@@ -9,21 +9,44 @@
 /* Begin PBXBuildFile section */
 		0EFDD947276B72C400323984 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD946276B72C400323984 /* AppDelegate.swift */; };
 		0EFDD949276B72C400323984 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD948276B72C400323984 /* SceneDelegate.swift */; };
-		0EFDD94B276B72C400323984 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD94A276B72C400323984 /* ViewController.swift */; };
-		0EFDD94E276B72C400323984 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EFDD94C276B72C400323984 /* Main.storyboard */; };
+		0EFDD94B276B72C400323984 /* ConversationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD94A276B72C400323984 /* ConversationController.swift */; };
 		0EFDD950276B72C700323984 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0EFDD94F276B72C700323984 /* Assets.xcassets */; };
 		0EFDD953276B72C700323984 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0EFDD951276B72C700323984 /* LaunchScreen.storyboard */; };
+		0EFDD95C276B798D00323984 /* SQLite in Frameworks */ = {isa = PBXBuildFile; productRef = 0EFDD95B276B798D00323984 /* SQLite */; };
+		0EFDD961276B79F300323984 /* ConversationSQLiteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD960276B79F300323984 /* ConversationSQLiteStore.swift */; };
+		0EFDD967276B7A3E00323984 /* Friend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD966276B7A3E00323984 /* Friend.swift */; };
+		0EFDD969276B7A4A00323984 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD968276B7A4A00323984 /* Conversation.swift */; };
+		0EFDD96B276B7A5400323984 /* Messenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD96A276B7A5400323984 /* Messenge.swift */; };
+		0EFDD96D276B7B0000323984 /* StoreAPIs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD96C276B7B0000323984 /* StoreAPIs.swift */; };
+		0EFDD96F276B7D6100323984 /* FriendSQLiteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD96E276B7D6100323984 /* FriendSQLiteStore.swift */; };
+		0EFDD971276B86AD00323984 /* FriendsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD970276B86AD00323984 /* FriendsController.swift */; };
+		0EFDD973276B86BC00323984 /* ConversationInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD972276B86BC00323984 /* ConversationInteractor.swift */; };
+		0EFDD975276B8BB100323984 /* FriendInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD974276B8BB100323984 /* FriendInteractor.swift */; };
+		0EFDD977276C2C2A00323984 /* MessengesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD976276C2C2A00323984 /* MessengesController.swift */; };
+		0EFDD979276C2C4700323984 /* MessengesInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD978276C2C4700323984 /* MessengesInteractor.swift */; };
+		0EFDD97E276C357E00323984 /* MessengesSQLiteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD97D276C357E00323984 /* MessengesSQLiteStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0EFDD943276B72C400323984 /* ChatSqlite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatSqlite.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EFDD946276B72C400323984 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0EFDD948276B72C400323984 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		0EFDD94A276B72C400323984 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		0EFDD94D276B72C400323984 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		0EFDD94A276B72C400323984 /* ConversationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationController.swift; sourceTree = "<group>"; };
 		0EFDD94F276B72C700323984 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0EFDD952276B72C700323984 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0EFDD954276B72C700323984 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0EFDD960276B79F300323984 /* ConversationSQLiteStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationSQLiteStore.swift; sourceTree = "<group>"; };
+		0EFDD966276B7A3E00323984 /* Friend.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Friend.swift; sourceTree = "<group>"; };
+		0EFDD968276B7A4A00323984 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
+		0EFDD96A276B7A5400323984 /* Messenge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Messenge.swift; sourceTree = "<group>"; };
+		0EFDD96C276B7B0000323984 /* StoreAPIs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreAPIs.swift; sourceTree = "<group>"; };
+		0EFDD96E276B7D6100323984 /* FriendSQLiteStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendSQLiteStore.swift; sourceTree = "<group>"; };
+		0EFDD970276B86AD00323984 /* FriendsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsController.swift; sourceTree = "<group>"; };
+		0EFDD972276B86BC00323984 /* ConversationInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationInteractor.swift; sourceTree = "<group>"; };
+		0EFDD974276B8BB100323984 /* FriendInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendInteractor.swift; sourceTree = "<group>"; };
+		0EFDD976276C2C2A00323984 /* MessengesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessengesController.swift; sourceTree = "<group>"; };
+		0EFDD978276C2C4700323984 /* MessengesInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessengesInteractor.swift; sourceTree = "<group>"; };
+		0EFDD97D276C357E00323984 /* MessengesSQLiteStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessengesSQLiteStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +54,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0EFDD95C276B798D00323984 /* SQLite in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -58,13 +82,72 @@
 			children = (
 				0EFDD946276B72C400323984 /* AppDelegate.swift */,
 				0EFDD948276B72C400323984 /* SceneDelegate.swift */,
-				0EFDD94A276B72C400323984 /* ViewController.swift */,
-				0EFDD94C276B72C400323984 /* Main.storyboard */,
+				0EFDD95F276B79C300323984 /* Models */,
+				0EFDD95E276B79BD00323984 /* Scenes */,
+				0EFDD95D276B79AF00323984 /* Services */,
 				0EFDD94F276B72C700323984 /* Assets.xcassets */,
 				0EFDD951276B72C700323984 /* LaunchScreen.storyboard */,
 				0EFDD954276B72C700323984 /* Info.plist */,
 			);
 			path = ChatSqlite;
+			sourceTree = "<group>";
+		};
+		0EFDD95D276B79AF00323984 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				0EFDD96C276B7B0000323984 /* StoreAPIs.swift */,
+				0EFDD960276B79F300323984 /* ConversationSQLiteStore.swift */,
+				0EFDD97D276C357E00323984 /* MessengesSQLiteStore.swift */,
+				0EFDD96E276B7D6100323984 /* FriendSQLiteStore.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		0EFDD95E276B79BD00323984 /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				0EFDD97C276C2E9B00323984 /* Messenges */,
+				0EFDD97B276C2E9600323984 /* Friends */,
+				0EFDD97A276C2E8F00323984 /* Conversations */,
+			);
+			path = Scenes;
+			sourceTree = "<group>";
+		};
+		0EFDD95F276B79C300323984 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				0EFDD966276B7A3E00323984 /* Friend.swift */,
+				0EFDD968276B7A4A00323984 /* Conversation.swift */,
+				0EFDD96A276B7A5400323984 /* Messenge.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		0EFDD97A276C2E8F00323984 /* Conversations */ = {
+			isa = PBXGroup;
+			children = (
+				0EFDD94A276B72C400323984 /* ConversationController.swift */,
+				0EFDD972276B86BC00323984 /* ConversationInteractor.swift */,
+			);
+			path = Conversations;
+			sourceTree = "<group>";
+		};
+		0EFDD97B276C2E9600323984 /* Friends */ = {
+			isa = PBXGroup;
+			children = (
+				0EFDD970276B86AD00323984 /* FriendsController.swift */,
+				0EFDD974276B8BB100323984 /* FriendInteractor.swift */,
+			);
+			path = Friends;
+			sourceTree = "<group>";
+		};
+		0EFDD97C276C2E9B00323984 /* Messenges */ = {
+			isa = PBXGroup;
+			children = (
+				0EFDD976276C2C2A00323984 /* MessengesController.swift */,
+				0EFDD978276C2C4700323984 /* MessengesInteractor.swift */,
+			);
+			path = Messenges;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -83,6 +166,9 @@
 			dependencies = (
 			);
 			name = ChatSqlite;
+			packageProductDependencies = (
+				0EFDD95B276B798D00323984 /* SQLite */,
+			);
 			productName = ChatSqlite;
 			productReference = 0EFDD943276B72C400323984 /* ChatSqlite.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +197,9 @@
 				Base,
 			);
 			mainGroup = 0EFDD93A276B72C400323984;
+			packageReferences = (
+				0EFDD95A276B798D00323984 /* XCRemoteSwiftPackageReference "SQLite.swift" */,
+			);
 			productRefGroup = 0EFDD944276B72C400323984 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -127,7 +216,6 @@
 			files = (
 				0EFDD953276B72C700323984 /* LaunchScreen.storyboard in Resources */,
 				0EFDD950276B72C700323984 /* Assets.xcassets in Resources */,
-				0EFDD94E276B72C400323984 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -138,23 +226,27 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0EFDD94B276B72C400323984 /* ViewController.swift in Sources */,
+				0EFDD975276B8BB100323984 /* FriendInteractor.swift in Sources */,
+				0EFDD97E276C357E00323984 /* MessengesSQLiteStore.swift in Sources */,
+				0EFDD969276B7A4A00323984 /* Conversation.swift in Sources */,
+				0EFDD971276B86AD00323984 /* FriendsController.swift in Sources */,
+				0EFDD967276B7A3E00323984 /* Friend.swift in Sources */,
+				0EFDD977276C2C2A00323984 /* MessengesController.swift in Sources */,
+				0EFDD94B276B72C400323984 /* ConversationController.swift in Sources */,
+				0EFDD96D276B7B0000323984 /* StoreAPIs.swift in Sources */,
+				0EFDD96F276B7D6100323984 /* FriendSQLiteStore.swift in Sources */,
+				0EFDD973276B86BC00323984 /* ConversationInteractor.swift in Sources */,
+				0EFDD961276B79F300323984 /* ConversationSQLiteStore.swift in Sources */,
 				0EFDD947276B72C400323984 /* AppDelegate.swift in Sources */,
 				0EFDD949276B72C400323984 /* SceneDelegate.swift in Sources */,
+				0EFDD96B276B7A5400323984 /* Messenge.swift in Sources */,
+				0EFDD979276C2C4700323984 /* MessengesInteractor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		0EFDD94C276B72C400323984 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				0EFDD94D276B72C400323984 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		0EFDD951276B72C700323984 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -294,7 +386,6 @@
 				INFOPLIST_FILE = ChatSqlite/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -322,7 +413,6 @@
 				INFOPLIST_FILE = ChatSqlite/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -360,6 +450,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		0EFDD95A276B798D00323984 /* XCRemoteSwiftPackageReference "SQLite.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stephencelis/SQLite.swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0EFDD95B276B798D00323984 /* SQLite */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0EFDD95A276B798D00323984 /* XCRemoteSwiftPackageReference "SQLite.swift" */;
+			productName = SQLite;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 0EFDD93B276B72C400323984 /* Project object */;
 }
