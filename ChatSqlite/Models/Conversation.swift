@@ -6,6 +6,7 @@
 //
 
 import Foundation
+
 protocol Conversation {
 
     var theme: String? {get}
@@ -13,6 +14,8 @@ protocol Conversation {
     var title: String {get}
     var id: String {get}
     var members: String? {get}
+    var lastMsg : String {get set}
+    var timestamp : Date {get set}
 
 }
 
@@ -26,6 +29,9 @@ struct ConversationSQLite : Conversation, Codable {
     var id: String
     
     var members: String?
+
+    var lastMsg : String
     
+    var timestamp: Date
     
 }

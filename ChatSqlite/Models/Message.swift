@@ -7,24 +7,24 @@
 
 import Foundation
 
-enum MessengeType : String, Codable {
+enum MessageType : String, Codable {
     case text, image, gif
 }
 
 protocol Message{
-    var conversationId : String {get set}
+    var cid : String {get set}
     var content : String {get}
-    var type : MessengeType {get}
+    var type : MessageType {get}
     var timestamp : Date {get}
     var sender : String {get}
 }
 
-struct MessengeSQLite : Message, Codable {
-    var conversationId : String 
+struct MessageSQLite : Message, Codable {
+    var cid : String
 
     var content: String
     
-    var type: MessengeType
+    var type: MessageType
     
     var timestamp: Date
     

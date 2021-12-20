@@ -11,6 +11,7 @@ class ConversationController: UITableViewController {
 
     var interactor : ConversationInteractor?
     var conversations : [Conversation] = []
+    var cellId = "convCell"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,7 +20,7 @@ class ConversationController: UITableViewController {
         setup()
         
         // table
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "convCell")
+        tableView.register(SubtitleCell.self, forCellReuseIdentifier: cellId)
         
         // navigation
         navigationItem.title = "Chats"
@@ -52,16 +53,19 @@ extension ConversationController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "convCell") else {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as? SubtitleCell else {
             fatalError()
         }
         
-        cell.textLabel?.text = conversations[indexPath.row].title
+        print("configure cell \(conversations[indexPath.row].lastMsg)")
         
+        cell.textLabel?.text = conversations[indexPath.row].title
+        cell.detailTextLabel?.text = conversations[indexPath.row].lastMsg
         return cell
     }
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let controller = MessengesController()
+        let controller = MessagesController()
         controller.configure(conversation: conversations[indexPath.row]){ newMess in
             self.updateLastMessenge(newMess, at: indexPath)
         }
@@ -69,11 +73,26 @@ extension ConversationController {
     }
     
     func updateLastMessenge(_ msg : Message, at i : IndexPath){
-        
-        let cell = tableView.cellForRow(at: i)
-        
-        cell?.detailTextLabel?.text = msg.content
-        // TBD: reorder cell
+        var c = conversations[i.row]
+        c.lastMsg = msg.content
+        c.timestamp = msg.timestamp
+        conversations[i.row] = c
+    }
+    
+    func searchRowInsert(timestamp : Date) -> Int{
+        var l = 0
+        var r = conversations.count
+        var res = 0
+        while ( l <= r){
+            let mid = (l + r) / 2
+            if conversations[mid].timestamp <= timestamp {
+                l = mid + 1
+            } else {
+                res = mid
+                r = mid - 1
+            }
+        }
+        return res
     }
 }
 

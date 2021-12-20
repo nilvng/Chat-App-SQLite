@@ -8,14 +8,14 @@
 import Foundation
 import UIKit
 
-protocol MessengesPresenter : AnyObject{
+protocol MessagesPresenter : AnyObject{
     func presentAllItems(_ items : [Message]?)
     func presentNewItem(_ item : Message)
 }
-class MessengesInteractor {
-    weak var presenter : MessengesPresenter?
+class MessagesInteractor {
+    weak var presenter : MessagesPresenter?
     
-    var store : MessengesSQLStore = MessengesSQLStore()
+    var store : MessagesSQLStore = MessagesSQLStore()
     var conversationStore = ConversationSQLiteStore.shared
     
     var conversation : Conversation!
@@ -23,7 +23,7 @@ class MessengesInteractor {
     var offSet : CGFloat {
         CGFloat(noRecords * 2)
     }
-    var currPage = 1
+    var currPage = 0
     
     
     func fetchData(friend : Friend){
@@ -35,12 +35,16 @@ class MessengesInteractor {
         let conversation = ConversationSQLite(theme: nil,
                                               thumbnail: nil,
                                               title: friend.name,
-                                              id: UUID().uuidString, members: friend.id)
+                                              id: UUID().uuidString,
+                                              members: friend.id,
+                                              lastMsg: "",
+                                              timestamp: Date())
+        
         self.conversation = conversation
         presenter?.presentAllItems(nil)
     }
     
-    func fetchData(conversation: Conversation, noPages: Int = 1){
+    func fetchData(conversation: Conversation, noPages: Int = 0){
         // filter messenges belong to this conversation
         self.conversation = conversation
         store.getAll(conversationID: conversation.id,
@@ -67,16 +71,15 @@ class MessengesInteractor {
         }
     }
 
-    func sendMessenge(_ msg: Message, newConv : Bool){
+    func sendMessenge(content: String, newConv : Bool){
+        var m : MessageSQLite!
         if newConv {
             // create conversation
             conversationStore.create(newItem: conversation, completionHandler: { [weak self] c, err in
                 guard let conv = c else {
                     return
                 }
-                var m = msg
-                m.conversationId = conv.id
-                
+                m = MessageSQLite(cid: conv.id, content: content, type: .text, timestamp: Date(), sender: "1")
                 // create new messege
                 self?.store.create(newItem: m, completionHandler: { msg, err in
                     if err == nil {
@@ -85,11 +88,26 @@ class MessengesInteractor {
                 })
             })
         } else {
-            store.create(newItem: msg, completionHandler: {  [weak self] msg, err in
+            // create messenge
+            m = MessageSQLite(cid: conversation.id, content: content, type: .text, timestamp: Date(), sender: "1")
+            store.create(newItem: m, completionHandler: {  [weak self] msg, err in
                 if err == nil {
                     self?.presenter?.presentNewItem(msg!)
                 }
             })
         }
+        
+        // update lastMessage
+        conversation.lastMsg = m.content
+        conversation.timestamp = m.timestamp
+        
+        conversationStore.update(item: conversation, completionHandler: {
+            c, err in
+            if err != nil {
+                print("Successfully update last message.")
+            } else {
+                print(err!.localizedDescription)
+            }
+        })
     }
 }

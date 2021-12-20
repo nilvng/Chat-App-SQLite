@@ -15,9 +15,10 @@ protocol ConversationPresenter : AnyObject {
 class ConversationInteractor {
     var store = ConversationSQLiteStore.shared
     weak var presenter : ConversationPresenter?
-    
+    var noRecords : Int = 13
+    var noPages = 0
     func fetchData(){
-        store.getAll(completionHandler: { [weak self] items, err in
+        store.getAll(noRecords: noRecords, noPages: noPages, completionHandler: { [weak self] items, err in
             if let friends = items {
                 self?.presenter?.presentAllItems(friends)
             } else {

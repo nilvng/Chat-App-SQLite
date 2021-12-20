@@ -58,7 +58,7 @@ class FriendsController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let chatController = MessengesController()
+        let chatController = MessagesController()
         let friend = friends[indexPath.row]
 
         chatController.configure(friend: friend)

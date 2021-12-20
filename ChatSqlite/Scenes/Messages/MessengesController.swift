@@ -7,13 +7,13 @@
 
 import UIKit
 
-class MessengesController: UITableViewController {
+class MessagesController: UITableViewController {
 
     typealias lastMsgAction = (Message) -> Void
     
     var updateLastMsgAction : lastMsgAction?
     
-    var interactor : MessengesInteractor?
+    var interactor : MessagesInteractor?
     
     var items : [Message] = []
     var conversation : Conversation?
@@ -36,13 +36,12 @@ class MessengesController: UITableViewController {
     }
     
     func configure(conversation : Conversation, action : lastMsgAction? = nil){
-        interactor?.fetchData(conversation: conversation)
         updateLastMsgAction = action
         self.conversation = conversation
     }
     
     func setup(){
-        let inter = MessengesInteractor()
+        let inter = MessagesInteractor()
         inter.presenter = self
         interactor = inter
     }
@@ -60,22 +59,22 @@ class MessengesController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        interactor?.fetchData(conversation: conversation!)
     }
 
     @objc func addMess(){
         let text = ["Random talk", "see you", "salute"].randomElement()!
-        var mess : Message
-        if let c = conversation {
-            mess = MessengeSQLite(conversationId: c.id, content: text, type: .text, timestamp: Date(), sender: "1") // user's id is 1
-            interactor?.sendMessenge(mess, newConv: false)
+        if let _ = conversation {
+            print("old chat")
+
+            interactor?.sendMessenge(content: text, newConv: false)
 
         } else {
-            mess = MessengeSQLite(conversationId: "", content: text, type: .text, timestamp: Date(), sender: "1") // user's id is 1
-            interactor?.sendMessenge(mess, newConv: isNew)
+
+            interactor?.sendMessenge(content: text, newConv: isNew)
             isNew = false
         }
 
-        updateLastMsgAction?(mess)
     }
     
 
@@ -99,7 +98,7 @@ class MessengesController: UITableViewController {
 
 }
 
-extension MessengesController : MessengesPresenter {
+extension MessagesController : MessagesPresenter {
     func presentAllItems(_ items: [Message]?) {
         if items == nil {
             isNew = true

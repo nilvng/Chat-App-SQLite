@@ -12,7 +12,7 @@ class ConversationSQLiteStore {
     
     static var shared = ConversationSQLiteStore()
     
-    var db : Connection?
+    var db : Connection!
     var items : [Conversation] = []
     
     var table = Table("Conversation")
@@ -20,6 +20,9 @@ class ConversationSQLiteStore {
     var title = Expression<String>("title")
     var members = Expression<String>("members")
     var thumbnail = Expression<String>("thumbnail")
+    var lastMsg = Expression<String>("lastMsg")
+    var timestamp = Expression<String>("timestamp")
+
     
     private init(){
         getInstance(path: "chat-conversation.sqlite")
@@ -27,14 +30,16 @@ class ConversationSQLiteStore {
         
     }
     
-    func getAll(completionHandler: @escaping ([Conversation]?, StoreError?) -> Void) {
-        
+    func getAll( noRecords : Int, noPages: Int, desc : Bool = true, completionHandler: @escaping ([Conversation]?, StoreError?) -> Void) {
         do {
+            let queries = table.order(timestamp.desc)
+                .limit(noRecords, offset: noRecords * noPages)
             
-            let result : [ConversationSQLite] = try db!.prepare(table).map { row in
+            let result : [ConversationSQLite] = try db!.prepare(queries).map { row in
                 return try row.decode()
             }
             items = result
+            print("fetch all:\(items)")
             completionHandler(items,nil)
         } catch let e{
             print(e.localizedDescription)
@@ -50,8 +55,9 @@ class ConversationSQLiteStore {
                  
         let dir = dirs[0]
                 
-        let path = dir.appendingPathComponent(subPath);
-            
+        let path = dir.appendingPathComponent(subPath)
+        print(path)
+        
         do{
             db = try Connection(path)
         } catch let e{
@@ -67,6 +73,8 @@ class ConversationSQLiteStore {
             t.column(id, primaryKey: true)
             t.column(title)
             t.column(members)
+            t.column(lastMsg)
+            t.column(timestamp)
         })
         } catch let e {
             print(e.localizedDescription)
@@ -95,7 +103,11 @@ class ConversationSQLiteStore {
     }
     
     func update(item: Conversation, completionHandler: @escaping (Conversation?, StoreError?) -> Void) {
-        fatalError()
+        guard let itemSql = item as? ConversationSQLite else {
+            completionHandler(nil,.cantUpdate("Wrong model type."))
+            return
+        }
+        try! db.run(table.filter(id == item.id).update(itemSql))
     }
     
     func delete(id: String, completionHandler: @escaping (Conversation?, StoreError?) -> Void) {
