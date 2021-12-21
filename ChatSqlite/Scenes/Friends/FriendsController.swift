@@ -7,15 +7,11 @@
 
 import UIKit
 
-protocol FriendPresenter {
-    func presentItems(_ items : [Friend])
-    func presentNewItems(_ item : Friend)
-}
 
 class FriendsController: UITableViewController {
 
     var interactor : FriendInteractor?
-    var friends : [Friend] = []
+    var friends : [FriendsModel] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,20 +20,20 @@ class FriendsController: UITableViewController {
         navigationItem.title = "Friends"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
                                                             target: self,
-                                                            action: #selector(addMess))
+                                                            action: #selector(addButtonPressed))
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "friendCell")
 
     }
     func setup() {
-        let inter = FriendInteractor()
+        let inter = FriendInteractor(store: FriendSQLiteStore())
         inter.presenter = self
         interactor = inter
     }
 
-    @objc func addMess(){
+    @objc func addButtonPressed(){
         let names = ["Meme", "Bingo", "WRM"]
-        let friend = FriendSqlite(avatar: "hello", id: UUID().uuidString, phoneNumber: "1234", name: names.randomElement()!)
+        let friend = FriendsModel(avatar: "hello", id: UUID().uuidString, phoneNumber: "1234", name: names.randomElement()!)
         interactor?.addItem(friend)
     }
     // MARK: - Table view data source
@@ -78,12 +74,12 @@ class FriendsController: UITableViewController {
 }
 
 extension FriendsController : FriendPresenter {
-    func presentNewItems(_ item: Friend) {
+    func presentNewItems(_ item: FriendsModel) {
         self.friends.append(item)
         tableView.reloadData()
     }
     
-    func presentItems(_ items: [Friend]) {
+    func presentItems(_ items: [FriendsModel]) {
         self.friends = items
         tableView.reloadData()
     }

@@ -10,7 +10,7 @@ import UIKit
 class ConversationController: UITableViewController {
 
     var interactor : ConversationInteractor?
-    var conversations : [Conversation] = []
+    var conversations : [ConversationsModel] = []
     var cellId = "convCell"
     
     override func viewDidLoad() {
@@ -25,16 +25,16 @@ class ConversationController: UITableViewController {
         // navigation
         navigationItem.title = "Chats"
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self,
-                                                            action: #selector(addMess))
+                                                            action: #selector(addButtonPressed))
     }
     
     func setup() {
-        let inter = ConversationInteractor()
+        let inter = ConversationInteractor(store: ConversationStoreWorker.getInstance(store: ConversationSQLiteStore()))
         inter.presenter = self
         interactor = inter
     }
     
-    @objc func addMess(){
+    @objc func addButtonPressed(){
         let fController = FriendsController()
         navigationController?.pushViewController(fController, animated: true)
     }
@@ -97,15 +97,14 @@ extension ConversationController {
 }
 
 extension ConversationController : ConversationPresenter{
-    func presentNewItems(_ item: Conversation) {
+    func presentNewItems(_ item: ConversationsModel) {
         self.conversations.append(item)
         tableView.reloadData()
     }
     
-    func presentAllItems(_ items: [Conversation]) {
+    func presentAllItems(_ items: [ConversationsModel]) {
         self.conversations = items
         tableView.reloadData()
     }
-    
     
 }

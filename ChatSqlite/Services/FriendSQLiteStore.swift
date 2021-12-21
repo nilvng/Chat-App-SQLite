@@ -8,7 +8,7 @@
 import Foundation
 import SQLite
 
-class FriendSQLiteStore : StoreAPIs{
+class FriendSQLiteStore{
     var db : Connection?
     var table  = Table("Friend")
     
@@ -53,28 +53,27 @@ class FriendSQLiteStore : StoreAPIs{
         
     }
     
-    func fetchData(completionHandler: @escaping ([Friend]?, StoreError?) -> Void){
+    func fetchData(completionHandler: @escaping ([FriendSqlite]?, StoreError?) -> Void){
         do {
             let result : [FriendSqlite] = try db!.prepare(table).map { row in
                 return try row.decode()
             }
-            items = result
-            completionHandler(items,nil)
+            completionHandler(result,nil)
         } catch let e{
             print(e.localizedDescription)
             completionHandler(nil,.cantFetch("Cant fetch"))
         }
     }
     
-    func getAll(completionHandler: @escaping ([Friend]?, StoreError?) -> Void) {
+    func getAll(completionHandler: @escaping ([FriendSqlite]?, StoreError?) -> Void) {
         fetchData(completionHandler: completionHandler)
     }
     
-    func getWithId(_ id: String, completionHandler: @escaping (Friend?, StoreError?) -> Void) {
+    func getWithId(_ id: String, completionHandler: @escaping (FriendSQLiteStore?, StoreError?) -> Void) {
         fatalError()
     }
     
-    func create(newItem: Friend, completionHandler: @escaping (Friend?, StoreError?) -> Void) {
+    func create(newItem: FriendSqlite, completionHandler: @escaping (FriendSqlite?, StoreError?) -> Void) {
         do {
             let rowid = try db?.run(table.insert(id <- newItem.id,
                                                  name <- newItem.name,
@@ -89,18 +88,16 @@ class FriendSQLiteStore : StoreAPIs{
         }
     }
     
-    func update(item: Friend, completionHandler: @escaping (Friend?, StoreError?) -> Void) {
+    func update(item: FriendSqlite, completionHandler: @escaping (FriendSqlite?, StoreError?) -> Void) {
         fatalError()
     }
     
-    func delete(id: String, completionHandler: @escaping (Friend?, StoreError?) -> Void) {
+    func delete(id: String, completionHandler: @escaping (FriendSqlite?, StoreError?) -> Void) {
         fatalError()
     }
     
     func generateId() -> String{
         return UUID().uuidString
     }
-    
-    var items: [Friend] = []
-    
+        
 }

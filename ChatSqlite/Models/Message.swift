@@ -19,7 +19,11 @@ protocol Message{
     var sender : String {get}
 }
 
-struct MessageSQLite : Message, Codable {
+protocol SQLiteModel : Codable{
+    
+}
+
+struct MessageSQLite : Message, SQLiteModel {
     var cid : String
 
     var content: String

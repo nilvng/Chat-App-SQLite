@@ -9,12 +9,11 @@ import Foundation
 protocol StoreAPIs {
     associatedtype T
      
-    var items : [T] {get set}
-    mutating func getAll(completionHandler : @escaping ([T]?, StoreError?) -> Void)
+    func getAll(completionHandler : @escaping ([T]?, StoreError?) -> Void)
     func getWithId(_ id: String, completionHandler : @escaping (T?, StoreError?) -> Void)
-    mutating func create(newItem: T,completionHandler : @escaping (T?, StoreError?) -> Void)
-    mutating func update(item: T,completionHandler : @escaping (T?, StoreError?) -> Void)
-    mutating func delete(id: String ,completionHandler : @escaping (T?, StoreError?) -> Void)
+    func create(newItem: T,completionHandler : @escaping (T?, StoreError?) -> Void)
+    func update(item: T,completionHandler : @escaping (T?, StoreError?) -> Void)
+    func delete(id: String ,completionHandler : @escaping (T?, StoreError?) -> Void)
 }
 
 

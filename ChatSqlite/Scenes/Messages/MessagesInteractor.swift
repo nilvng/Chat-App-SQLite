@@ -16,9 +16,9 @@ class MessagesInteractor {
     weak var presenter : MessagesPresenter?
     
     var store : MessagesSQLStore = MessagesSQLStore()
-    var conversationStore = ConversationSQLiteStore.shared
+    lazy var conversationStore = ConversationStoreWorker.getInstance()
     
-    var conversation : Conversation!
+    var conversation : ConversationsModel!
     var noRecords : Int = 13
     var offSet : CGFloat {
         CGFloat(noRecords * 2)
@@ -28,23 +28,22 @@ class MessagesInteractor {
     
     func fetchData(friend : Friend){
         // find conversation with friend
-        
-        // found it
-        
-        // if conversation not exist
-        let conversation = ConversationSQLite(theme: nil,
-                                              thumbnail: nil,
-                                              title: friend.name,
-                                              id: UUID().uuidString,
-                                              members: friend.id,
-                                              lastMsg: "",
-                                              timestamp: Date())
-        
-        self.conversation = conversation
-        presenter?.presentAllItems(nil)
+        conversationStore.findWithFriend(friend){ res, err in
+            // found it
+            if let c = res {
+                self.fetchData(conversation: c)
+            } else {
+                
+                // if conversation not exist
+                self.conversation = ConversationsModel.fromFriend(friend: friend) as! ConversationsModel
+                self.presenter?.presentAllItems(nil)
+            }
+
+        }
+
     }
     
-    func fetchData(conversation: Conversation, noPages: Int = 0){
+    func fetchData(conversation: ConversationsModel, noPages: Int = 0){
         // filter messenges belong to this conversation
         self.conversation = conversation
         store.getAll(conversationID: conversation.id,
@@ -75,14 +74,15 @@ class MessagesInteractor {
         var m : MessageSQLite!
         if newConv {
             // create conversation
-            conversationStore.create(newItem: conversation, completionHandler: { [weak self] c, err in
+            conversationStore.create(newItem: self.conversation, completionHandler: { [weak self] c, err in
                 guard let conv = c else {
                     return
                 }
                 m = MessageSQLite(cid: conv.id, content: content, type: .text, timestamp: Date(), sender: "1")
                 // create new messege
                 self?.store.create(newItem: m, completionHandler: { msg, err in
-                    if err == nil {
+                    if msg != nil && err == nil {
+                        self?.updateLastMessage(m: msg!)
                         self?.presenter?.presentNewItem(msg!)
                     }
                 })
@@ -91,17 +91,22 @@ class MessagesInteractor {
             // create messenge
             m = MessageSQLite(cid: conversation.id, content: content, type: .text, timestamp: Date(), sender: "1")
             store.create(newItem: m, completionHandler: {  [weak self] msg, err in
-                if err == nil {
+                if msg != nil && err == nil {
+                    self?.updateLastMessage(m: msg!)
                     self?.presenter?.presentNewItem(msg!)
                 }
             })
         }
         
+
+    }
+    
+    func updateLastMessage( m: MessageSQLite){
         // update lastMessage
         conversation.lastMsg = m.content
         conversation.timestamp = m.timestamp
         
-        conversationStore.update(item: conversation, completionHandler: {
+        conversationStore?.update(item: conversation, completionHandler: {
             c, err in
             if err != nil {
                 print("Successfully update last message.")
@@ -109,5 +114,9 @@ class MessagesInteractor {
                 print(err!.localizedDescription)
             }
         })
+    }
+    
+    func toDtbModel(conversation: Conversation) -> ConversationSQLite{
+        return ConversationSQLite(theme: conversation.theme, thumbnail: conversation.thumbnail, title: conversation.title, id: conversation.id, members: conversation.members, lastMsg: conversation.lastMsg, timestamp: conversation.timestamp)
     }
 }

@@ -13,13 +13,21 @@ protocol Conversation {
     var thumbnail: String? {get}
     var title: String {get}
     var id: String {get}
-    var members: String? {get}
+    var members: String {get}
     var lastMsg : String {get set}
     var timestamp : Date {get set}
 
+    static func fromFriend(friend : Friend) -> Conversation
 }
 
-struct ConversationSQLite : Conversation, Codable {
+struct ConversationSQLite : Codable, Conversation {
+    static func fromFriend(friend: Friend) -> Conversation {
+        return ConversationSQLite(theme: nil, thumbnail: nil,
+                                  title: friend.name, id: UUID().uuidString,
+                                  members: friend.id,
+                                  lastMsg: "", timestamp: Date())
+    }
+    
     var theme: String?
     
     var thumbnail: String?
@@ -28,7 +36,7 @@ struct ConversationSQLite : Conversation, Codable {
     
     var id: String
     
-    var members: String?
+    var members: String
 
     var lastMsg : String
     

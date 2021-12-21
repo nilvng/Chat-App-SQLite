@@ -11,7 +11,6 @@ import SQLite
 class MessagesSQLStore {
     
     var db : Connection?
-    var items : [Message] = []
     
     var table = Table("Messages")
     var cid = Expression<String>("cid")
@@ -20,14 +19,21 @@ class MessagesSQLStore {
     var type = Expression<String>("type")
     var sender = Expression<String>("sender")
     
+    let serialQueue = DispatchQueue(
+        label: "zalo.chatApp.messagesStore",
+        qos: .userInitiated,
+        autoreleaseFrequency: .workItem,
+        target: nil)
+    
     init(){
         getInstance(path: "chat-message.sqlite")
         createTable()
         
     }
     
-    func getAll(conversationID: String, noRecords : Int, noPages: Int, desc : Bool = true, completionHandler: @escaping ([Message]?, StoreError?) -> Void) {
+    func getAll(conversationID: String, noRecords : Int, noPages: Int, desc : Bool = true, completionHandler: @escaping ([MessageSQLite]?, StoreError?) -> Void) {
         print(conversationID)
+            
         do {
             let queries = table.filter(cid == conversationID)
                 .order(timestamp.desc)
@@ -36,15 +42,13 @@ class MessagesSQLStore {
             let result : [MessageSQLite] = try db!.prepare(queries).map { row in
                 return try row.decode()
             }
-            items = result
-            print("fetch all:\(items)")
-            completionHandler(items,nil)
+            completionHandler(result,nil)
         } catch let e{
             print(e.localizedDescription)
             completionHandler(nil,.cantFetch("Cant fetch"))
+            }
         }
         
-    }
     
     
     func getInstance(path subPath : String){
@@ -80,17 +84,13 @@ class MessagesSQLStore {
     }
 
     
-    func getWithId(_ id: String, completionHandler: @escaping (Message?, StoreError?) -> Void) {
+    func getWithId(_ id: String, completionHandler: @escaping (MessageSQLite?, StoreError?) -> Void) {
         fatalError()
     }
     
-    func create(newItem: Message, completionHandler: @escaping (Message?, StoreError?) -> Void) {
+    func create(newItem: MessageSQLite, completionHandler: @escaping (MessageSQLite?, StoreError?) -> Void) {
         do {
-            guard let sqliteObject = newItem as? MessageSQLite else {
-                completionHandler(nil, .cantFetch("SQLite Error: Cannot add non-SQLite object"))
-                return
-            }
-            let rowid = try db?.run(table.insert(sqliteObject))
+            let rowid = try db?.run(table.insert(newItem))
             
             print("Create Messenge row: \(String(describing: rowid))")
             completionHandler(newItem, nil)
@@ -100,11 +100,11 @@ class MessagesSQLStore {
         }
     }
     
-    func update(item: Message, completionHandler: @escaping (Message?, StoreError?) -> Void) {
+    func update(item: MessageSQLite, completionHandler: @escaping (MessageSQLite?, StoreError?) -> Void) {
         fatalError()
     }
     
-    func delete(id: String, completionHandler: @escaping (Message?, StoreError?) -> Void) {
+    func delete(id: String, completionHandler: @escaping (MessageSQLite?, StoreError?) -> Void) {
         fatalError()
     }
     

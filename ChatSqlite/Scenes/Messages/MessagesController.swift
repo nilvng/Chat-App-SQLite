@@ -16,7 +16,7 @@ class MessagesController: UITableViewController {
     var interactor : MessagesInteractor?
     
     var items : [Message] = []
-    var conversation : Conversation?
+    var conversation : ConversationsModel?
     var friend : Friend?
     
     var isNew : Bool = false
@@ -35,7 +35,7 @@ class MessagesController: UITableViewController {
         self.friend = friend
     }
     
-    func configure(conversation : Conversation, action : lastMsgAction? = nil){
+    func configure(conversation : ConversationsModel, action : lastMsgAction? = nil){
         updateLastMsgAction = action
         self.conversation = conversation
     }
@@ -59,7 +59,8 @@ class MessagesController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        interactor?.fetchData(conversation: conversation!)
+        guard let c = conversation else {return}
+        interactor?.fetchData(conversation: c)
     }
 
     @objc func addMess(){
