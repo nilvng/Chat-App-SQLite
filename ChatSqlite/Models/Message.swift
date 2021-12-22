@@ -23,7 +23,7 @@ protocol SQLiteModel : Codable{
     
 }
 
-struct MessageSQLite : Message, SQLiteModel {
+struct MessageSQLite : SQLiteModel, Message {
     var cid : String
 
     var content: String

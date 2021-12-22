@@ -6,6 +6,22 @@
 //
 
 import Foundation
+import UIKit
+import SQLite
+
+struct Theme : Codable {
+        
+    typealias Datatype = String
+    
+    var bubbleColor : Datatype = "blue-purple"
+    var background : Datatype = "default"
+    var accentColor : Datatype = "blue"
+}
+
+extension Theme {
+    static var v0 = Theme()
+    static var v1 = Theme(bubbleColor: "green-orange", background: "forrest", accentColor: "greeny")
+}
 
 protocol Conversation {
 
@@ -17,16 +33,9 @@ protocol Conversation {
     var lastMsg : String {get set}
     var timestamp : Date {get set}
 
-    static func fromFriend(friend : Friend) -> Conversation
 }
 
-struct ConversationSQLite : Codable, Conversation {
-    static func fromFriend(friend: Friend) -> Conversation {
-        return ConversationSQLite(theme: nil, thumbnail: nil,
-                                  title: friend.name, id: UUID().uuidString,
-                                  members: friend.id,
-                                  lastMsg: "", timestamp: Date())
-    }
+struct ConversationSQLite : SQLiteModel, Conversation {
     
     var theme: String?
     

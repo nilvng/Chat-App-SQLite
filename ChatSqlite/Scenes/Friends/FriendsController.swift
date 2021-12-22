@@ -7,10 +7,14 @@
 
 import UIKit
 
+protocol FriendsBusinessLogic {
+    func fetchData()
+    func addItem(_ item: FriendsModel)
+}
 
 class FriendsController: UITableViewController {
 
-    var interactor : FriendInteractor?
+    var interactor : FriendsBusinessLogic?
     var friends : [FriendsModel] = []
     
     override func viewDidLoad() {
@@ -67,7 +71,7 @@ class FriendsController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        interactor?.getAll()
+        interactor?.fetchData()
     }
     
 

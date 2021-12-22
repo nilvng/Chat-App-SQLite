@@ -7,9 +7,15 @@
 
 import UIKit
 
+protocol ConversationsBusinessLogic {
+    func fetchData()
+    func addItem(_ conversation : ConversationsModel)
+    func onScroll(tableOffset: CGFloat)
+}
+
 class ConversationController: UITableViewController {
 
-    var interactor : ConversationInteractor?
+    var interactor : ConversationsBusinessLogic?
     var conversations : [ConversationsModel] = []
     var cellId = "convCell"
     
@@ -66,10 +72,16 @@ extension ConversationController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let controller = MessagesController()
+        
         controller.configure(conversation: conversations[indexPath.row]){ newMess in
             self.updateLastMessenge(newMess, at: indexPath)
         }
+        
         navigationController?.pushViewController(controller, animated: true)
+    }
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        interactor?.onScroll(tableOffset: tableView.contentOffset.y)
     }
     
     func updateLastMessenge(_ msg : Message, at i : IndexPath){
@@ -102,8 +114,11 @@ extension ConversationController : ConversationPresenter{
         tableView.reloadData()
     }
     
-    func presentAllItems(_ items: [ConversationsModel]) {
-        self.conversations = items
+    func presentAllItems(_ items: [ConversationsModel]?) {
+        if items == nil {
+            return
+        }
+        self.conversations = items!
         tableView.reloadData()
     }
     

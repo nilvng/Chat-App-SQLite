@@ -8,10 +8,9 @@
 import Foundation
 import SQLite
 
-class FriendSQLiteStore{
+class FriendSQLiteStore {
     var db : Connection?
     var table  = Table("Friend")
-    
     let id = Expression<String>("id")
     let name = Expression<String>("name")
     let phoneNumber = Expression<String>("phoneNumber")
@@ -37,8 +36,6 @@ class FriendSQLiteStore{
     func getInstance(path subPath : String){
         let dirs: [NSString] = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory,
                                                                                FileManager.SearchPathDomainMask.allDomainsMask, true) as [NSString]
-                   
-                 
         let dir = dirs[0]
                 
         let path = dir.appendingPathComponent(subPath);
@@ -52,8 +49,11 @@ class FriendSQLiteStore{
         }
         
     }
+}
+
+extension FriendSQLiteStore : FriendStore{
     
-    func fetchData(completionHandler: @escaping ([FriendSqlite]?, StoreError?) -> Void){
+    func getAll(completionHandler: @escaping ([Friend]?, StoreError?) -> Void){
         do {
             let result : [FriendSqlite] = try db!.prepare(table).map { row in
                 return try row.decode()
@@ -65,20 +65,18 @@ class FriendSQLiteStore{
         }
     }
     
-    func getAll(completionHandler: @escaping ([FriendSqlite]?, StoreError?) -> Void) {
-        fetchData(completionHandler: completionHandler)
-    }
-    
-    func getWithId(_ id: String, completionHandler: @escaping (FriendSQLiteStore?, StoreError?) -> Void) {
+    func getWithId(_ id: String, completionHandler: @escaping (Friend?, StoreError?) -> Void) {
         fatalError()
     }
     
-    func create(newItem: FriendSqlite, completionHandler: @escaping (FriendSqlite?, StoreError?) -> Void) {
+    func create(newItem: Friend, completionHandler: @escaping (Friend?, StoreError?) -> Void) {
+        guard let item = newItem as? FriendSqlite else {
+            completionHandler(nil, .cantFetch("Wrong type"))
+            return
+        }
+        
         do {
-            let rowid = try db?.run(table.insert(id <- newItem.id,
-                                                 name <- newItem.name,
-                                                 phoneNumber <- newItem.phoneNumber,
-                                                 avatar <- newItem.avatar))
+            let rowid = try db?.run(table.insert(item))
             
             print("Create Friend row: \(String(describing: rowid))")
             completionHandler(newItem, nil)
@@ -88,11 +86,15 @@ class FriendSQLiteStore{
         }
     }
     
-    func update(item: FriendSqlite, completionHandler: @escaping (FriendSqlite?, StoreError?) -> Void) {
+    func update(item: Friend, completionHandler: @escaping (Friend?, StoreError?) -> Void) {
+        guard let item = item as? FriendSqlite else {
+            completionHandler(nil, .cantFetch("wrong type"))
+            return
+        }
         fatalError()
     }
     
-    func delete(id: String, completionHandler: @escaping (FriendSqlite?, StoreError?) -> Void) {
+    func delete(id: String, completionHandler: @escaping (Friend?, StoreError?) -> Void) {
         fatalError()
     }
     

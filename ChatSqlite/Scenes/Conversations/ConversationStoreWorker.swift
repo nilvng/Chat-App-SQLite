@@ -11,7 +11,7 @@ import Foundation
 // handle callback in main thread
 class ConversationStoreWorker {
     
-    var store : ConversationSQLiteStore
+    var store : ConversationStore
     
     static var shared : ConversationStoreWorker!
     
@@ -35,7 +35,7 @@ class ConversationStoreWorker {
     
     func getAll(noPages: Int, noRecords: Int ,completionHandler: @escaping ([ConversationsModel]?, StoreError?) -> Void) {
         utilityQueue.async {
-            self.store.getAll(noRecords: noRecords, noPages: noPages) { res, err in
+            self.store.getAll(noRecords: noRecords, noPages: noPages, desc: true) { res, err in
                 
                 var items : [ConversationsModel]? = nil
                 
@@ -107,7 +107,7 @@ class ConversationStoreWorker {
         }
     }
     
-    func toUIModel(conversation: ConversationSQLite?) -> ConversationsModel?{
+    func toUIModel(conversation: Conversation?) -> ConversationsModel?{
         guard let c = conversation else {
             return nil
         }

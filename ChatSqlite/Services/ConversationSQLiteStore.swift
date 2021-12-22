@@ -17,7 +17,8 @@ class ConversationSQLiteStore {
     var id = Expression<String>("id")
     var title = Expression<String>("title")
     var members = Expression<String>("members")
-    var thumbnail = Expression<String>("thumbnail")
+    var theme = Expression<String?>("theme")
+    var thumbnail = Expression<String?>("thumbnail")
     var lastMsg = Expression<String>("lastMsg")
     var timestamp = Expression<String>("timestamp")
 
@@ -25,24 +26,6 @@ class ConversationSQLiteStore {
     init(){
         getInstance(path: "chat-conversation.sqlite")
         createTable()
-        
-    }
-    
-    func getAll( noRecords : Int, noPages: Int, desc : Bool = true, completionHandler: @escaping ([ConversationSQLite]?, StoreError?) -> Void) {
-        do {
-            let queries = table.order(timestamp.desc)
-                .limit(noRecords, offset: noRecords * noPages)
-            
-            let result : [ConversationSQLite] = try db!.prepare(queries).map { row in
-                return try row.decode()
-            }
-            items = result
-            print("fetch all:\(items)")
-            completionHandler(items,nil)
-        } catch let e{
-            print(e.localizedDescription)
-            completionHandler(nil,.cantFetch("Cant fetch"))
-        }
         
     }
     
@@ -54,7 +37,7 @@ class ConversationSQLiteStore {
         let dir = dirs[0]
                 
         let path = dir.appendingPathComponent(subPath)
-        print(path)
+        print(" dtb address: \(path)")
         
         do{
             db = try Connection(path)
@@ -71,6 +54,8 @@ class ConversationSQLiteStore {
             t.column(id, primaryKey: true)
             t.column(title)
             t.column(members)
+           // t.column(theme)
+            t.column(thumbnail)
             t.column(lastMsg)
             t.column(timestamp)
         })
@@ -78,16 +63,43 @@ class ConversationSQLiteStore {
             print(e.localizedDescription)
         }
     }
+}
 
+extension ConversationSQLiteStore : ConversationStore{
     
-    func getWithId(_ id: String, completionHandler: @escaping (ConversationSQLite?, StoreError?) -> Void) {
+
+    func getAll( noRecords : Int, noPages: Int, desc : Bool = true, completionHandler: @escaping ([Conversation]?, StoreError?) -> Void) {
+        do {
+            var queries = table.limit(noRecords, offset: noRecords * noPages)
+                
+            queries = desc ? queries.order(timestamp.desc) : queries.order(timestamp.asc)
+            
+            let result : [ConversationSQLite] = try db!.prepare(queries).map { row in
+                return try row.decode()
+            }
+            items = result
+            completionHandler(items,nil)
+        } catch let e{
+            print(e.localizedDescription)
+            completionHandler(nil,.cantFetch("Cant fetch"))
+        }
+        
+    }
+    
+    func getWithId(_ id: String, completionHandler: @escaping (Conversation?, StoreError?) -> Void) {
         fatalError()
     }
     
-    func create(newItem: ConversationSQLite, completionHandler: @escaping (ConversationSQLite?, StoreError?) -> Void) {
+    func create(newItem: Conversation, completionHandler: @escaping (Conversation?, StoreError?) -> Void) {
+        guard let item = newItem as? ConversationSQLite else {
+            completionHandler(nil, .cantFetch("wrong type"))
+            return
+        }
+        
         do {
+            print(newItem)
 
-            let rowid = try db?.run(table.insert(newItem))
+            let rowid = try db?.run(table.insert(item))
             
             print("Create Conversation row: \(String(describing: rowid))")
             completionHandler(newItem, nil)
@@ -97,16 +109,21 @@ class ConversationSQLiteStore {
         }
     }
     
-    func update(item: ConversationSQLite, completionHandler: @escaping (ConversationSQLite?, StoreError?) -> Void) {
+    func update(item: Conversation, completionHandler: @escaping (Conversation?, StoreError?) -> Void) {
 
-        try! db.run(table.filter(id == item.id).update(item))
+        guard let item = item as? ConversationSQLite else {
+            completionHandler(nil, .cantFetch("wrong type"))
+            return
+        }
+        
+            try! db.run(table.filter(id == item.id).update(item))
     }
     
-    func delete(id: String, completionHandler: @escaping (ConversationSQLite?, StoreError?) -> Void) {
+    func delete(id: String, completionHandler: @escaping (Conversation?, StoreError?) -> Void) {
         fatalError()
     }
     
-    func findWithFriend(_ friend : Friend, completion: @escaping (ConversationSQLite?, StoreError?) -> Void ){
+    func findWithFriend(_ friend : Friend, completion: @escaping (Conversation?, StoreError?) -> Void ){
         print("find conv with friend: \(friend.id)")
         let query = table.filter(members == friend.id)
         

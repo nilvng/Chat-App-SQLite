@@ -12,10 +12,12 @@ protocol MessagesPresenter : AnyObject{
     func presentAllItems(_ items : [Message]?)
     func presentNewItem(_ item : Message)
 }
-class MessagesInteractor {
+
+class MessagesInteractor : MessagesBusinessLogic {
+    
     weak var presenter : MessagesPresenter?
     
-    var store : MessagesSQLStore = MessagesSQLStore()
+    var store : MessagesSQLStore!
     lazy var conversationStore = ConversationStoreWorker.getInstance()
     
     var conversation : ConversationsModel!
@@ -35,7 +37,7 @@ class MessagesInteractor {
             } else {
                 
                 // if conversation not exist
-                self.conversation = ConversationsModel.fromFriend(friend: friend) as! ConversationsModel
+                self.conversation = ConversationsModel.fromFriend(friend: friend)
                 self.presenter?.presentAllItems(nil)
             }
 
@@ -43,11 +45,16 @@ class MessagesInteractor {
 
     }
     
-    func fetchData(conversation: ConversationsModel, noPages: Int = 0){
+    func fetchData(conversation: ConversationsModel){
+        
+        if store == nil {
+            store = MessagesSQLStore(cid: conversation.id)
+        }
+        
         // filter messenges belong to this conversation
         self.conversation = conversation
         store.getAll(conversationID: conversation.id,
-                     noRecords: noRecords, noPages: noPages) { [weak self] msgs, err in
+                     noRecords: noRecords, noPages: 0) { [weak self] msgs, err in
             self?.presenter?.presentAllItems(msgs)
             
         }
@@ -70,7 +77,7 @@ class MessagesInteractor {
         }
     }
 
-    func sendMessenge(content: String, newConv : Bool){
+    func sendMessage(content: String, newConv : Bool){
         var m : MessageSQLite!
         if newConv {
             // create conversation
@@ -101,12 +108,12 @@ class MessagesInteractor {
 
     }
     
-    func updateLastMessage( m: MessageSQLite){
+    func updateLastMessage( m: Message){
         // update lastMessage
         conversation.lastMsg = m.content
         conversation.timestamp = m.timestamp
         
-        conversationStore?.update(item: conversation, completionHandler: {
+        conversationStore.update(item: conversation, completionHandler: {
             c, err in
             if err != nil {
                 print("Successfully update last message.")

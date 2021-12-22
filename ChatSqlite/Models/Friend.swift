@@ -16,22 +16,8 @@ protocol Friend {
     
 }
 
-struct FriendMemo : Friend{
-    var avatar: String?
+struct FriendSqlite : SQLiteModel, Friend {
     
-    var id: String
-    
-    var phoneNumber: String
-    
-    var name: String
-    
-    func firstLetter() -> String?{
-        return String(name.first!.uppercased())
-    }
-
-}
-
-struct FriendSqlite : Friend, Codable{
     var avatar: String?
     
     var id: String

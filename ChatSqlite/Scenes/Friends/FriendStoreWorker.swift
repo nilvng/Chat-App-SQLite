@@ -13,7 +13,7 @@ import Foundation
 // handle callback in main thread
 class FriendStoreWorker {
     
-    var store : FriendSQLiteStore
+    var store : FriendStore
     
     static var shared : FriendStoreWorker!
     
@@ -26,7 +26,7 @@ class FriendStoreWorker {
                                       autoreleaseFrequency: .workItem,
                                       target: nil)
     
-    init (store: FriendSQLiteStore){
+    init (store: FriendStore){
         self.store = store
     }
     
@@ -84,7 +84,7 @@ class FriendStoreWorker {
         fatalError()
     }
     
-    func toUIModel(friend: FriendSqlite?) -> FriendsModel?{
+    func toUIModel(friend: Friend?) -> FriendsModel?{
         guard let f = friend else{
             return nil
         }

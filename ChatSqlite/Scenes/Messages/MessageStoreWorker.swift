@@ -10,9 +10,10 @@ import Foundation
 // converting models from and to UI format
 // handle callback in main thread
 class MessageStoreWorker {
-    var store : MessagesSQLStore
     
-    init (store: MessagesSQLStore){
+    var store : MessageStore
+    
+    init (store: MessageStore){
         self.store = store
     }
     

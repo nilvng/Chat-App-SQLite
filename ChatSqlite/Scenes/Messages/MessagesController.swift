@@ -7,13 +7,20 @@
 
 import UIKit
 
+protocol MessagesBusinessLogic {
+    func fetchData(friend: Friend)
+    func fetchData(conversation: ConversationsModel)
+    func onScroll(tableOffset: CGFloat)
+    func sendMessage(content: String, newConv: Bool)
+}
+
 class MessagesController: UITableViewController {
 
     typealias lastMsgAction = (Message) -> Void
     
     var updateLastMsgAction : lastMsgAction?
     
-    var interactor : MessagesInteractor?
+    var interactor : MessagesBusinessLogic?
     
     var items : [Message] = []
     var conversation : ConversationsModel?
@@ -68,11 +75,11 @@ class MessagesController: UITableViewController {
         if let _ = conversation {
             print("old chat")
 
-            interactor?.sendMessenge(content: text, newConv: false)
+            interactor?.sendMessage(content: text, newConv: false)
 
         } else {
 
-            interactor?.sendMessenge(content: text, newConv: isNew)
+            interactor?.sendMessage(content: text, newConv: isNew)
             isNew = false
         }
 

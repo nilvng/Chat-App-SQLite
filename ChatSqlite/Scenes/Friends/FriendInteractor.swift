@@ -12,7 +12,7 @@ protocol FriendPresenter {
     func presentNewItems(_ item : FriendsModel)
 }
 
-class FriendInteractor {
+class FriendInteractor : FriendsBusinessLogic{
     var store : FriendStoreWorker
     var presenter : FriendPresenter? = nil
     
@@ -20,7 +20,7 @@ class FriendInteractor {
         self.store = FriendStoreWorker.getInstance(store: store)
     }
     
-    func getAll(){
+    func fetchData(){
         store.getAll(completionHandler: { [weak self] items, err in
             if let friends = items{
                 self?.presenter?.presentItems(friends)

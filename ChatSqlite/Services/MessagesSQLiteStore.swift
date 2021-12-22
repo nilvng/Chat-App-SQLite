@@ -19,36 +19,24 @@ class MessagesSQLStore {
     var type = Expression<String>("type")
     var sender = Expression<String>("sender")
     
+    var conversationID : String
+    
     let serialQueue = DispatchQueue(
         label: "zalo.chatApp.messagesStore",
         qos: .userInitiated,
         autoreleaseFrequency: .workItem,
         target: nil)
     
-    init(){
+    init(cid: String){
+        
+        conversationID = cid
+
         getInstance(path: "chat-message.sqlite")
         createTable()
         
     }
     
-    func getAll(conversationID: String, noRecords : Int, noPages: Int, desc : Bool = true, completionHandler: @escaping ([MessageSQLite]?, StoreError?) -> Void) {
-        print(conversationID)
-            
-        do {
-            let queries = table.filter(cid == conversationID)
-                .order(timestamp.desc)
-                .limit(noRecords, offset: noRecords * noPages)
-            
-            let result : [MessageSQLite] = try db!.prepare(queries).map { row in
-                return try row.decode()
-            }
-            completionHandler(result,nil)
-        } catch let e{
-            print(e.localizedDescription)
-            completionHandler(nil,.cantFetch("Cant fetch"))
-            }
-        }
-        
+
     
     
     func getInstance(path subPath : String){
@@ -82,15 +70,41 @@ class MessagesSQLStore {
             print(e.localizedDescription)
         }
     }
-
     
-    func getWithId(_ id: String, completionHandler: @escaping (MessageSQLite?, StoreError?) -> Void) {
+}
+extension MessagesSQLStore : MessageStore{
+    func getAll(conversationID: String, noRecords : Int, noPages: Int, desc : Bool = true, completionHandler: @escaping ([Message]?, StoreError?) -> Void) {
+        print(conversationID)
+            
+        do {
+            let queries = table.filter(cid == conversationID)
+                .order(timestamp.desc)
+                .limit(noRecords, offset: noRecords * noPages)
+            
+            let result : [MessageSQLite] = try db!.prepare(queries).map { row in
+                return try row.decode()
+            }
+            completionHandler(result,nil)
+        } catch let e{
+            print(e.localizedDescription)
+            completionHandler(nil,.cantFetch("Cant fetch"))
+            }
+        }
+        
+    
+    func getWithId(_ id: String, completionHandler: @escaping (Message?, StoreError?) -> Void) {
         fatalError()
     }
     
-    func create(newItem: MessageSQLite, completionHandler: @escaping (MessageSQLite?, StoreError?) -> Void) {
+    func create(newItem: Message, completionHandler: @escaping (Message?, StoreError?) -> Void) {
+        
+        guard let item = newItem as? MessageSQLite else {
+            completionHandler(nil, .cantFetch("wrong type"))
+            return
+        }
+        
         do {
-            let rowid = try db?.run(table.insert(newItem))
+            let rowid = try db?.run(table.insert(item))
             
             print("Create Messenge row: \(String(describing: rowid))")
             completionHandler(newItem, nil)
@@ -100,11 +114,15 @@ class MessagesSQLStore {
         }
     }
     
-    func update(item: MessageSQLite, completionHandler: @escaping (MessageSQLite?, StoreError?) -> Void) {
+    func update(item: Message, completionHandler: @escaping (Message?, StoreError?) -> Void) {
+        guard let item = item as? MessageSQLite else {
+            completionHandler(nil, .cantFetch("wrong type"))
+            return
+        }
         fatalError()
     }
     
-    func delete(id: String, completionHandler: @escaping (MessageSQLite?, StoreError?) -> Void) {
+    func delete(id: String, completionHandler: @escaping (Message?, StoreError?) -> Void) {
         fatalError()
     }
     
