@@ -16,9 +16,9 @@ protocol ConversationPresenter : AnyObject {
 class ConversationInteractor : ConversationsBusinessLogic{
     var store : ConversationStoreWorker
     weak var presenter : ConversationPresenter?
-    var noRecords : Int = 13
+    var noRecords : Int = 20
     var currPage = 0
-    var offset : CGFloat = 30
+    var offset : CGFloat = 300
     
     init(store: ConversationStoreWorker){
         self.store = store
@@ -55,7 +55,9 @@ class ConversationInteractor : ConversationsBusinessLogic{
         currPage = pages
         
         store.getAll(noPages: pages, noRecords: noRecords) { [weak self] items, err in
-            if items == nil || items!.isEmpty {return}
+            if items == nil || items!.isEmpty {
+                print("empty fetch!")
+                return}
             self?.presenter?.presentAllItems(items)
             
         }

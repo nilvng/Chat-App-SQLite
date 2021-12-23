@@ -18,19 +18,15 @@ class MessagesSQLStore {
     var timestamp = Expression<Date>("timestamp")
     var type = Expression<String>("type")
     var sender = Expression<String>("sender")
-    
-    var conversationID : String
-    
+        
     let serialQueue = DispatchQueue(
         label: "zalo.chatApp.messagesStore",
         qos: .userInitiated,
         autoreleaseFrequency: .workItem,
         target: nil)
     
-    init(cid: String){
+    init(){
         
-        conversationID = cid
-
         getInstance(path: "chat-message.sqlite")
         createTable()
         

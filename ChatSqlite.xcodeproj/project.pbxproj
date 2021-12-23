@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E15EC3227742B790082FA1B /* MessageWorkerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15EC3127742B790082FA1B /* MessageWorkerManager.swift */; };
 		0E2395B927708340006B2DE2 /* FriendsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2395B827708340006B2DE2 /* FriendsModel.swift */; };
 		0E2395BB2770834C006B2DE2 /* ConversationsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2395BA2770834C006B2DE2 /* ConversationsModel.swift */; };
 		0E2395BD2770835A006B2DE2 /* MessagesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2395BC2770835A006B2DE2 /* MessagesModel.swift */; };
@@ -35,6 +36,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0E15EC3127742B790082FA1B /* MessageWorkerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageWorkerManager.swift; sourceTree = "<group>"; };
 		0E2395B827708340006B2DE2 /* FriendsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsModel.swift; sourceTree = "<group>"; };
 		0E2395BA2770834C006B2DE2 /* ConversationsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsModel.swift; sourceTree = "<group>"; };
 		0E2395BC2770835A006B2DE2 /* MessagesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesModel.swift; sourceTree = "<group>"; };
@@ -75,6 +77,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0EDA95782774628700646051 /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				0E15EC3127742B790082FA1B /* MessageWorkerManager.swift */,
+				0E6666BC2771882A00786E57 /* MessageStoreWorker.swift */,
+			);
+			path = Manager;
+			sourceTree = "<group>";
+		};
 		0EFDD93A276B72C400323984 = {
 			isa = PBXGroup;
 			children = (
@@ -94,6 +105,7 @@
 		0EFDD945276B72C400323984 /* ChatSqlite */ = {
 			isa = PBXGroup;
 			children = (
+				0EDA95782774628700646051 /* Manager */,
 				0EFDD946276B72C400323984 /* AppDelegate.swift */,
 				0EFDD948276B72C400323984 /* SceneDelegate.swift */,
 				0EFDD95F276B79C300323984 /* Models */,
@@ -166,7 +178,6 @@
 				0EFDD976276C2C2A00323984 /* MessagesController.swift */,
 				0EFDD978276C2C4700323984 /* MessagesInteractor.swift */,
 				0E2395BC2770835A006B2DE2 /* MessagesModel.swift */,
-				0E6666BC2771882A00786E57 /* MessageStoreWorker.swift */,
 			);
 			path = Messages;
 			sourceTree = "<group>";
@@ -266,6 +277,7 @@
 				0EFDD949276B72C400323984 /* SceneDelegate.swift in Sources */,
 				0E2395BB2770834C006B2DE2 /* ConversationsModel.swift in Sources */,
 				0E2395B927708340006B2DE2 /* FriendsModel.swift in Sources */,
+				0E15EC3227742B790082FA1B /* MessageWorkerManager.swift in Sources */,
 				0EFDD96B276B7A5400323984 /* Message.swift in Sources */,
 				0ED7F026277198AD00ABBAB1 /* FriendStoreWorker.swift in Sources */,
 				0EFDD979276C2C4700323984 /* MessagesInteractor.swift in Sources */,

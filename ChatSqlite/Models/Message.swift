@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SQLite
 
 enum MessageType : String, Codable {
     case text, image, gif
@@ -34,7 +35,20 @@ struct MessageSQLite : SQLiteModel, Message {
     
     var sender: String
     
-    
+    enum MsgExpression {
+        case cid
+        case content
+        
+//        func getExpression() -> Expression<Any>{
+//            switch self{
+//            case .cid:
+//                return Expression<String>("cid")
+//
+//            case .content:
+//                return Expression<String>("content")
+//            }
+//        }
+    }
 }
 
 

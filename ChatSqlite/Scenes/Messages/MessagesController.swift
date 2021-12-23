@@ -53,6 +53,7 @@ class MessagesController: UITableViewController {
         interactor = inter
     }
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -78,7 +79,7 @@ class MessagesController: UITableViewController {
             interactor?.sendMessage(content: text, newConv: false)
 
         } else {
-
+            print("new chat")
             interactor?.sendMessage(content: text, newConv: isNew)
             isNew = false
         }

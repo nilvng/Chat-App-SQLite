@@ -17,17 +17,17 @@ class MessagesInteractor : MessagesBusinessLogic {
     
     weak var presenter : MessagesPresenter?
     
-    var store : MessagesSQLStore!
+    var store : MessageStoreWorker?
     lazy var conversationStore = ConversationStoreWorker.getInstance()
     
     var conversation : ConversationsModel!
-    var noRecords : Int = 13
+    
+    var noRecords : Int = 20
     var offSet : CGFloat {
-        CGFloat(noRecords * 2)
+        CGFloat(300)
     }
     var currPage = 0
-    
-    
+        
     func fetchData(friend : Friend){
         // find conversation with friend
         conversationStore.findWithFriend(friend){ res, err in
@@ -46,66 +46,77 @@ class MessagesInteractor : MessagesBusinessLogic {
     }
     
     func fetchData(conversation: ConversationsModel){
-        
-        if store == nil {
-            store = MessagesSQLStore(cid: conversation.id)
-        }
-        
+
         // filter messenges belong to this conversation
         self.conversation = conversation
-        store.getAll(conversationID: conversation.id,
-                     noRecords: noRecords, noPages: 0) { [weak self] msgs, err in
+        
+        createWorker(cid: conversation.id)
+        store!.getAll(noRecords: noRecords, noPages: 0) { [weak self] msgs, err in
             self?.presenter?.presentAllItems(msgs)
             
         }
     }
     
+    func createWorker(cid : String){
+        if store == nil {
+            self.store = MessageWorkerManager.shared.get(cid: cid)
+            
+        }
+    }
+    
     func onScroll(tableOffset : CGFloat){
-        print(tableOffset)
+        //print(tableOffset)
         let pages = Int(tableOffset / offSet)
-        print(pages)
         guard pages - currPage >= 1 else {
             return
         }
         currPage = pages
-        
-        store.getAll(conversationID: conversation.id,
-                     noRecords: noRecords, noPages: pages) { [weak self] msgs, err in
-            if msgs == nil || msgs!.isEmpty {return}
+        print(pages)
+
+        store?.getAll(noRecords: noRecords, noPages: currPage) { [weak self] msgs, err in
+            if msgs == nil || msgs!.isEmpty || err != nil {
+                print("empty fetch!: \(String(describing: self?.currPage))")
+                return
+                
+            } // empty result -> no need to present
             self?.presenter?.presentAllItems(msgs)
             
         }
     }
 
-    func sendMessage(content: String, newConv : Bool){
-        var m : MessageSQLite!
+    func sendMessage(content: String, newConv : Bool  = true){
         if newConv {
             // create conversation
             conversationStore.create(newItem: self.conversation, completionHandler: { [weak self] c, err in
-                guard let conv = c else {
+                guard let c = c else {
                     return
                 }
-                m = MessageSQLite(cid: conv.id, content: content, type: .text, timestamp: Date(), sender: "1")
-                // create new messege
-                self?.store.create(newItem: m, completionHandler: { msg, err in
-                    if msg != nil && err == nil {
-                        self?.updateLastMessage(m: msg!)
-                        self?.presenter?.presentNewItem(msg!)
-                    }
-                })
+                self?.conversation = c
+                print("Conversation added.")
+                self?.saveMessage(content: content)
             })
         } else {
             // create messenge
-            m = MessageSQLite(cid: conversation.id, content: content, type: .text, timestamp: Date(), sender: "1")
-            store.create(newItem: m, completionHandler: {  [weak self] msg, err in
-                if msg != nil && err == nil {
-                    self?.updateLastMessage(m: msg!)
-                    self?.presenter?.presentNewItem(msg!)
-                }
-            })
+            saveMessage(content: content)
         }
         
 
+    }
+    
+    func saveMessage(content: String){
+        let m = MessageSQLite(cid: conversation.id, content: content, type: .text, timestamp: Date(), sender: "1")
+        
+        createWorker(cid: conversation.id) // if needed
+        
+        store!.add(newItem: m, completionHandler: {  [weak self] msg, err in
+            if msg != nil && err == nil {
+                print("Messages saved.")
+                self?.updateLastMessage(m: msg!)
+                self?.presenter?.presentNewItem(msg!)
+            } else {
+                print(err?.localizedDescription ?? "Unknown error")
+            }
+        })
     }
     
     func updateLastMessage( m: Message){

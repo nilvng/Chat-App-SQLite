@@ -57,6 +57,8 @@ class ConversationStoreWorker {
     }
 
     func create(newItem: ConversationsModel, completionHandler: @escaping (ConversationsModel?, StoreError?) -> Void) {
+        
+        print("conv create..")
         self.utilityQueue.async {
             // preprocess
             let item = self.toDtbModel(conversation: newItem)
