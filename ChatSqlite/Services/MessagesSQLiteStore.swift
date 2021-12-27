@@ -8,7 +8,9 @@
 import Foundation
 import SQLite
 
-class MessagesSQLStore {
+class MessagesSQLStore : MessageDataLogic {
+    var conversationID: String
+    
     
     var db : Connection?
     
@@ -18,6 +20,7 @@ class MessagesSQLStore {
     var timestamp = Expression<Date>("timestamp")
     var type = Expression<String>("type")
     var sender = Expression<String>("sender")
+    
         
     let serialQueue = DispatchQueue(
         label: "zalo.chatApp.messagesStore",
@@ -26,7 +29,7 @@ class MessagesSQLStore {
         target: nil)
     
     init(){
-        
+        conversationID = "" // testing only
         getInstance(path: "chat-message.sqlite")
         createTable()
         
@@ -68,14 +71,16 @@ class MessagesSQLStore {
     }
     
 }
-extension MessagesSQLStore : MessageStore{
-    func getAll(conversationID: String, noRecords : Int, noPages: Int, desc : Bool = true, completionHandler: @escaping ([Message]?, StoreError?) -> Void) {
-        print(conversationID)
+extension MessagesSQLStore{
+
+    
+    func getAll(noRecords : Int, noPages: Int, desc : Bool = false, completionHandler: @escaping ([Message]?, StoreError?) -> Void) {
             
         do {
-            let queries = table.filter(cid == conversationID)
-                .order(timestamp.desc)
+            var queries = table.filter(cid == conversationID)
                 .limit(noRecords, offset: noRecords * noPages)
+            
+            queries = desc ? queries.order(timestamp.desc) : queries.order(timestamp.asc)
             
             let result : [MessageSQLite] = try db!.prepare(queries).map { row in
                 return try row.decode()
@@ -92,7 +97,7 @@ extension MessagesSQLStore : MessageStore{
         fatalError()
     }
     
-    func create(newItem: Message, completionHandler: @escaping (Message?, StoreError?) -> Void) {
+    func add(newItem: Message, completionHandler: @escaping (Message?, StoreError?) -> Void) {
         
         guard let item = newItem as? MessageSQLite else {
             completionHandler(nil, .cantFetch("wrong type"))

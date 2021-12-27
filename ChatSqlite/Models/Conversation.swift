@@ -25,30 +25,47 @@ extension Theme {
 
 protocol Conversation {
 
-    var theme: String? {get}
-    var thumbnail: String? {get}
-    var title: String {get}
-    var id: String {get}
-    var members: String {get}
-    var lastMsg : String {get set}
-    var timestamp : Date {get set}
-
+    var theme: String? {get set}
+    var thumbnail: String? {get set}
+    var title: String! {get set}
+    var id: String! {get set}
+    var members: String! {get set}
+    var lastMsg : String! {get set}
+    var timestamp : Date! {get set}
+    func toUIModel() -> ConversationsModel
+    mutating func fromUIModel(c : ConversationsModel)
 }
 
 struct ConversationSQLite : SQLiteModel, Conversation {
+    func toUIModel() -> ConversationsModel {
+    return ConversationsModel(theme: theme, thumbnail: thumbnail, title: title, id: id, members: members, lastMsg: lastMsg, timestamp: timestamp)
+    }
+    
+    mutating func fromUIModel(c: ConversationsModel){
+    theme =  c.theme
+    thumbnail = c.thumbnail
+    title = c.title
+    id = c.id
+    members = c.members
+    lastMsg = c.lastMsg
+    timestamp = c.timestamp
+    }
+    
+    init(){}
+    
     
     var theme: String?
     
     var thumbnail: String?
     
-    var title: String
+    var title: String!
     
-    var id: String
+    var id: String!
     
-    var members: String
+    var members: String!
 
-    var lastMsg : String
+    var lastMsg : String!
     
-    var timestamp: Date
+    var timestamp: Date!
     
 }

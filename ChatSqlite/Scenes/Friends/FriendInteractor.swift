@@ -12,7 +12,7 @@ protocol FriendPresenter {
     func presentNewItems(_ item : FriendsModel)
 }
 
-class FriendInteractor : FriendsBusinessLogic{
+class FriendInteractor : FriendsDisplayLogic{
     var store : FriendStoreWorker
     var presenter : FriendPresenter? = nil
     

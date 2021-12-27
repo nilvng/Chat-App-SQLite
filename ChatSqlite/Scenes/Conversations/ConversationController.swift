@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol ConversationsBusinessLogic {
+protocol ConversationsDisplayLogic {
     func fetchData()
     func addItem(_ conversation : ConversationsModel)
     func onScroll(tableOffset: CGFloat)
@@ -15,7 +15,7 @@ protocol ConversationsBusinessLogic {
 
 class ConversationController: UITableViewController {
 
-    var interactor : ConversationsBusinessLogic?
+    var interactor : ConversationsDisplayLogic?
     var conversations : [ConversationsModel] = []
     var cellId = "convCell"
     
@@ -35,7 +35,8 @@ class ConversationController: UITableViewController {
     }
     
     func setup() {
-        let inter = ConversationInteractor(store: ConversationStoreWorker.getInstance(store: ConversationSQLiteStore()))
+        let dataLogic : ConversationDataLogic = ConversationStoreProxy.shared
+        let inter = ConversationInteractor(store: dataLogic)
         inter.presenter = self
         interactor = inter
     }

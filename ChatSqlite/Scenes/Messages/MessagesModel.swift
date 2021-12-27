@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MessagesModel : Message {
+struct MessagesModel {
     var cid: String
     
     var content: String

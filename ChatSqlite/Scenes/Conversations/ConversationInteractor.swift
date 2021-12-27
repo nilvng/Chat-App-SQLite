@@ -13,32 +13,37 @@ protocol ConversationPresenter : AnyObject {
     func presentNewItems(_ item : ConversationsModel)
 }
 
-class ConversationInteractor : ConversationsBusinessLogic{
-    var store : ConversationStoreWorker
+class ConversationInteractor : ConversationsDisplayLogic{
+    var store : ConversationDataLogic
     weak var presenter : ConversationPresenter?
     var noRecords : Int = 20
     var currPage = 0
     var offset : CGFloat = 300
     
-    init(store: ConversationStoreWorker){
+    init(store: ConversationDataLogic){
         self.store = store
     }
     
     
     func fetchData(){
-        store.getAll(noPages: 0, noRecords: noRecords, completionHandler: { [weak self] items, err in
-            if let convs = items {
-                self?.presenter?.presentAllItems(convs)
+        store.getAll(noRecords: noRecords, noPages: 0, desc: true, completionHandler: { [weak self] res, err in
+            if let convs = res {
+                
+                // Convert into data model
+                let items = convs.map { $0.toUIModel() }
+                
+                self?.presenter?.presentAllItems(items)
             } else {
                 print(err?.localizedDescription ?? "")
             }
         })
     }
     func addItem(_ item : ConversationsModel){
-
-        store.create(newItem: item, completionHandler: { [weak self] item, err in
+        // map to db model
+        let i = toDtbModel(item)
+        store.add(newItem: i, completionHandler: { [weak self] item, err in
             if let i = item {
-                self?.presenter?.presentNewItems(i)
+                self?.presenter?.presentNewItems(i.toUIModel())
             } else {
                 print(err?.localizedDescription ?? "")
             }
@@ -54,13 +59,20 @@ class ConversationInteractor : ConversationsBusinessLogic{
         }
         currPage = pages
         
-        store.getAll(noPages: pages, noRecords: noRecords) { [weak self] items, err in
-            if items == nil || items!.isEmpty {
+        store.getAll(noRecords: noRecords, noPages: pages, desc: true) { [weak self] res, err in
+            if res == nil || res!.isEmpty {
                 print("empty fetch!")
                 return}
+            
+            let items = res!.map { $0.toUIModel() }
+
             self?.presenter?.presentAllItems(items)
             
         }
     }
-    
+    func toDtbModel(_ conversation: ConversationsModel) -> Conversation{
+        var c =  ConversationSQLite()
+        c.fromUIModel(c: conversation)
+        return c
+    }
 }

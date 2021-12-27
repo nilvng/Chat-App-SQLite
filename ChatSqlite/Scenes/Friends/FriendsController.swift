@@ -7,14 +7,14 @@
 
 import UIKit
 
-protocol FriendsBusinessLogic {
+protocol FriendsDisplayLogic {
     func fetchData()
     func addItem(_ item: FriendsModel)
 }
 
 class FriendsController: UITableViewController {
 
-    var interactor : FriendsBusinessLogic?
+    var interactor : FriendsDisplayLogic?
     var friends : [FriendsModel] = []
     
     override func viewDidLoad() {

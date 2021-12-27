@@ -88,7 +88,7 @@ extension FriendSQLiteStore : FriendStore{
     
     func update(item: Friend, completionHandler: @escaping (Friend?, StoreError?) -> Void) {
         guard let item = item as? FriendSqlite else {
-            completionHandler(nil, .cantFetch("wrong type"))
+            completionHandler(nil, .cantUpdate("wrong type"))
             return
         }
         fatalError()

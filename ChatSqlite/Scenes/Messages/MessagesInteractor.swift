@@ -13,12 +13,12 @@ protocol MessagesPresenter : AnyObject{
     func presentNewItem(_ item : Message)
 }
 
-class MessagesInteractor : MessagesBusinessLogic {
+class MessagesInteractor : MessagesDislayLogic {
     
     weak var presenter : MessagesPresenter?
     
-    var store : MessageStoreWorker?
-    lazy var conversationStore = ConversationStoreWorker.getInstance()
+    var store : MessageDataLogic?
+    lazy var conversationStore = ConversationStoreProxy.shared
     
     var conversation : ConversationsModel!
     
@@ -33,7 +33,7 @@ class MessagesInteractor : MessagesBusinessLogic {
         conversationStore.findWithFriend(friend){ res, err in
             // found it
             if let c = res {
-                self.fetchData(conversation: c)
+                self.fetchData(conversation: c.toUIModel())
             } else {
                 
                 // if conversation not exist
@@ -51,7 +51,7 @@ class MessagesInteractor : MessagesBusinessLogic {
         self.conversation = conversation
         
         createWorker(cid: conversation.id)
-        store!.getAll(noRecords: noRecords, noPages: 0) { [weak self] msgs, err in
+        store!.getAll(noRecords: noRecords, noPages: 0, desc: false) { [weak self] msgs, err in
             self?.presenter?.presentAllItems(msgs)
             
         }
@@ -73,7 +73,7 @@ class MessagesInteractor : MessagesBusinessLogic {
         currPage = pages
         print(pages)
 
-        store?.getAll(noRecords: noRecords, noPages: currPage) { [weak self] msgs, err in
+        store?.getAll(noRecords: noRecords, noPages: currPage, desc: false) { [weak self] msgs, err in
             if msgs == nil || msgs!.isEmpty || err != nil {
                 print("empty fetch!: \(String(describing: self?.currPage))")
                 return
@@ -87,11 +87,11 @@ class MessagesInteractor : MessagesBusinessLogic {
     func sendMessage(content: String, newConv : Bool  = true){
         if newConv {
             // create conversation
-            conversationStore.create(newItem: self.conversation, completionHandler: { [weak self] c, err in
+            conversationStore.add(newItem: toDbConversationModel(conversation), completionHandler: { [weak self] c, err in
                 guard let c = c else {
                     return
                 }
-                self?.conversation = c
+                self?.conversation = c.toUIModel()
                 print("Conversation added.")
                 self?.saveMessage(content: content)
             })
@@ -104,11 +104,11 @@ class MessagesInteractor : MessagesBusinessLogic {
     }
     
     func saveMessage(content: String){
-        let m = MessageSQLite(cid: conversation.id, content: content, type: .text, timestamp: Date(), sender: "1")
+        let m = MessagesModel(cid: conversation.id, content: content, type: .text, timestamp: Date(), sender: "1")
         
         createWorker(cid: conversation.id) // if needed
         
-        store!.add(newItem: m, completionHandler: {  [weak self] msg, err in
+        store!.add(newItem: toDbMsgModel(m), completionHandler: {  [weak self] msg, err in
             if msg != nil && err == nil {
                 print("Messages saved.")
                 self?.updateLastMessage(m: msg!)
@@ -124,17 +124,24 @@ class MessagesInteractor : MessagesBusinessLogic {
         conversation.lastMsg = m.content
         conversation.timestamp = m.timestamp
         
-        conversationStore.update(item: conversation, completionHandler: {
+        conversationStore.update(item: toDbConversationModel(conversation), completionHandler: {
             c, err in
-            if err != nil {
+            if err == nil {
                 print("Successfully update last message.")
             } else {
-                print(err!.localizedDescription)
+                print(err?.localizedDescription  ?? "weird error")
             }
         })
     }
     
-    func toDtbModel(conversation: Conversation) -> ConversationSQLite{
-        return ConversationSQLite(theme: conversation.theme, thumbnail: conversation.thumbnail, title: conversation.title, id: conversation.id, members: conversation.members, lastMsg: conversation.lastMsg, timestamp: conversation.timestamp)
+    func toDbConversationModel(_ conversation: ConversationsModel) -> Conversation{
+        var  i = ConversationSQLite()
+        i.fromUIModel(c: conversation)
+        return i
+    }
+    func toDbMsgModel(_ message: MessagesModel) -> Message{
+        var  i = MessageSQLite()
+        i.fromUIModel(c: message)
+        return i
     }
 }

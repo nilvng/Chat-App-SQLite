@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol MessagesBusinessLogic {
+protocol MessagesDislayLogic {
     func fetchData(friend: Friend)
     func fetchData(conversation: ConversationsModel)
     func onScroll(tableOffset: CGFloat)
@@ -20,7 +20,7 @@ class MessagesController: UITableViewController {
     
     var updateLastMsgAction : lastMsgAction?
     
-    var interactor : MessagesBusinessLogic?
+    var interactor : MessagesDislayLogic?
     
     var items : [Message] = []
     var conversation : ConversationsModel?
@@ -57,7 +57,7 @@ class MessagesController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        navigationItem.title = "Messenges"
+        navigationItem.title = conversation?.title
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
                                                             target: self,
                                                             action: #selector(addMess))

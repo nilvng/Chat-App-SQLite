@@ -13,27 +13,46 @@ enum MessageType : String, Codable {
 }
 
 protocol Message{
-    var cid : String {get set}
-    var content : String {get}
-    var type : MessageType {get}
-    var timestamp : Date {get}
-    var sender : String {get}
+    var cid : String! {get set}
+    var content : String! {get}
+    var type : MessageType! {get}
+    var timestamp : Date! {get}
+    var sender : String! {get}
+    
+    func toUIModel() -> MessagesModel
+    
+    mutating func fromUIModel(c: MessagesModel)
 }
 
 protocol SQLiteModel : Codable{
-    
+
 }
 
 struct MessageSQLite : SQLiteModel, Message {
-    var cid : String
+    func toUIModel() -> MessagesModel {
+        return MessagesModel(cid: cid, content: content, type: type, timestamp: timestamp, sender: sender)
+    }
+    
+    mutating func fromUIModel(c: MessagesModel) {
+        cid = c.cid
+        content = c.content
+        self.type = c.type
+        self.timestamp = c.timestamp
+        self.sender = c.sender
+    }
+    
+    var cid : String!
 
-    var content: String
+    var content: String!
     
-    var type: MessageType
+    var type: MessageType!
     
-    var timestamp: Date
+    var timestamp: Date!
     
-    var sender: String
+    var sender: String!
+    
+    init(){
+    }
     
     enum MsgExpression {
         case cid

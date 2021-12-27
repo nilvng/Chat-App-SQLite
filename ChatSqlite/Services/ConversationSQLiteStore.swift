@@ -54,7 +54,7 @@ class ConversationSQLiteStore {
             t.column(id, primaryKey: true)
             t.column(title)
             t.column(members)
-           // t.column(theme)
+            t.column(theme)
             t.column(thumbnail)
             t.column(lastMsg)
             t.column(timestamp)
@@ -65,7 +65,7 @@ class ConversationSQLiteStore {
     }
 }
 
-extension ConversationSQLiteStore : ConversationStore{
+extension ConversationSQLiteStore : ConversationDataLogic{
     
 
     func getAll( noRecords : Int, noPages: Int, desc : Bool = true, completionHandler: @escaping ([Conversation]?, StoreError?) -> Void) {
@@ -90,7 +90,7 @@ extension ConversationSQLiteStore : ConversationStore{
         fatalError()
     }
     
-    func create(newItem: Conversation, completionHandler: @escaping (Conversation?, StoreError?) -> Void) {
+    func add(newItem: Conversation, completionHandler: @escaping (Conversation?, StoreError?) -> Void) {
         guard let item = newItem as? ConversationSQLite else {
             completionHandler(nil, .cantFetch("wrong type"))
             return
@@ -115,8 +115,13 @@ extension ConversationSQLiteStore : ConversationStore{
             completionHandler(nil, .cantFetch("wrong type"))
             return
         }
-        
-            try! db.run(table.filter(id == item.id).update(item))
+        do {
+            try db.run(table.filter(id == item.id).update(item))
+            print("update conversation: \(String(describing: item.id))")
+            completionHandler(item,nil)
+        } catch let e {
+            completionHandler(nil, .cantUpdate(e.localizedDescription))
+        }
     }
     
     func delete(id: String, completionHandler: @escaping (Conversation?, StoreError?) -> Void) {

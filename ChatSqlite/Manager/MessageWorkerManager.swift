@@ -9,18 +9,18 @@ import Foundation
 
 class MessageWorkerManager{
     static var shared = MessageWorkerManager()
-    var workers = [String: MessageStoreWorker]()
+    var workers = [String: MessageDataLogic]()
     
     private init(){
         
     }
     
-    func get(cid: String) -> MessageStoreWorker{
+    func get(cid: String) -> MessageDataLogic{
         if let w = workers[cid] {
             return w
         }
-        // create worker
-        let w = MessageStoreWorker(cid: cid)
+        // create proxy worker
+        let w = MessageStoreProxy(cid: cid)
         workers[cid] = w
         return w
     }

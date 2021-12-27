@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ConversationsModel : Conversation {
+struct ConversationsModel {
     static func fromFriend(friend: Friend) -> ConversationsModel {
         return ConversationsModel(theme: nil, thumbnail: nil,
                                   title: friend.name, id: UUID().uuidString,
