@@ -6,19 +6,19 @@
 //
 
 import Foundation
-
+// MARK: DataLogic protocol
 protocol ConversationDataLogic {
     
     func getAll( noRecords : Int, noPages: Int, desc : Bool, completionHandler: @escaping ([Conversation]?, StoreError?) -> Void)
     func getWithId(_ id: String, completionHandler: @escaping (Conversation?, StoreError?) -> Void)
     func add(newItem: Conversation, completionHandler: @escaping (Conversation?, StoreError?) -> Void)
-    func delete(id: String, completionHandler: @escaping (Conversation?, StoreError?) -> Void)
+    func delete(id: String, completionHandler: @escaping (StoreError?) -> Void)
     func update(item: Conversation,completionHandler : @escaping (Conversation?, StoreError?) -> Void)
-    func findWithFriend(_ friend : Friend, completion: @escaping (Conversation?, StoreError?) -> Void )
+    func findWithFriend(id : String, completion: @escaping (Conversation?, StoreError?) -> Void )
 }
 
-class ConversationStoreProxy : ConversationDataLogic {
-    
+// MARK: Class
+class ConversationStoreProxy {
     var store : ConversationDataLogic = ConversationSQLiteStore()
     
     var items : [Conversation] = []
@@ -31,9 +31,85 @@ class ConversationStoreProxy : ConversationDataLogic {
                                       qos: .utility,
                                       autoreleaseFrequency: .workItem,
                                       target: nil)
-    init (){
+    private init (){
         print("Conversation Manager created.")
     }
+}
+
+// MARK: ConversationService
+extension ConversationStoreProxy : ConversationService {
+    
+    func fetchAllItems(noRecords: Int, noPages: Int, desc: Bool, completionHandler: @escaping ([ConversationDomain]?, StoreError?) -> Void) {
+        
+        self.getAll(noRecords: noRecords, noPages: noPages, completionHandler: { res, err in
+            if let items = res {
+                let mappedItems = items.map { $0.toUIModel() }
+                completionHandler(mappedItems, err)
+            } else {
+                completionHandler(nil,err)
+            }
+        })
+    }
+    
+    func fetchItemWithId(_ id: String, completionHandler: @escaping (ConversationDomain?, StoreError?) -> Void) {
+        self.getWithId(id, completionHandler: { res, err in
+            if let item = res {
+                let mappedItems = item.toUIModel()
+                completionHandler(mappedItems, err)
+            } else {
+                completionHandler(nil, err)
+            }
+        })
+    }
+    
+    func updateItem(_ item: ConversationDomain, completionHandler: @escaping (ConversationDomain?, StoreError?) -> Void) {
+        let mappedItem = toDtbModel(item)
+        self.update(item: mappedItem, completionHandler: { res, err in
+            if let resItem = res {
+                completionHandler(self.toUIModel(resItem), err)
+            } else {
+                completionHandler(nil, err)
+            }
+        })
+    }
+    
+    func deleteItem(id: String, completionHandler: @escaping (StoreError?) -> Void) {
+        self.delete(id: id, completionHandler: completionHandler)
+    }
+    
+    func createItem(_ item: ConversationDomain, completionHandler: @escaping (ConversationDomain?, StoreError?) -> Void) {
+        let mappedItem = toDtbModel(item)
+        self.add(newItem: mappedItem, completionHandler: { res, err in
+            if let item = res {
+                completionHandler(item.toUIModel(), err)
+            } else {
+                completionHandler(nil, err)
+            }
+        })
+    }
+
+    func findItemWithFriend(id: String, completion: @escaping (ConversationDomain?, StoreError?) -> Void) {
+        self.findWithFriend(id: id, completion: { res, err in
+            if let resItem = res {
+                completion(self.toUIModel(resItem), err)
+            } else {
+                completion(nil, err)
+            }
+        })
+    }
+    func toDtbModel(_ conversation: ConversationDomain) -> Conversation{
+        var c =  ConversationSQLite()
+        c.fromUIModel(c: conversation)
+        return c
+    }
+    func toUIModel(_ conversation: Conversation) -> ConversationDomain{
+        return conversation.toUIModel()
+    }
+    
+}
+
+// MARK: ConversationDataLogic
+extension ConversationStoreProxy : ConversationDataLogic {
     
     func getAll( noRecords : Int, noPages: Int, desc : Bool = true, completionHandler: @escaping ([Conversation]?, StoreError?) -> Void) {
         utilityQueue.async { [self] in
@@ -85,11 +161,11 @@ class ConversationStoreProxy : ConversationDataLogic {
         
     }
     
-    func findWithFriend(_ friend : Friend, completion: @escaping (Conversation?, StoreError?) -> Void ){
+    func findWithFriend(id : String, completion: @escaping (Conversation?, StoreError?) -> Void ){
         
         self.utilityQueue.async {
 
-            self.store.findWithFriend(friend){ res, err in
+            self.store.findWithFriend(id: id){ res, err in
                 
                 DispatchQueue.main.async {
                     completion(res,err)
@@ -155,7 +231,7 @@ class ConversationStoreProxy : ConversationDataLogic {
         }
     }
     
-    func delete(id: String, completionHandler: @escaping (Conversation?, StoreError?) -> Void) {
+    func delete(id: String, completionHandler: @escaping (StoreError?) -> Void) {
         fatalError()
     }
     

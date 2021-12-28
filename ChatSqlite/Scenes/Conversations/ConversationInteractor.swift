@@ -9,8 +9,8 @@ import Foundation
 import UIKit
 
 protocol ConversationPresenter : AnyObject {
-    func presentAllItems(_ items : [ConversationsModel]?)
-    func presentNewItems(_ item : ConversationsModel)
+    func presentAllItems(_ items : [ConversationDomain]?)
+    func presentNewItems(_ item : ConversationDomain)
 }
 
 class ConversationInteractor : ConversationsDisplayLogic{
@@ -38,7 +38,7 @@ class ConversationInteractor : ConversationsDisplayLogic{
             }
         })
     }
-    func addItem(_ item : ConversationsModel){
+    func addItem(_ item : ConversationDomain){
         // map to db model
         let i = toDtbModel(item)
         store.add(newItem: i, completionHandler: { [weak self] item, err in
@@ -70,7 +70,7 @@ class ConversationInteractor : ConversationsDisplayLogic{
             
         }
     }
-    func toDtbModel(_ conversation: ConversationsModel) -> Conversation{
+    func toDtbModel(_ conversation: ConversationDomain) -> Conversation{
         var c =  ConversationSQLite()
         c.fromUIModel(c: conversation)
         return c

@@ -123,7 +123,7 @@ extension MessagesSQLStore{
         fatalError()
     }
     
-    func delete(id: String, completionHandler: @escaping (Message?, StoreError?) -> Void) {
+    func delete(id: String, completionHandler: @escaping (StoreError?) -> Void) {
         fatalError()
     }
     

@@ -19,9 +19,9 @@ protocol Message{
     var timestamp : Date! {get}
     var sender : String! {get}
     
-    func toUIModel() -> MessagesModel
+    func toUIModel() -> MessageDomain
     
-    mutating func fromUIModel(c: MessagesModel)
+    mutating func fromUIModel(c: MessageDomain)
 }
 
 protocol SQLiteModel : Codable{
@@ -29,11 +29,11 @@ protocol SQLiteModel : Codable{
 }
 
 struct MessageSQLite : SQLiteModel, Message {
-    func toUIModel() -> MessagesModel {
-        return MessagesModel(cid: cid, content: content, type: type, timestamp: timestamp, sender: sender)
+    func toUIModel() -> MessageDomain {
+        return MessageDomain(cid: cid, content: content, type: type, timestamp: timestamp, sender: sender)
     }
     
-    mutating func fromUIModel(c: MessagesModel) {
+    mutating func fromUIModel(c: MessageDomain) {
         cid = c.cid
         content = c.content
         self.type = c.type

@@ -7,6 +7,7 @@
 
 import Foundation
 
+// MARK: DataLogic Protocol
 protocol MessageDataLogic {
     
     var conversationID : String { get set}
@@ -14,13 +15,11 @@ protocol MessageDataLogic {
     func getAll( noRecords : Int, noPages: Int, desc : Bool, completionHandler: @escaping ([Message]?, StoreError?) -> Void)
     func getWithId(_ id: String, completionHandler: @escaping (Message?, StoreError?) -> Void)
     func add(newItem: Message, completionHandler: @escaping (Message?, StoreError?) -> Void)
-    func delete(id: String, completionHandler: @escaping (Message?, StoreError?) -> Void)
+    func delete(id: String, completionHandler: @escaping (StoreError?) -> Void)
 
 }
-
-// handle callback in main thread
-class MessageStoreProxy : MessageDataLogic {
-
+class MessageStoreProxy {
+    
     var store : MessageDataLogic = MessagesSQLStore()
     
     var messages : [Message] = []
@@ -38,6 +37,74 @@ class MessageStoreProxy : MessageDataLogic {
         self.conversationID = cid
         store.conversationID = cid
     }
+
+}
+// MARK: MessageService
+extension MessageStoreProxy : MessageService {
+    func fetchAllItems(noRecords: Int, noPages: Int, desc: Bool, completionHandler: @escaping ([MessageDomain]?, StoreError?) -> Void) {
+        self.getAll(noRecords: noRecords, noPages: noPages, desc: desc, completionHandler: { res, err in
+            if let resItems = res {
+                let mapped = resItems.map { self.toUIModel(item: $0)}
+                completionHandler(mapped, err)
+            } else {
+                completionHandler(nil, err)
+            }
+        })
+    }
+    
+    func fetchItemWithId(_ id: String, completionHandler: @escaping (MessageDomain?, StoreError?) -> Void) {
+        self.getWithId(id, completionHandler:  { res, err in
+            if let resItem = res {
+                let mapped = self.toUIModel(item: resItem)
+                completionHandler(mapped, err)
+            } else {
+                completionHandler(nil, err)
+            }
+        })
+    }
+    
+    func createItem(_ item: MessageDomain, completionHandler: @escaping (MessageDomain?, StoreError?) -> Void) {
+        let mapped = toDtbModel(item: item)
+        self.add(newItem: mapped, completionHandler:  { res, err in
+            if let resItem = res {
+                let mapped = self.toUIModel(item: resItem)
+                completionHandler(mapped, err)
+            } else {
+                completionHandler(nil, err)
+            }
+        })
+
+    }
+    
+    func updateItem(_ item: MessageDomain, completionHandler: @escaping (MessageDomain?, StoreError?) -> Void) {
+        let mapped = toDtbModel(item: item)
+        self.update(item: mapped, completionHandler:  { res, err in
+            if let resItem = res {
+                let mapped = self.toUIModel(item: resItem)
+                completionHandler(mapped, err)
+            } else {
+                completionHandler(nil, err)
+            }
+        })
+    }
+    
+    func deleteItem(id: String, completionHandler: @escaping (StoreError?) -> Void) {
+        self.delete(id: id, completionHandler: completionHandler)
+    }
+    func toUIModel(item f: Message) -> MessageDomain{
+        return f.toUIModel()
+    }
+    
+    func toDtbModel(item f: MessageDomain) -> Message{
+        var msg  = MessageSQLite()
+        msg.fromUIModel(c: f)
+        return msg
+    }
+    
+}
+
+// MARK: StoreProxy
+extension MessageStoreProxy : MessageDataLogic {
     
     func getAll( noRecords : Int, noPages: Int, desc : Bool = false, completionHandler: @escaping ([Message]?, StoreError?) -> Void) {
         utilityQueue.async { [self] in
@@ -116,7 +183,7 @@ class MessageStoreProxy : MessageDataLogic {
         fatalError()
     }
     
-    func delete(id: String, completionHandler: @escaping (Message?, StoreError?) -> Void) {
+    func delete(id: String, completionHandler: @escaping (StoreError?) -> Void) {
         fatalError()
     }
 }

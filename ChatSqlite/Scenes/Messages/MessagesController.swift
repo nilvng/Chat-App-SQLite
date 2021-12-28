@@ -8,23 +8,23 @@
 import UIKit
 
 protocol MessagesDislayLogic {
-    func fetchData(friend: Friend)
-    func fetchData(conversation: ConversationsModel)
+    func fetchData(friend: FriendDomain)
+    func fetchData(conversation: ConversationDomain)
     func onScroll(tableOffset: CGFloat)
     func sendMessage(content: String, newConv: Bool)
 }
 
 class MessagesController: UITableViewController {
 
-    typealias lastMsgAction = (Message) -> Void
+    typealias lastMsgAction = (MessageDomain) -> Void
     
     var updateLastMsgAction : lastMsgAction?
     
     var interactor : MessagesDislayLogic?
     
-    var items : [Message] = []
-    var conversation : ConversationsModel?
-    var friend : Friend?
+    var items : [MessageDomain] = []
+    var conversation : ConversationDomain?
+    var friend : FriendDomain?
     
     var isNew : Bool = false
     
@@ -37,12 +37,12 @@ class MessagesController: UITableViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(friend: Friend){
+    func configure(friend: FriendDomain){
         interactor?.fetchData(friend: friend)
         self.friend = friend
     }
     
-    func configure(conversation : ConversationsModel, action : lastMsgAction? = nil){
+    func configure(conversation : ConversationDomain, action : lastMsgAction? = nil){
         updateLastMsgAction = action
         self.conversation = conversation
     }
@@ -108,7 +108,8 @@ class MessagesController: UITableViewController {
 }
 
 extension MessagesController : MessagesPresenter {
-    func presentAllItems(_ items: [Message]?) {
+    
+    func presentAllItems(_ items: [MessageDomain]?) {
         if items == nil {
             isNew = true
             return
@@ -117,7 +118,7 @@ extension MessagesController : MessagesPresenter {
         tableView.reloadData()
     }
     
-    func presentNewItem(_ item: Message) {
+    func presentNewItem(_ item: MessageDomain) {
         self.items.append(item)
         tableView.reloadData()
     }

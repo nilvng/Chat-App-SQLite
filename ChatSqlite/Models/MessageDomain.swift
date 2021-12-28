@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MessagesModel {
+struct MessageDomain {
     var cid: String
     
     var content: String

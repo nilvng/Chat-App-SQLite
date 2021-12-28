@@ -13,6 +13,7 @@ protocol Friend {
     var id: String {get}
     var phoneNumber: String {get}
     var name: String {get}
+
     
 }
 
@@ -25,5 +26,5 @@ struct FriendSqlite : SQLiteModel, Friend {
     var phoneNumber: String
     
     var name: String
-    
+
 }

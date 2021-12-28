@@ -9,14 +9,14 @@ import UIKit
 
 protocol ConversationsDisplayLogic {
     func fetchData()
-    func addItem(_ conversation : ConversationsModel)
+    func addItem(_ conversation : ConversationDomain)
     func onScroll(tableOffset: CGFloat)
 }
 
 class ConversationController: UITableViewController {
 
     var interactor : ConversationsDisplayLogic?
-    var conversations : [ConversationsModel] = []
+    var conversations : [ConversationDomain] = []
     var cellId = "convCell"
     
     override func viewDidLoad() {
@@ -63,9 +63,7 @@ extension ConversationController {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellId) as? SubtitleCell else {
             fatalError()
         }
-        
-        print("configure cell \(conversations[indexPath.row].lastMsg)")
-        
+                
         cell.textLabel?.text = conversations[indexPath.row].title
         cell.detailTextLabel?.text = conversations[indexPath.row].lastMsg
         return cell
@@ -85,7 +83,7 @@ extension ConversationController {
         interactor?.onScroll(tableOffset: tableView.contentOffset.y)
     }
     
-    func updateLastMessenge(_ msg : Message, at i : IndexPath){
+    func updateLastMessenge(_ msg : MessageDomain, at i : IndexPath){
         var c = conversations[i.row]
         c.lastMsg = msg.content
         c.timestamp = msg.timestamp
@@ -110,12 +108,12 @@ extension ConversationController {
 }
 
 extension ConversationController : ConversationPresenter{
-    func presentNewItems(_ item: ConversationsModel) {
+    func presentNewItems(_ item: ConversationDomain) {
         self.conversations.append(item)
         tableView.reloadData()
     }
     
-    func presentAllItems(_ items: [ConversationsModel]?) {
+    func presentAllItems(_ items: [ConversationDomain]?) {
         if items == nil {
             return
         }

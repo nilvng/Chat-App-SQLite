@@ -32,16 +32,16 @@ protocol Conversation {
     var members: String! {get set}
     var lastMsg : String! {get set}
     var timestamp : Date! {get set}
-    func toUIModel() -> ConversationsModel
-    mutating func fromUIModel(c : ConversationsModel)
+    func toUIModel() -> ConversationDomain
+    mutating func fromUIModel(c : ConversationDomain)
 }
 
 struct ConversationSQLite : SQLiteModel, Conversation {
-    func toUIModel() -> ConversationsModel {
-    return ConversationsModel(theme: theme, thumbnail: thumbnail, title: title, id: id, members: members, lastMsg: lastMsg, timestamp: timestamp)
+    func toUIModel() -> ConversationDomain {
+    return ConversationDomain(theme: theme, thumbnail: thumbnail, title: title, id: id, members: members, lastMsg: lastMsg, timestamp: timestamp)
     }
     
-    mutating func fromUIModel(c: ConversationsModel){
+    mutating func fromUIModel(c: ConversationDomain){
     theme =  c.theme
     thumbnail = c.thumbnail
     title = c.title

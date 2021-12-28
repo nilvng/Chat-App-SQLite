@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct ConversationsModel {
-    static func fromFriend(friend: Friend) -> ConversationsModel {
-        return ConversationsModel(theme: nil, thumbnail: nil,
+struct ConversationDomain {
+    static func fromFriend(friend: FriendDomain) -> ConversationDomain {
+        return ConversationDomain(theme: nil, thumbnail: nil,
                                   title: friend.name, id: UUID().uuidString,
                                   members: friend.id,
                                   lastMsg: "", timestamp: Date())

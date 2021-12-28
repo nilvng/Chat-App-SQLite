@@ -124,13 +124,13 @@ extension ConversationSQLiteStore : ConversationDataLogic{
         }
     }
     
-    func delete(id: String, completionHandler: @escaping (Conversation?, StoreError?) -> Void) {
+    func delete(id: String, completionHandler: @escaping (StoreError?) -> Void) {
         fatalError()
     }
     
-    func findWithFriend(_ friend : Friend, completion: @escaping (Conversation?, StoreError?) -> Void ){
-        print("find conv with friend: \(friend.id)")
-        let query = table.filter(members == friend.id)
+    func findWithFriend(id: String, completion: @escaping (Conversation?, StoreError?) -> Void ){
+        print("find conv with friend: \(id)")
+        let query = table.filter(members == id)
         
         do {
             let result : [ConversationSQLite] = try db.prepare(query).map{ row in

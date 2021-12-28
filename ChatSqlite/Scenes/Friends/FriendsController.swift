@@ -9,13 +9,13 @@ import UIKit
 
 protocol FriendsDisplayLogic {
     func fetchData()
-    func addItem(_ item: FriendsModel)
+    func addItem(_ item: FriendDomain)
 }
 
 class FriendsController: UITableViewController {
 
     var interactor : FriendsDisplayLogic?
-    var friends : [FriendsModel] = []
+    var friends : [FriendDomain] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,7 +37,7 @@ class FriendsController: UITableViewController {
 
     @objc func addButtonPressed(){
         let names = ["Meme", "Bingo", "WRM"]
-        let friend = FriendsModel(avatar: "hello", id: UUID().uuidString, phoneNumber: "1234", name: names.randomElement()!)
+        let friend = FriendDomain(avatar: "hello", id: UUID().uuidString, phoneNumber: "1234", name: names.randomElement()!)
         interactor?.addItem(friend)
     }
     // MARK: - Table view data source
@@ -78,12 +78,12 @@ class FriendsController: UITableViewController {
 }
 
 extension FriendsController : FriendPresenter {
-    func presentNewItems(_ item: FriendsModel) {
+    func presentNewItems(_ item: FriendDomain) {
         self.friends.append(item)
         tableView.reloadData()
     }
     
-    func presentItems(_ items: [FriendsModel]) {
+    func presentItems(_ items: [FriendDomain]) {
         self.friends = items
         tableView.reloadData()
     }

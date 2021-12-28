@@ -8,20 +8,20 @@
 import Foundation
 
 protocol FriendPresenter {
-    func presentItems(_ items : [FriendsModel])
-    func presentNewItems(_ item : FriendsModel)
+    func presentItems(_ items : [FriendDomain])
+    func presentNewItems(_ item : FriendDomain)
 }
 
 class FriendInteractor : FriendsDisplayLogic{
-    var store : FriendStoreWorker
+    var store : FriendService
     var presenter : FriendPresenter? = nil
     
     init( store : FriendSQLiteStore ){
-        self.store = FriendStoreWorker.getInstance(store: store)
+        self.store = FriendStoreProxy.shared
     }
     
     func fetchData(){
-        store.getAll(completionHandler: { [weak self] items, err in
+        store.fetchAllItems(completionHandler: { [weak self] items, err in
             if let friends = items{
                 self?.presenter?.presentItems(friends)
             } else {
@@ -30,8 +30,8 @@ class FriendInteractor : FriendsDisplayLogic{
         })
     }
     
-    func addItem(_ item: FriendsModel){
-        store.create(newItem: item, completionHandler: {[weak self] item, err in
+    func addItem(_ item: FriendDomain){
+        store.createItem(item, completionHandler: {[weak self] item, err in
             if let i = item , err == nil{
                 self?.presenter?.presentNewItems(i)
             } else {

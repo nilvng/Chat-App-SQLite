@@ -51,7 +51,7 @@ class FriendSQLiteStore {
     }
 }
 
-extension FriendSQLiteStore : FriendStore{
+extension FriendSQLiteStore : FriendDataLogic{    
     
     func getAll(completionHandler: @escaping ([Friend]?, StoreError?) -> Void){
         do {
@@ -69,7 +69,7 @@ extension FriendSQLiteStore : FriendStore{
         fatalError()
     }
     
-    func create(newItem: Friend, completionHandler: @escaping (Friend?, StoreError?) -> Void) {
+    func add(newItem: Friend, completionHandler: @escaping (Friend?, StoreError?) -> Void) {
         guard let item = newItem as? FriendSqlite else {
             completionHandler(nil, .cantFetch("Wrong type"))
             return
@@ -94,7 +94,7 @@ extension FriendSQLiteStore : FriendStore{
         fatalError()
     }
     
-    func delete(id: String, completionHandler: @escaping (Friend?, StoreError?) -> Void) {
+    func delete(id: String, completionHandler: @escaping (StoreError?) -> Void) {
         fatalError()
     }
     

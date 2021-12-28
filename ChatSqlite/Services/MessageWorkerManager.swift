@@ -9,13 +9,13 @@ import Foundation
 
 class MessageWorkerManager{
     static var shared = MessageWorkerManager()
-    var workers = [String: MessageDataLogic]()
+    var workers = [String: MessageService]()
     
     private init(){
         
     }
     
-    func get(cid: String) -> MessageDataLogic{
+    func get(cid: String) -> MessageService{
         if let w = workers[cid] {
             return w
         }

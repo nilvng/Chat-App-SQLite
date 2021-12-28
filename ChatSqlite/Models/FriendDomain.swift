@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct FriendsModel : Friend {
+struct FriendDomain {
     var avatar: String?
     
     var id: String
