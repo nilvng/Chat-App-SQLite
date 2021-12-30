@@ -15,10 +15,11 @@ class MessagesSQLStore : MessageDataLogic {
     var db : Connection?
     
     var table = Table("Messages")
+    var mid = Expression<String>("mid")
     var cid = Expression<String>("cid")
     var content = Expression<String>("content")
     var timestamp = Expression<Date>("timestamp")
-    var type = Expression<String>("type")
+    var type = Expression<Int>("type")
     var sender = Expression<String>("sender")
     
         
@@ -59,6 +60,7 @@ class MessagesSQLStore : MessageDataLogic {
     func createTable(){
         do{
         try db?.run(table.create(ifNotExists: true) { t in
+            t.column(mid, primaryKey: true)
             t.column(cid)
             t.column(content)
             t.column(timestamp)
@@ -81,13 +83,19 @@ extension MessagesSQLStore{
                 .limit(noRecords, offset: noRecords * noPages)
             
             queries = desc ? queries.order(timestamp.desc) : queries.order(timestamp.asc)
-            
-            let result : [MessageSQLite] = try db!.prepare(queries).map { row in
-                return try row.decode()
+            let result : [MessageSQLite] = try db!.prepareRowIterator(queries).map { row in
+                var m = MessageSQLite()
+                m.mid = row[mid]
+                m.cid = row[cid]
+                m.content = row[content]
+                m.type = MessageType(rawValue:row[type])
+                m.timestamp = row[timestamp]
+                m.sender = row[sender]
+                return m
             }
             completionHandler(result,nil)
         } catch let e{
-            print(e.localizedDescription)
+            print(e)
             completionHandler(nil,.cantFetch("Cant fetch"))
             }
         }

@@ -44,6 +44,7 @@ class FriendStoreProxy {
 }
 
 extension FriendStoreProxy : FriendService {
+    
     func fetchAllItems(completionHandler: @escaping ([FriendDomain]?, StoreError?) -> Void) {
         self.getAll(completionHandler: { res, err in
             if let resItems = res {
@@ -59,29 +60,19 @@ extension FriendStoreProxy : FriendService {
         fatalError()
     }
     
-    func createItem(_ item: FriendDomain, completionHandler: @escaping (FriendDomain?, StoreError?) -> Void) {
+    func createItem(_ item: FriendDomain, completionHandler: @escaping (StoreError?) -> Void) {
         let mapped = toDtbModel(friend: item)
         self.add(newItem: mapped, completionHandler: { res, err in
-            if let resItem = res {
-                let mapped = self.toUIModel(friend: resItem)
-                completionHandler(mapped, err)
-            
-        } else {
-                completionHandler(nil, err)
-                 }
+                completionHandler(err)
         })
     }
     
-    func updateItem(_ item: FriendDomain, completionHandler: @escaping (FriendDomain?, StoreError?) -> Void) {
+    func updateItem(_ item: FriendDomain, completionHandler: @escaping (StoreError?) -> Void) {
         let mapped = toDtbModel(friend: item)
         self.update(item: mapped, completionHandler: { res, err in
-            if let resItem = res {
-                let mapped = self.toUIModel(friend: resItem)
-                completionHandler(mapped, err)
-            
-        } else {
-                completionHandler(nil, err)
-                 }
+
+                completionHandler(err)
+                
         })
     }
     

@@ -114,13 +114,25 @@ extension MessagesController : MessagesPresenter {
             isNew = true
             return
         }
+        
         self.items += items!
-        tableView.reloadData()
+        
+        DispatchQueue.main.async {
+            print(self.items)
+            
+            self.tableView.reloadData()
+        }
     }
     
     func presentNewItem(_ item: MessageDomain) {
+        
         self.items.append(item)
-        tableView.reloadData()
+        
+        DispatchQueue.main.async {
+            
+            self.tableView.reloadData()
+        
+        }
     }
     
     

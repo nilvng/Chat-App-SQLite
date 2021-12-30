@@ -86,13 +86,18 @@ class MessagesInteractor : MessagesDislayLogic {
     }
 
     func sendMessage(content: String, newConv : Bool  = true){
+        // show the user first
+        let m = MessageDomain(cid: conversation.id, content: content, type: .text, timestamp: Date(), sender: "1")
+        self.presenter?.presentNewItem(m)
+
+        // update db
         if newConv {
             // create conversation
-            conversationStore.createItem(conversation, completionHandler: { [weak self] c, err in
-                guard let c = c else {
+            conversationStore.createItem(conversation, completionHandler: { [weak self] err in
+                guard err == nil else {
+                    print(err!.localizedDescription)
                     return
                 }
-                self?.conversation = c
                 print("Conversation added.")
                 self?.saveMessage(content: content)
             })
@@ -109,11 +114,11 @@ class MessagesInteractor : MessagesDislayLogic {
         
         createWorker(cid: conversation.id) // if needed
         
-        store!.createItem(m, completionHandler: {  [weak self] msg, err in
-            if msg != nil && err == nil {
+        store!.createItem(m, completionHandler: {  [weak self]  err in
+            if err == nil {
                 print("Messages saved.")
-                self?.updateLastMessage(m: msg!)
-                self?.presenter?.presentNewItem(msg!)
+                self?.updateLastMessage(m: m)
+                //self?.presenter?.presentNewItem(msg!)
             } else {
                 print(err?.localizedDescription ?? "Unknown error")
             }
@@ -125,8 +130,7 @@ class MessagesInteractor : MessagesDislayLogic {
         conversation.lastMsg = m.content
         conversation.timestamp = m.timestamp
         
-        conversationStore.updateItem(conversation, completionHandler: {
-            c, err in
+        conversationStore.updateItem(conversation, completionHandler: {err in
             if err == nil {
                 print("Successfully update last message.")
             } else {

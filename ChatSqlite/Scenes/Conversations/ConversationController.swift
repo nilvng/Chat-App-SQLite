@@ -35,8 +35,8 @@ class ConversationController: UITableViewController {
     }
     
     func setup() {
-        let dataLogic : ConversationDataLogic = ConversationStoreProxy.shared
-        let inter = ConversationInteractor(store: dataLogic)
+        let service = ConversationStoreProxy.shared
+        let inter = ConversationInteractor(store: service)
         inter.presenter = self
         interactor = inter
     }
@@ -109,16 +109,29 @@ extension ConversationController {
 
 extension ConversationController : ConversationPresenter{
     func presentNewItems(_ item: ConversationDomain) {
+        
         self.conversations.append(item)
-        tableView.reloadData()
+        
+        DispatchQueue.main.async {
+            
+            self.tableView.reloadData()
+        
+        }
     }
     
     func presentAllItems(_ items: [ConversationDomain]?) {
+        
         if items == nil {
             return
         }
+        
         self.conversations = items!
-        tableView.reloadData()
+        
+        DispatchQueue.main.async {
+            
+            self.tableView.reloadData()
+        
+        }
     }
     
 }

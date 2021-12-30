@@ -17,7 +17,7 @@ protocol ConversationDataLogic {
     func findWithFriend(id : String, completion: @escaping (Conversation?, StoreError?) -> Void )
 }
 
-// MARK: Class
+// MARK: Proxy Class
 class ConversationStoreProxy {
     var store : ConversationDataLogic = ConversationSQLiteStore()
     
@@ -62,14 +62,12 @@ extension ConversationStoreProxy : ConversationService {
         })
     }
     
-    func updateItem(_ item: ConversationDomain, completionHandler: @escaping (ConversationDomain?, StoreError?) -> Void) {
+    func updateItem(_ item: ConversationDomain, completionHandler: @escaping (StoreError?) -> Void) {
         let mappedItem = toDtbModel(item)
         self.update(item: mappedItem, completionHandler: { res, err in
-            if let resItem = res {
-                completionHandler(self.toUIModel(resItem), err)
-            } else {
-                completionHandler(nil, err)
-            }
+
+                completionHandler(err)
+        
         })
     }
     
@@ -77,14 +75,12 @@ extension ConversationStoreProxy : ConversationService {
         self.delete(id: id, completionHandler: completionHandler)
     }
     
-    func createItem(_ item: ConversationDomain, completionHandler: @escaping (ConversationDomain?, StoreError?) -> Void) {
+    func createItem(_ item: ConversationDomain, completionHandler: @escaping (StoreError?) -> Void) {
         let mappedItem = toDtbModel(item)
         self.add(newItem: mappedItem, completionHandler: { res, err in
-            if let item = res {
-                completionHandler(item.toUIModel(), err)
-            } else {
-                completionHandler(nil, err)
-            }
+
+                completionHandler(err)
+            
         })
     }
 
@@ -108,7 +104,7 @@ extension ConversationStoreProxy : ConversationService {
     
 }
 
-// MARK: ConversationDataLogic
+// MARK: ConversationDataLogic: queue
 extension ConversationStoreProxy : ConversationDataLogic {
     
     func getAll( noRecords : Int, noPages: Int, desc : Bool = true, completionHandler: @escaping ([Conversation]?, StoreError?) -> Void) {
@@ -128,11 +124,8 @@ extension ConversationStoreProxy : ConversationDataLogic {
                 print("Cached msgs.")
                 let end = endIndex < self.items.count ? endIndex : items.count - 1
                 
-                DispatchQueue.main.async {
-
                 completionHandler(Array(items[startIndex...end]), nil)
 
-                }
                 return
             }
             print("Fetch msgs.")
@@ -151,12 +144,8 @@ extension ConversationStoreProxy : ConversationDataLogic {
                         self.items += res!
                     }
                 }
-                
-                DispatchQueue.main.async {
-
                     completionHandler(res,err)
-                }
-            })
+                })
         }
         
     }
@@ -167,9 +156,8 @@ extension ConversationStoreProxy : ConversationDataLogic {
 
             self.store.findWithFriend(id: id){ res, err in
                 
-                DispatchQueue.main.async {
                     completion(res,err)
-                }
+
             }
         }
     }
@@ -185,18 +173,12 @@ extension ConversationStoreProxy : ConversationDataLogic {
             print("Worker add msg.")
             items.append(newItem)
             
-            DispatchQueue.main.async {
-
                 completionHandler(newItem,nil)
             
-            }
             // Add to db
             store.add(newItem: newItem, completionHandler: { res, err in
                 if err != nil{
-                    DispatchQueue.main.async {
-
                         completionHandler(nil ,err)
-                    }
                 }
             })
         }
@@ -214,17 +196,13 @@ extension ConversationStoreProxy : ConversationDataLogic {
             items[prev] = item
             items.sort(by: {$0.timestamp > $1.timestamp})
             
-            DispatchQueue.main.async {
-                completionHandler(item,nil)
-            }
+            completionHandler(item,nil)
             
             // in db
             self.store.update(item: item){ res, err in
                 if err != nil {
-                    DispatchQueue.main.async {
                         print("some error")
                         completionHandler(nil ,err)
-                    }
                 }
                 
             }

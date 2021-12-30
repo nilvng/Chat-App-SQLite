@@ -8,12 +8,15 @@
 import Foundation
 import SQLite
 
-enum MessageType : String, Codable {
-    case text, image, gif
+enum MessageType : Int, Codable {
+    case text = 0
+    case image
+    case gif
 }
 
 protocol Message{
     var cid : String! {get set}
+    var mid : String! {get}
     var content : String! {get}
     var type : MessageType! {get}
     var timestamp : Date! {get}
@@ -28,7 +31,7 @@ protocol SQLiteModel : Codable{
 
 }
 
-struct MessageSQLite : SQLiteModel, Message {
+struct MessageSQLite : Message, Codable {
     func toUIModel() -> MessageDomain {
         return MessageDomain(cid: cid, content: content, type: type, timestamp: timestamp, sender: sender)
     }
@@ -40,6 +43,8 @@ struct MessageSQLite : SQLiteModel, Message {
         self.timestamp = c.timestamp
         self.sender = c.sender
     }
+    
+    var mid : String! = UUID().uuidString
     
     var cid : String!
 
@@ -54,19 +59,19 @@ struct MessageSQLite : SQLiteModel, Message {
     init(){
     }
     
-    enum MsgExpression {
-        case cid
-        case content
+    enum Keys : String, CodingKey {
         
-//        func getExpression() -> Expression<Any>{
-//            switch self{
-//            case .cid:
-//                return Expression<String>("cid")
-//
-//            case .content:
-//                return Expression<String>("content")
-//            }
-//        }
+        case mid, cid, content, type, timestamp, sender
+    }
+    
+    init(from decoder : Decoder) throws{
+        let values = try decoder.container(keyedBy: CodingKeys.self)
+        mid = try values.decode(String.self, forKey: .mid)
+        cid = try values.decode(String.self, forKey: .cid)
+        content = try values.decode(String.self, forKey: .content)
+        type = try values.decode(MessageType.self, forKey: .type)
+        timestamp = try values.decode(Date.self, forKey: .timestamp)
+        sender = try values.decode(String.self, forKey: .sender)
     }
 }
 

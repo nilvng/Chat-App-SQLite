@@ -31,11 +31,9 @@ class FriendInteractor : FriendsDisplayLogic{
     }
     
     func addItem(_ item: FriendDomain){
-        store.createItem(item, completionHandler: {[weak self] item, err in
-            if let i = item , err == nil{
-                self?.presenter?.presentNewItems(i)
-            } else {
-                print(err?.localizedDescription ?? "null error")
+        store.createItem(item, completionHandler: {err in
+            if err != nil{
+                print(err!.localizedDescription)
             }
         })
     }

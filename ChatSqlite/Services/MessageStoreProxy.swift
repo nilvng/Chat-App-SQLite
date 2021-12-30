@@ -63,28 +63,21 @@ extension MessageStoreProxy : MessageService {
         })
     }
     
-    func createItem(_ item: MessageDomain, completionHandler: @escaping (MessageDomain?, StoreError?) -> Void) {
+    func createItem(_ item: MessageDomain, completionHandler: @escaping (StoreError?) -> Void) {
         let mapped = toDtbModel(item: item)
         self.add(newItem: mapped, completionHandler:  { res, err in
-            if let resItem = res {
-                let mapped = self.toUIModel(item: resItem)
-                completionHandler(mapped, err)
-            } else {
-                completionHandler(nil, err)
-            }
+
+                completionHandler(err)
+            
         })
 
     }
     
-    func updateItem(_ item: MessageDomain, completionHandler: @escaping (MessageDomain?, StoreError?) -> Void) {
+    func updateItem(_ item: MessageDomain, completionHandler: @escaping (StoreError?) -> Void) {
         let mapped = toDtbModel(item: item)
         self.update(item: mapped, completionHandler:  { res, err in
-            if let resItem = res {
-                let mapped = self.toUIModel(item: resItem)
-                completionHandler(mapped, err)
-            } else {
-                completionHandler(nil, err)
-            }
+        
+                completionHandler(err)
         })
     }
     
@@ -107,6 +100,7 @@ extension MessageStoreProxy : MessageService {
 extension MessageStoreProxy : MessageDataLogic {
     
     func getAll( noRecords : Int, noPages: Int, desc : Bool = false, completionHandler: @escaping ([Message]?, StoreError?) -> Void) {
+        
         utilityQueue.async { [self] in
             
         // Find in cache
@@ -124,9 +118,7 @@ extension MessageStoreProxy : MessageDataLogic {
                 print("Cached msgs.")
                 let end = endIndex < self.messages.count ? endIndex : messages.count - 1
 
-                DispatchQueue.main.async {
                     completionHandler(Array(messages[startIndex...end]), nil)
-                }
                 return
             }
             print("Fetch msgs.")
@@ -137,9 +129,7 @@ extension MessageStoreProxy : MessageDataLogic {
                 if (res != nil){
                     if (res!.isEmpty) {
                         self.isDoneFetching =  true
-                        DispatchQueue.main.async {
                             completionHandler(res,err)
-                        }
                     } else {
                         if res!.count < noRecords {
                             self.isDoneFetching = true
@@ -147,9 +137,7 @@ extension MessageStoreProxy : MessageDataLogic {
                         self.messages += res!
                     }
                 }
-                DispatchQueue.main.async {
                     completionHandler(res,err)
-                }
             })
         }
         
@@ -166,12 +154,11 @@ extension MessageStoreProxy : MessageDataLogic {
             print("Worker add msg.")
             messages.append(newItem)
             
-            DispatchQueue.main.async {
                 completionHandler(newItem,nil)
-            }
-            
+                
             // Add to db
             store.add(newItem: newItem, completionHandler: { res, err in
+                
                 if err != nil { // there is error
                     completionHandler(res,err)
                 }

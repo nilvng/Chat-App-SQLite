@@ -80,12 +80,24 @@ class FriendsController: UITableViewController {
 extension FriendsController : FriendPresenter {
     func presentNewItems(_ item: FriendDomain) {
         self.friends.append(item)
-        tableView.reloadData()
+        
+        DispatchQueue.main.async {
+            
+            self.tableView.reloadData()
+        
+        }
+        
     }
     
     func presentItems(_ items: [FriendDomain]) {
         self.friends = items
-        tableView.reloadData()
+        
+        DispatchQueue.main.async {
+            
+            self.tableView.reloadData()
+        
+        }
+        
     }
     
     
