@@ -10,10 +10,14 @@ import UIKit
 
 class ConversationDataSource : NSObject {
     var items : [ConversationDomain] = []
+    var filteredItems : [ConversationDomain] = []
+    var isFiltering: Bool = false
+    
     static var CELL_ID = "messCell"
     
     func loadItems(_ items: [ConversationDomain]){
         self.items = items
+        filteredItems = items
     }
     func updateItem(){
         
@@ -30,22 +34,46 @@ class ConversationDataSource : NSObject {
         c.timestamp = msg.timestamp
         items[i.row] = c
     }
+    func getIndexOfItem(_ item: ConversationDomain) -> Int? {
+        let i = filteredItems.firstIndex(where: { $0.id == item.id})
+        return i
+    }
+    
+    func getItem(at index: IndexPath) -> ConversationDomain{
+        return filteredItems[index.row]
+    }
+    
+    func filterItemBy(key: String){
+        guard key != "" else {
+            self.clearSearch()
+            return
+        }
+        isFiltering = true
+        self.filteredItems = self.items.filter { item in
+            return item.title.lowercased().contains(key.lowercased())
+        }
+        
+        }
+    
+    func clearSearch(){
+        print("clear search.")
+        isFiltering = false
+        filteredItems = items
+    }
 }
 
 extension ConversationDataSource : UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items.count
+        self.filteredItems.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: ConversationDataSource.CELL_ID) as? SubtitleCell else {
-            fatalError()
-        }
-                
-        cell.textLabel?.text = items[indexPath.row].title
-        cell.detailTextLabel?.text = items[indexPath.row].lastMsg
+        let cell = tableView.dequeueReusableCell(withIdentifier: ConversationCell.identifier, for: indexPath) as! ConversationCell
+        
+        cell.configure(model: filteredItems[indexPath.row])
         return cell
+        
     }
     
 }

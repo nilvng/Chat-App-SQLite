@@ -20,6 +20,8 @@
 		0E12424B277EDA020054D069 /* PhotoRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124247277EDA020054D069 /* PhotoRequest.swift */; };
 		0E12424C277EDA020054D069 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124248277EDA020054D069 /* Theme.swift */; };
 		0E12424E277EDABD0054D069 /* SearchContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E12424D277EDABD0054D069 /* SearchContactCell.swift */; };
+		0E124251277EF3A10054D069 /* ConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124250277EF3A10054D069 /* ConversationCell.swift */; };
+		0E124253277EF4590054D069 /* ConvConfigController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124252277EF4590054D069 /* ConvConfigController.swift */; };
 		0E15EC3227742B790082FA1B /* MessageWorkerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15EC3127742B790082FA1B /* MessageWorkerManager.swift */; };
 		0E2395B927708340006B2DE2 /* FriendDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2395B827708340006B2DE2 /* FriendDomain.swift */; };
 		0E2395BB2770834C006B2DE2 /* ConversationDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2395BA2770834C006B2DE2 /* ConversationDomain.swift */; };
@@ -62,6 +64,8 @@
 		0E124247277EDA020054D069 /* PhotoRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoRequest.swift; sourceTree = "<group>"; };
 		0E124248277EDA020054D069 /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		0E12424D277EDABD0054D069 /* SearchContactCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchContactCell.swift; sourceTree = "<group>"; };
+		0E124250277EF3A10054D069 /* ConversationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConversationCell.swift; sourceTree = "<group>"; };
+		0E124252277EF4590054D069 /* ConvConfigController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConvConfigController.swift; sourceTree = "<group>"; };
 		0E15EC3127742B790082FA1B /* MessageWorkerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageWorkerManager.swift; sourceTree = "<group>"; };
 		0E2395B827708340006B2DE2 /* FriendDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendDomain.swift; sourceTree = "<group>"; };
 		0E2395BA2770834C006B2DE2 /* ConversationDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDomain.swift; sourceTree = "<group>"; };
@@ -225,8 +229,10 @@
 			isa = PBXGroup;
 			children = (
 				0EFDD94A276B72C400323984 /* ConversationController.swift */,
+				0E124250277EF3A10054D069 /* ConversationCell.swift */,
 				0E124238277EB7FE0054D069 /* ConversationDataSource.swift */,
 				0EFDD972276B86BC00323984 /* ConversationInteractor.swift */,
+				0E124252277EF4590054D069 /* ConvConfigController.swift */,
 				0EFDD97F276C7AD700323984 /* SubtitleCell.swift */,
 			);
 			path = Conversations;
@@ -356,6 +362,7 @@
 				0E2395BB2770834C006B2DE2 /* ConversationDomain.swift in Sources */,
 				0E2395B927708340006B2DE2 /* FriendDomain.swift in Sources */,
 				0E15EC3227742B790082FA1B /* MessageWorkerManager.swift in Sources */,
+				0E124253277EF4590054D069 /* ConvConfigController.swift in Sources */,
 				0E124237277EB6E20054D069 /* FriendDataSource.swift in Sources */,
 				0E12424C277EDA020054D069 /* Theme.swift in Sources */,
 				0E12424A277EDA020054D069 /* BackgroundFactory.swift in Sources */,
@@ -364,6 +371,7 @@
 				0E124241277ED9E00054D069 /* UIColor+Chat.swift in Sources */,
 				0EFDD96B276B7A5400323984 /* Message.swift in Sources */,
 				0E12424B277EDA020054D069 /* PhotoRequest.swift in Sources */,
+				0E124251277EF3A10054D069 /* ConversationCell.swift in Sources */,
 				0EFDD979276C2C4700323984 /* MessagesInteractor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
