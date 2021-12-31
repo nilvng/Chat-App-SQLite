@@ -97,7 +97,6 @@ extension ConversationSQLiteStore : ConversationDataLogic{
         }
         
         do {
-            print(newItem)
 
             let rowid = try db?.run(table.insert(item))
             

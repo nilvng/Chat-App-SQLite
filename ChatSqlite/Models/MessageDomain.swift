@@ -8,6 +8,7 @@
 import Foundation
 
 struct MessageDomain {
+
     var cid: String
     
     var content: String

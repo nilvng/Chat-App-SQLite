@@ -15,7 +15,7 @@ protocol FriendsDisplayLogic {
 class FriendsController: UITableViewController {
 
     var interactor : FriendsDisplayLogic?
-    var friends : [FriendDomain] = []
+    var dataSource  = FriendDataSource()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,7 +26,7 @@ class FriendsController: UITableViewController {
                                                             target: self,
                                                             action: #selector(addButtonPressed))
         
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "friendCell")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: FriendDataSource.CELL_ID)
 
     }
     func setup() {
@@ -38,28 +38,15 @@ class FriendsController: UITableViewController {
     @objc func addButtonPressed(){
         let names = ["Meme", "Bingo", "WRM"]
         let friend = FriendDomain(avatar: "hello", id: UUID().uuidString, phoneNumber: "1234", name: names.randomElement()!)
+        
+        presentNewItems(friend)
         interactor?.addItem(friend)
-    }
-    // MARK: - Table view data source
-
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return friends.count
-    }
-
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "friendCell", for: indexPath)
-
-        // Configure the cell...
-        cell.textLabel?.text = friends[indexPath.row].name
-        return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let chatController = MessagesController()
-        let friend = friends[indexPath.row]
+        let friend = dataSource.getItem(ip: indexPath)
 
         chatController.configure(friend: friend)
         
@@ -79,7 +66,7 @@ class FriendsController: UITableViewController {
 
 extension FriendsController : FriendPresenter {
     func presentNewItems(_ item: FriendDomain) {
-        self.friends.append(item)
+        dataSource.appendItems([item])
         
         DispatchQueue.main.async {
             
@@ -90,7 +77,7 @@ extension FriendsController : FriendPresenter {
     }
     
     func presentItems(_ items: [FriendDomain]) {
-        self.friends = items
+        dataSource.appendItems(items)
         
         DispatchQueue.main.async {
             

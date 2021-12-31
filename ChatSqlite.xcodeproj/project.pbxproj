@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E124234277EA53D0054D069 /* MessageDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124233277EA53D0054D069 /* MessageDataSource.swift */; };
+		0E124237277EB6E20054D069 /* FriendDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124236277EB6E20054D069 /* FriendDataSource.swift */; };
+		0E124239277EB7FE0054D069 /* ConversationDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124238277EB7FE0054D069 /* ConversationDataSource.swift */; };
 		0E15EC3227742B790082FA1B /* MessageWorkerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15EC3127742B790082FA1B /* MessageWorkerManager.swift */; };
 		0E2395B927708340006B2DE2 /* FriendDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2395B827708340006B2DE2 /* FriendDomain.swift */; };
 		0E2395BB2770834C006B2DE2 /* ConversationDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2395BA2770834C006B2DE2 /* ConversationDomain.swift */; };
@@ -36,6 +39,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0E124233277EA53D0054D069 /* MessageDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDataSource.swift; sourceTree = "<group>"; };
+		0E124236277EB6E20054D069 /* FriendDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendDataSource.swift; sourceTree = "<group>"; };
+		0E124238277EB7FE0054D069 /* ConversationDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDataSource.swift; sourceTree = "<group>"; };
 		0E15EC3127742B790082FA1B /* MessageWorkerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageWorkerManager.swift; sourceTree = "<group>"; };
 		0E2395B827708340006B2DE2 /* FriendDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendDomain.swift; sourceTree = "<group>"; };
 		0E2395BA2770834C006B2DE2 /* ConversationDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDomain.swift; sourceTree = "<group>"; };
@@ -77,6 +83,32 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0E124231277E9B7C0054D069 /* DB */ = {
+			isa = PBXGroup;
+			children = (
+				0EFDD96C276B7B0000323984 /* ServiceBasicAPIs.swift */,
+				0E15EC3127742B790082FA1B /* MessageWorkerManager.swift */,
+				0E6666BC2771882A00786E57 /* MessageStoreProxy.swift */,
+				0EDA95792775A08300646051 /* ConversationStoreProxy.swift */,
+				0E66A9AA277A189E00525C3B /* FriendStoreProxy.swift */,
+			);
+			path = DB;
+			sourceTree = "<group>";
+		};
+		0E124232277E9B940054D069 /* Image */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Image;
+			sourceTree = "<group>";
+		};
+		0E124235277EB6BF0054D069 /* CommonView */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = CommonView;
+			sourceTree = "<group>";
+		};
 		0E66A9A9277A139400525C3B /* SQLIteStores */ = {
 			isa = PBXGroup;
 			children = (
@@ -90,11 +122,8 @@
 		0EDA95782774628700646051 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				0EFDD96C276B7B0000323984 /* ServiceBasicAPIs.swift */,
-				0E15EC3127742B790082FA1B /* MessageWorkerManager.swift */,
-				0E6666BC2771882A00786E57 /* MessageStoreProxy.swift */,
-				0EDA95792775A08300646051 /* ConversationStoreProxy.swift */,
-				0E66A9AA277A189E00525C3B /* FriendStoreProxy.swift */,
+				0E124232277E9B940054D069 /* Image */,
+				0E124231277E9B7C0054D069 /* DB */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -134,6 +163,7 @@
 		0EFDD95E276B79BD00323984 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				0E124235277EB6BF0054D069 /* CommonView */,
 				0EFDD97C276C2E9B00323984 /* Messages */,
 				0EFDD97B276C2E9600323984 /* Friends */,
 				0EFDD97A276C2E8F00323984 /* Conversations */,
@@ -158,6 +188,7 @@
 			isa = PBXGroup;
 			children = (
 				0EFDD94A276B72C400323984 /* ConversationController.swift */,
+				0E124238277EB7FE0054D069 /* ConversationDataSource.swift */,
 				0EFDD972276B86BC00323984 /* ConversationInteractor.swift */,
 				0EFDD97F276C7AD700323984 /* SubtitleCell.swift */,
 			);
@@ -168,6 +199,7 @@
 			isa = PBXGroup;
 			children = (
 				0EFDD970276B86AD00323984 /* FriendsController.swift */,
+				0E124236277EB6E20054D069 /* FriendDataSource.swift */,
 				0EFDD974276B8BB100323984 /* FriendInteractor.swift */,
 			);
 			path = Friends;
@@ -177,6 +209,7 @@
 			isa = PBXGroup;
 			children = (
 				0EFDD976276C2C2A00323984 /* MessagesController.swift */,
+				0E124233277EA53D0054D069 /* MessageDataSource.swift */,
 				0EFDD978276C2C4700323984 /* MessagesInteractor.swift */,
 			);
 			path = Messages;
@@ -276,9 +309,12 @@
 				0EFDD947276B72C400323984 /* AppDelegate.swift in Sources */,
 				0E66A9AB277A189E00525C3B /* FriendStoreProxy.swift in Sources */,
 				0EFDD949276B72C400323984 /* SceneDelegate.swift in Sources */,
+				0E124234277EA53D0054D069 /* MessageDataSource.swift in Sources */,
 				0E2395BB2770834C006B2DE2 /* ConversationDomain.swift in Sources */,
 				0E2395B927708340006B2DE2 /* FriendDomain.swift in Sources */,
 				0E15EC3227742B790082FA1B /* MessageWorkerManager.swift in Sources */,
+				0E124237277EB6E20054D069 /* FriendDataSource.swift in Sources */,
+				0E124239277EB7FE0054D069 /* ConversationDataSource.swift in Sources */,
 				0EFDD96B276B7A5400323984 /* Message.swift in Sources */,
 				0EFDD979276C2C4700323984 /* MessagesInteractor.swift in Sources */,
 			);

@@ -21,10 +21,11 @@ class MessagesController: UITableViewController {
     var updateLastMsgAction : lastMsgAction?
     
     var interactor : MessagesDislayLogic?
+    var dataSource = MessageDataSource()
     
-    var items : [MessageDomain] = []
+    var theme : String? = "basic"
     var conversation : ConversationDomain?
-    var friend : FriendDomain?
+    
     
     var isNew : Bool = false
     
@@ -39,7 +40,7 @@ class MessagesController: UITableViewController {
     
     func configure(friend: FriendDomain){
         interactor?.fetchData(friend: friend)
-        self.friend = friend
+        self.conversation = ConversationDomain.fromFriend(friend: friend)
     }
     
     func configure(conversation : ConversationDomain, action : lastMsgAction? = nil){
@@ -61,7 +62,7 @@ class MessagesController: UITableViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
                                                             target: self,
                                                             action: #selector(addMess))
-        
+        tableView.dataSource = dataSource
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "messCell")
     }
     
@@ -73,32 +74,16 @@ class MessagesController: UITableViewController {
 
     @objc func addMess(){
         let text = ["Random talk", "see you", "salute"].randomElement()!
-        if let _ = conversation {
+        
+        interactor?.sendMessage(content: text, newConv: isNew)
+
+        if !isNew {
             print("old chat")
-
-            interactor?.sendMessage(content: text, newConv: false)
-
         } else {
             print("new chat")
-            interactor?.sendMessage(content: text, newConv: isNew)
             isNew = false
         }
 
-    }
-    
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return items.count
-    }
-
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "messCell", for: indexPath)
-
-        // Configure the cell...
-        cell.textLabel?.text = items[indexPath.row].content
-
-        return cell
     }
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -115,23 +100,27 @@ extension MessagesController : MessagesPresenter {
             return
         }
         
-        self.items += items!
+        dataSource.appendItems(items!)
         
         DispatchQueue.main.async {
-            print(self.items)
-            
             self.tableView.reloadData()
         }
     }
     
     func presentNewItem(_ item: MessageDomain) {
         
-        self.items.append(item)
+        dataSource.appendItems([item])
         
         DispatchQueue.main.async {
-            
             self.tableView.reloadData()
         
+        }
+    }
+    
+    func loadConversation(_ c: ConversationDomain, isNew : Bool){
+        DispatchQueue.main.async {
+        self.isNew = isNew
+        self.conversation = c
         }
     }
     

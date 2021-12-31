@@ -11,6 +11,8 @@ import UIKit
 protocol MessagesPresenter : AnyObject{
     func presentAllItems(_ items : [MessageDomain]?)
     func presentNewItem(_ item : MessageDomain)
+    func loadConversation(_ c: ConversationDomain, isNew : Bool)
+
 }
 
 class MessagesInteractor : MessagesDislayLogic {
@@ -35,11 +37,12 @@ class MessagesInteractor : MessagesDislayLogic {
             if let c = res {
                 print("past chat")
                 self.fetchData(conversation: c)
+                self.presenter?.loadConversation(c, isNew: false)
             } else {
                 print("new chat")
                 // if conversation not exist
                 self.conversation = ConversationDomain.fromFriend(friend: friend)
-                self.presenter?.presentAllItems(nil)
+                self.presenter?.loadConversation(self.conversation, isNew: true)
             }
 
         })
