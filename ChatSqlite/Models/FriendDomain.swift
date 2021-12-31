@@ -16,5 +16,12 @@ struct FriendDomain {
     
     var name: String
     
+}
+
+extension FriendDomain : Searchable{
+    func getKeyword() -> String {
+        return name
+    }
+    
     
 }

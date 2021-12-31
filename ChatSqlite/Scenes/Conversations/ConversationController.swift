@@ -44,7 +44,7 @@ class ConversationController: UITableViewController {
     
     @objc func addButtonPressed(){
         let fController = FriendsController()
-        navigationController?.pushViewController(fController, animated: true)
+        present(fController, animated: true, completion: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -60,9 +60,7 @@ extension ConversationController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let controller = MessagesController()
         let c = dataSource.getItem(ip: indexPath)
-        controller.configure(conversation: c){ newMess in
-            self.dataSource.updateLastMessenge(newMess, at: indexPath)
-        }
+        controller.configure(conversation: c)
         
         navigationController?.pushViewController(controller, animated: true)
     }

@@ -16,7 +16,7 @@ class FriendInteractor : FriendsDisplayLogic{
     var store : FriendService
     var presenter : FriendPresenter? = nil
     
-    init( store : FriendSQLiteStore ){
+    init(){
         self.store = FriendStoreProxy.shared
     }
     

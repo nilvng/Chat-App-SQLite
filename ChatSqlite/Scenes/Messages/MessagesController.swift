@@ -15,11 +15,7 @@ protocol MessagesDislayLogic {
 }
 
 class MessagesController: UITableViewController {
-
-    typealias lastMsgAction = (MessageDomain) -> Void
-    
-    var updateLastMsgAction : lastMsgAction?
-    
+        
     var interactor : MessagesDislayLogic?
     var dataSource = MessageDataSource()
     
@@ -43,8 +39,7 @@ class MessagesController: UITableViewController {
         self.conversation = ConversationDomain.fromFriend(friend: friend)
     }
     
-    func configure(conversation : ConversationDomain, action : lastMsgAction? = nil){
-        updateLastMsgAction = action
+    func configure(conversation : ConversationDomain){
         self.conversation = conversation
     }
     

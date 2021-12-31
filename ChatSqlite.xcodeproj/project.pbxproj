@@ -10,6 +10,16 @@
 		0E124234277EA53D0054D069 /* MessageDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124233277EA53D0054D069 /* MessageDataSource.swift */; };
 		0E124237277EB6E20054D069 /* FriendDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124236277EB6E20054D069 /* FriendDataSource.swift */; };
 		0E124239277EB7FE0054D069 /* ConversationDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124238277EB7FE0054D069 /* ConversationDataSource.swift */; };
+		0E12423B277ED9560054D069 /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E12423A277ED9560054D069 /* AvatarView.swift */; };
+		0E124241277ED9E00054D069 /* UIColor+Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E12423D277ED9E00054D069 /* UIColor+Chat.swift */; };
+		0E124242277ED9E00054D069 /* Date+Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E12423E277ED9E00054D069 /* Date+Chat.swift */; };
+		0E124243277ED9E00054D069 /* UIImage+Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E12423F277ED9E00054D069 /* UIImage+Chat.swift */; };
+		0E124244277ED9E00054D069 /* UIView+anchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124240277ED9E00054D069 /* UIView+anchor.swift */; };
+		0E124249277EDA020054D069 /* ImageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124245277EDA010054D069 /* ImageStore.swift */; };
+		0E12424A277EDA020054D069 /* BackgroundFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124246277EDA020054D069 /* BackgroundFactory.swift */; };
+		0E12424B277EDA020054D069 /* PhotoRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124247277EDA020054D069 /* PhotoRequest.swift */; };
+		0E12424C277EDA020054D069 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124248277EDA020054D069 /* Theme.swift */; };
+		0E12424E277EDABD0054D069 /* SearchContactCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E12424D277EDABD0054D069 /* SearchContactCell.swift */; };
 		0E15EC3227742B790082FA1B /* MessageWorkerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15EC3127742B790082FA1B /* MessageWorkerManager.swift */; };
 		0E2395B927708340006B2DE2 /* FriendDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2395B827708340006B2DE2 /* FriendDomain.swift */; };
 		0E2395BB2770834C006B2DE2 /* ConversationDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2395BA2770834C006B2DE2 /* ConversationDomain.swift */; };
@@ -42,6 +52,16 @@
 		0E124233277EA53D0054D069 /* MessageDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDataSource.swift; sourceTree = "<group>"; };
 		0E124236277EB6E20054D069 /* FriendDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendDataSource.swift; sourceTree = "<group>"; };
 		0E124238277EB7FE0054D069 /* ConversationDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDataSource.swift; sourceTree = "<group>"; };
+		0E12423A277ED9560054D069 /* AvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarView.swift; sourceTree = "<group>"; };
+		0E12423D277ED9E00054D069 /* UIColor+Chat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+Chat.swift"; sourceTree = "<group>"; };
+		0E12423E277ED9E00054D069 /* Date+Chat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+Chat.swift"; sourceTree = "<group>"; };
+		0E12423F277ED9E00054D069 /* UIImage+Chat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Chat.swift"; sourceTree = "<group>"; };
+		0E124240277ED9E00054D069 /* UIView+anchor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+anchor.swift"; sourceTree = "<group>"; };
+		0E124245277EDA010054D069 /* ImageStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageStore.swift; sourceTree = "<group>"; };
+		0E124246277EDA020054D069 /* BackgroundFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundFactory.swift; sourceTree = "<group>"; };
+		0E124247277EDA020054D069 /* PhotoRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoRequest.swift; sourceTree = "<group>"; };
+		0E124248277EDA020054D069 /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		0E12424D277EDABD0054D069 /* SearchContactCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchContactCell.swift; sourceTree = "<group>"; };
 		0E15EC3127742B790082FA1B /* MessageWorkerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageWorkerManager.swift; sourceTree = "<group>"; };
 		0E2395B827708340006B2DE2 /* FriendDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendDomain.swift; sourceTree = "<group>"; };
 		0E2395BA2770834C006B2DE2 /* ConversationDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDomain.swift; sourceTree = "<group>"; };
@@ -98,6 +118,10 @@
 		0E124232277E9B940054D069 /* Image */ = {
 			isa = PBXGroup;
 			children = (
+				0E124246277EDA020054D069 /* BackgroundFactory.swift */,
+				0E124245277EDA010054D069 /* ImageStore.swift */,
+				0E124247277EDA020054D069 /* PhotoRequest.swift */,
+				0E124248277EDA020054D069 /* Theme.swift */,
 			);
 			path = Image;
 			sourceTree = "<group>";
@@ -105,8 +129,20 @@
 		0E124235277EB6BF0054D069 /* CommonView */ = {
 			isa = PBXGroup;
 			children = (
+				0E12423A277ED9560054D069 /* AvatarView.swift */,
 			);
 			path = CommonView;
+			sourceTree = "<group>";
+		};
+		0E12423C277ED97D0054D069 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				0E12423E277ED9E00054D069 /* Date+Chat.swift */,
+				0E12423D277ED9E00054D069 /* UIColor+Chat.swift */,
+				0E12423F277ED9E00054D069 /* UIImage+Chat.swift */,
+				0E124240277ED9E00054D069 /* UIView+anchor.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		0E66A9A9277A139400525C3B /* SQLIteStores */ = {
@@ -163,10 +199,11 @@
 		0EFDD95E276B79BD00323984 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				0E12423C277ED97D0054D069 /* Extensions */,
 				0E124235277EB6BF0054D069 /* CommonView */,
+				0EFDD97A276C2E8F00323984 /* Conversations */,
 				0EFDD97C276C2E9B00323984 /* Messages */,
 				0EFDD97B276C2E9600323984 /* Friends */,
-				0EFDD97A276C2E8F00323984 /* Conversations */,
 			);
 			path = Scenes;
 			sourceTree = "<group>";
@@ -198,6 +235,7 @@
 		0EFDD97B276C2E9600323984 /* Friends */ = {
 			isa = PBXGroup;
 			children = (
+				0E12424D277EDABD0054D069 /* SearchContactCell.swift */,
 				0EFDD970276B86AD00323984 /* FriendsController.swift */,
 				0E124236277EB6E20054D069 /* FriendDataSource.swift */,
 				0EFDD974276B8BB100323984 /* FriendInteractor.swift */,
@@ -298,13 +336,18 @@
 				0EFDD971276B86AD00323984 /* FriendsController.swift in Sources */,
 				0EFDD967276B7A3E00323984 /* Friend.swift in Sources */,
 				0EFDD977276C2C2A00323984 /* MessagesController.swift in Sources */,
+				0E12423B277ED9560054D069 /* AvatarView.swift in Sources */,
+				0E124242277ED9E00054D069 /* Date+Chat.swift in Sources */,
+				0E124243277ED9E00054D069 /* UIImage+Chat.swift in Sources */,
 				0EFDD94B276B72C400323984 /* ConversationController.swift in Sources */,
 				0EFDD96D276B7B0000323984 /* ServiceBasicAPIs.swift in Sources */,
+				0E12424E277EDABD0054D069 /* SearchContactCell.swift in Sources */,
 				0EDA957A2775A08300646051 /* ConversationStoreProxy.swift in Sources */,
 				0EFDD96F276B7D6100323984 /* FriendSQLiteStore.swift in Sources */,
 				0EFDD980276C7AD700323984 /* SubtitleCell.swift in Sources */,
 				0EFDD973276B86BC00323984 /* ConversationInteractor.swift in Sources */,
 				0EFDD961276B79F300323984 /* ConversationSQLiteStore.swift in Sources */,
+				0E124244277ED9E00054D069 /* UIView+anchor.swift in Sources */,
 				0E6666BD2771882A00786E57 /* MessageStoreProxy.swift in Sources */,
 				0EFDD947276B72C400323984 /* AppDelegate.swift in Sources */,
 				0E66A9AB277A189E00525C3B /* FriendStoreProxy.swift in Sources */,
@@ -314,8 +357,13 @@
 				0E2395B927708340006B2DE2 /* FriendDomain.swift in Sources */,
 				0E15EC3227742B790082FA1B /* MessageWorkerManager.swift in Sources */,
 				0E124237277EB6E20054D069 /* FriendDataSource.swift in Sources */,
+				0E12424C277EDA020054D069 /* Theme.swift in Sources */,
+				0E12424A277EDA020054D069 /* BackgroundFactory.swift in Sources */,
+				0E124249277EDA020054D069 /* ImageStore.swift in Sources */,
 				0E124239277EB7FE0054D069 /* ConversationDataSource.swift in Sources */,
+				0E124241277ED9E00054D069 /* UIColor+Chat.swift in Sources */,
 				0EFDD96B276B7A5400323984 /* Message.swift in Sources */,
+				0E12424B277EDA020054D069 /* PhotoRequest.swift in Sources */,
 				0EFDD979276C2C4700323984 /* MessagesInteractor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

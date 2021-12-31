@@ -28,7 +28,6 @@ class FriendSQLiteStore {
             t.column(phoneNumber)
             t.column(avatar)
         })
-            print("create table")
         } catch let e {
             print(e.localizedDescription)
         }

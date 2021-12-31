@@ -9,20 +9,6 @@ import Foundation
 import UIKit
 import SQLite
 
-struct Theme : Codable {
-        
-    typealias Datatype = String
-    
-    var bubbleColor : Datatype = "blue-purple"
-    var background : Datatype = "default"
-    var accentColor : Datatype = "blue"
-}
-
-extension Theme {
-    static var v0 = Theme()
-    static var v1 = Theme(bubbleColor: "green-orange", background: "forrest", accentColor: "greeny")
-}
-
 protocol Conversation {
 
     var theme: String? {get set}
