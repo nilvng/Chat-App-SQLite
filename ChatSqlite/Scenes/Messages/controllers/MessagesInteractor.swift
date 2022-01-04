@@ -112,7 +112,7 @@ class MessagesInteractor : MessagesDislayLogic {
 
     }
     
-    func saveMessage(content: String){
+    private func saveMessage(content: String){
         let m = MessageDomain(cid: conversation.id, content: content, type: .text, timestamp: Date(), sender: "1")
         
         createWorker(cid: conversation.id) // if needed
@@ -128,7 +128,7 @@ class MessagesInteractor : MessagesDislayLogic {
         })
     }
     
-    func updateLastMessage( m: MessageDomain){
+    private func updateLastMessage( m: MessageDomain){
         // update lastMessage
         conversation.lastMsg = m.content
         conversation.timestamp = m.timestamp
@@ -142,14 +142,4 @@ class MessagesInteractor : MessagesDislayLogic {
         })
     }
     
-    func toDbConversationModel(_ conversation: ConversationDomain) -> Conversation{
-        var  i = ConversationSQLite()
-        i.fromUIModel(c: conversation)
-        return i
-    }
-    func toDbMsgModel(_ message: MessageDomain) -> Message{
-        var  i = MessageSQLite()
-        i.fromUIModel(c: message)
-        return i
-    }
 }

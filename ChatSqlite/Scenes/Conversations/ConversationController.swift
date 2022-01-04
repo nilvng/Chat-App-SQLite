@@ -57,6 +57,7 @@ class ConversationController: UIViewController, UIGestureRecognizerDelegate {
         setup()
         setupTitle()
         setupNavigationBar()
+        setupNavigationBarColor()
         setupTableView()
         setupComposeButton()
         setupLongPressGesture()
@@ -72,6 +73,9 @@ class ConversationController: UIViewController, UIGestureRecognizerDelegate {
     private func setupTitle(){
         searchField.delegate = self
         navigationItem.titleView = searchField
+    }
+    
+    func setupNavigationBarColor() {
         
         let appearance = UINavigationBarAppearance()
         appearance.backgroundColor = .zaloBlue
@@ -82,6 +86,7 @@ class ConversationController: UIViewController, UIGestureRecognizerDelegate {
         navigationController?.navigationBar.standardAppearance = appearance
         navigationController?.navigationBar.compactAppearance = appearance
         navigationController?.navigationBar.scrollEdgeAppearance = appearance
+
     }
     
     func setupNavigationBar(){
@@ -183,11 +188,11 @@ class ConversationController: UIViewController, UIGestureRecognizerDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         interactor?.fetchData()
+        setupNavigationBarColor() // reset color, if it accidentally changed for other views
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-         
         navigationController?.navigationBar.barStyle = .black
         }
     
