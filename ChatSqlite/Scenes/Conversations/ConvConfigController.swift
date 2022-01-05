@@ -103,3 +103,63 @@ extension ConvConfigController : UITableViewDataSource, UITableViewDelegate {
         self.dismiss(animated: true, completion: nil)
     }
 }
+
+class HalfSizePresentationController: UIPresentationController {
+    let blurEffectView: UIVisualEffectView = {
+        let effect = UIBlurEffect(style: .dark)
+        let effectView = UIVisualEffectView(effect: effect)
+        effectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        return effectView
+    }()
+    var tapGesture : UITapGestureRecognizer!
+    var swipeGesture : UISwipeGestureRecognizer!
+    override init(presentedViewController: UIViewController, presenting presentingViewController: UIViewController?) {
+        
+        super.init(presentedViewController: presentedViewController, presenting: presentingViewController)
+        
+        setupTapDismissGesture()
+        setupSwipeDismissGesture()
+    }
+    
+    func setupTapDismissGesture(){
+        tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismiss))
+        self.blurEffectView.isUserInteractionEnabled = true
+        self.blurEffectView.addGestureRecognizer(tapGesture)
+    }
+    
+    func setupSwipeDismissGesture(){
+        swipeGesture = UISwipeGestureRecognizer(target: self, action: #selector(self.dismiss))
+        swipeGesture.direction = .down
+        self.presentedView?.addGestureRecognizer(swipeGesture)
+    }
+
+    
+    override var frameOfPresentedViewInContainerView: CGRect {
+        guard let bounds = containerView?.bounds else { return .zero }
+        print(bounds)
+        return CGRect(x: 0, y: bounds.height / 2, width: bounds.width, height: bounds.height / 2)
+    }
+    
+    @objc func dismiss(){
+        self.presentedViewController.dismiss(animated: true, completion: nil)
+    }
+    
+    override func presentationTransitionWillBegin() {
+        self.blurEffectView.alpha = 0
+        self.containerView?.addSubview(blurEffectView)
+        self.presentedViewController.transitionCoordinator?.animate(alongsideTransition: { _ in
+            self.blurEffectView.alpha = 0.4
+        }, completion:  nil)
+    }
+    override func containerViewWillLayoutSubviews() {
+        super.containerViewWillLayoutSubviews()
+        presentedView!.layer.masksToBounds = true
+        presentedView!.layer.cornerRadius = 10
+    }
+    override func containerViewDidLayoutSubviews() {
+        super.containerViewDidLayoutSubviews()
+        self.presentedView?.frame = frameOfPresentedViewInContainerView
+        blurEffectView.frame = containerView!.bounds
+    }
+
+}

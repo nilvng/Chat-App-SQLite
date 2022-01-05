@@ -115,20 +115,21 @@ extension ConversationStoreProxy : ConversationDataLogic {
             let endIndex = startIndex + noRecords
             
             if startIndex > self.items.count && isDoneFetching {
-                completionHandler(nil,.cantFetch("Exceed amount of Messages"))
+                completionHandler(nil,.cantFetch("Exceed amount of Conversation"))
                 return
             }
             print("\(startIndex) - \(endIndex) : \(items.count)")
 
             if endIndex < items.count || self.isDoneFetching{
-                print("Cached msgs.")
+                print("Cached convs.")
                 let end = endIndex < self.items.count ? endIndex : items.count - 1
                 
+                if (startIndex <= end){
                 completionHandler(Array(items[startIndex...end]), nil)
-
+                }
                 return
             }
-            print("Fetch msgs.")
+            print("Fetch convs.")
 
             // Fetch in db
             store.getAll(noRecords: noRecords, noPages: noPages, desc: desc, completionHandler: { res, err in
@@ -210,7 +211,15 @@ extension ConversationStoreProxy : ConversationDataLogic {
     }
     
     func delete(id: String, completionHandler: @escaping (StoreError?) -> Void) {
-        fatalError()
+        utilityQueue.async {
+        // delete in memo
+            if let deleteIndex = self.items.firstIndex(where: {$0.id == id } ){
+                self.items.remove(at: deleteIndex)
+            }
+            print("after deleting conv: \(self.items)")
+        // delete in db
+            self.store.delete(id: id, completionHandler: completionHandler)
+        }
     }
     
 }

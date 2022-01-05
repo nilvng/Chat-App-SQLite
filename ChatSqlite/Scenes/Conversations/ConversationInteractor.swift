@@ -26,6 +26,7 @@ class ConversationInteractor : ConversationsDisplayLogic{
     
     
     func fetchData(){
+        print("get all conv...")
         store.fetchAllItems(noRecords: noRecords, noPages: 0, desc: true, completionHandler: { [weak self] res, err in
             if let convs = res {
                 self?.presenter?.presentAllItems(convs)

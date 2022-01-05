@@ -27,7 +27,7 @@ class ChatMenuController : UIViewController{
 
     func setup(){
         service = ConversationStoreProxy.shared
-        msgService = MessageWorkerManager.shared.get(cid: conversation.id)
+        msgService = ChatManager.shared.get(cid: conversation.id)
     }
     
     fileprivate func setupDeleteButton() {
@@ -49,7 +49,18 @@ class ChatMenuController : UIViewController{
 
     @objc func deleteButtonPressed() {
         performDeleteItem()
-        navigationController?.popViewController(animated: true)
+        
+        // back to homepage
+        guard let viewControllers = self.navigationController?.viewControllers else {
+            return
+        }
+
+        for firstViewController in viewControllers {
+            if firstViewController is ConversationController {
+                self.navigationController?.popToViewController(firstViewController, animated: true)
+                break
+            }
+        }
     }
     
     func performDeleteItem(){
@@ -61,7 +72,9 @@ class ChatMenuController : UIViewController{
         })
         
         // delete in Msg table
-        
+        msgService?.deleteAllItems(completionHandler: { err in
+            print(err?.localizedDescription ?? "successfully delete conv : \(id)")
+        })
         
     }
     

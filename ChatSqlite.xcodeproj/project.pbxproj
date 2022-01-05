@@ -25,7 +25,7 @@
 		0E124257277EF82B0054D069 /* ChatbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124254277EF82B0054D069 /* ChatbarView.swift */; };
 		0E124258277EF82B0054D069 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124255277EF82B0054D069 /* MessageCell.swift */; };
 		0E124259277EF82B0054D069 /* BubbleConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124256277EF82B0054D069 /* BubbleConstant.swift */; };
-		0E15EC3227742B790082FA1B /* MessageWorkerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15EC3127742B790082FA1B /* MessageWorkerManager.swift */; };
+		0E15EC3227742B790082FA1B /* ChatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15EC3127742B790082FA1B /* ChatManager.swift */; };
 		0E2395B927708340006B2DE2 /* FriendDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2395B827708340006B2DE2 /* FriendDomain.swift */; };
 		0E2395BB2770834C006B2DE2 /* ConversationDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2395BA2770834C006B2DE2 /* ConversationDomain.swift */; };
 		0E2395BD2770835A006B2DE2 /* MessageDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2395BC2770835A006B2DE2 /* MessageDomain.swift */; };
@@ -73,7 +73,7 @@
 		0E124254277EF82B0054D069 /* ChatbarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatbarView.swift; sourceTree = "<group>"; };
 		0E124255277EF82B0054D069 /* MessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		0E124256277EF82B0054D069 /* BubbleConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleConstant.swift; sourceTree = "<group>"; };
-		0E15EC3127742B790082FA1B /* MessageWorkerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageWorkerManager.swift; sourceTree = "<group>"; };
+		0E15EC3127742B790082FA1B /* ChatManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatManager.swift; sourceTree = "<group>"; };
 		0E2395B827708340006B2DE2 /* FriendDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendDomain.swift; sourceTree = "<group>"; };
 		0E2395BA2770834C006B2DE2 /* ConversationDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDomain.swift; sourceTree = "<group>"; };
 		0E2395BC2770835A006B2DE2 /* MessageDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDomain.swift; sourceTree = "<group>"; };
@@ -119,7 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				0EFDD96C276B7B0000323984 /* ServiceBasicAPIs.swift */,
-				0E15EC3127742B790082FA1B /* MessageWorkerManager.swift */,
+				0E15EC3127742B790082FA1B /* ChatManager.swift */,
 				0E6666BC2771882A00786E57 /* MessageStoreProxy.swift */,
 				0EDA95792775A08300646051 /* ConversationStoreProxy.swift */,
 				0E66A9AA277A189E00525C3B /* FriendStoreProxy.swift */,
@@ -399,7 +399,7 @@
 				0E124234277EA53D0054D069 /* MessageDataSource.swift in Sources */,
 				0E2395BB2770834C006B2DE2 /* ConversationDomain.swift in Sources */,
 				0E2395B927708340006B2DE2 /* FriendDomain.swift in Sources */,
-				0E15EC3227742B790082FA1B /* MessageWorkerManager.swift in Sources */,
+				0E15EC3227742B790082FA1B /* ChatManager.swift in Sources */,
 				0E124253277EF4590054D069 /* ConvConfigController.swift in Sources */,
 				0E124237277EB6E20054D069 /* FriendDataSource.swift in Sources */,
 				0E12424C277EDA020054D069 /* Theme.swift in Sources */,

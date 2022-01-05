@@ -9,6 +9,7 @@ import Foundation
 import SQLite
 
 class MessagesSQLStore : MessageDataLogic {
+    
     var conversationID: String
     
     
@@ -135,5 +136,13 @@ extension MessagesSQLStore{
         fatalError()
     }
     
-    
+    func deleteAllMessages(completion: @escaping (StoreError?) -> Void) {
+        let query = table.filter(cid == conversationID)
+        do {
+            try db?.run(query.delete())
+            completion(nil)
+        } catch {
+            completion(.cantDelete("cant delete all msgs by cid: \(conversationID)"))
+        }
+    }
 }

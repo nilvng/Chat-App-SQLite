@@ -124,7 +124,13 @@ extension ConversationSQLiteStore : ConversationDataLogic{
     }
     
     func delete(id: String, completionHandler: @escaping (StoreError?) -> Void) {
-        fatalError()
+        do {
+            try db.run(table.filter(self.id == id).delete())
+            print("delete conversation: \(id)")
+            completionHandler(nil)
+        } catch let e {
+            completionHandler(.cantDelete(e.localizedDescription))
+        }
     }
     
     func findWithFriend(id: String, completion: @escaping (Conversation?, StoreError?) -> Void ){

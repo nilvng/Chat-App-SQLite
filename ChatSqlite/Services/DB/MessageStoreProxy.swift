@@ -16,9 +16,9 @@ protocol MessageDataLogic {
     func getWithId(_ id: String, completionHandler: @escaping (Message?, StoreError?) -> Void)
     func add(newItem: Message, completionHandler: @escaping (Message?, StoreError?) -> Void)
     func delete(id: String, completionHandler: @escaping (StoreError?) -> Void)
-
+    func deleteAllMessages(completion: @escaping (StoreError?) -> Void)
 }
-class MessageStoreProxy {
+class MessageStoreProxy{
     
     var store : MessageDataLogic = MessagesSQLStore()
     
@@ -84,6 +84,10 @@ extension MessageStoreProxy : MessageService {
     func deleteItem(id: String, completionHandler: @escaping (StoreError?) -> Void) {
         self.delete(id: id, completionHandler: completionHandler)
     }
+    
+    func deleteAllItems(completionHandler: @escaping (StoreError?) -> Void) {
+        self.deleteAllMessages(completion: completionHandler)
+    }
     func toUIModel(item f: Message) -> MessageDomain{
         return f.toUIModel()
     }
@@ -112,13 +116,16 @@ extension MessageStoreProxy : MessageDataLogic {
                 completionHandler(nil,.cantFetch("Exceed amount of Messages"))
                 return
             }
-            print("\(startIndex) - \(endIndex) : \(messages.count)")
+            print("\(startIndex) - \(endIndex) : \(messages.count) - done? \(isDoneFetching)")
 
             if endIndex < messages.count || self.isDoneFetching{
                 print("Cached msgs.")
                 let end = endIndex < self.messages.count ? endIndex : messages.count - 1
+                print("\(startIndex) - end: \(end)")
 
+                if (startIndex <= end){
                     completionHandler(Array(messages[startIndex...end]), nil)
+                }
                 return
             }
             print("Fetch msgs.")
@@ -127,9 +134,10 @@ extension MessageStoreProxy : MessageDataLogic {
             store.getAll(noRecords: noRecords, noPages: noPages, desc: desc, completionHandler: { res, err in
                 
                 if (res != nil){
+                    print("fetch data once..")
                     if (res!.isEmpty) {
                         self.isDoneFetching =  true
-                            completionHandler(res,err)
+                        completionHandler(res,err)
                     } else {
                         if res!.count < noRecords {
                             self.isDoneFetching = true
@@ -152,7 +160,7 @@ extension MessageStoreProxy : MessageDataLogic {
             
             // Add in cache
             print("Worker add msg.")
-            messages.append(newItem)
+            messages.insert(newItem, at: 0)
             
                 completionHandler(newItem,nil)
                 
@@ -172,5 +180,14 @@ extension MessageStoreProxy : MessageDataLogic {
     
     func delete(id: String, completionHandler: @escaping (StoreError?) -> Void) {
         fatalError()
+    }
+    func deleteAllMessages(completion: @escaping (StoreError?) -> Void) {
+        utilityQueue.async {
+            self.messages = []
+            
+            self.store.deleteAllMessages{ err in
+                print(err?.localizedDescription ?? "success delete all msg with cid: \(self.conversationID)")
+            }
+        }
     }
 }

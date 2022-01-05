@@ -16,6 +16,7 @@ class ConversationDataSource : NSObject {
     static var CELL_ID = "messCell"
     
     func loadItems(_ items: [ConversationDomain]){
+        //print("present this: \(items)")
         self.items = items
         filteredItems = items
     }

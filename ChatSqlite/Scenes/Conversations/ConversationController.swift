@@ -157,37 +157,16 @@ class ConversationController: UIViewController, UIGestureRecognizerDelegate {
 //        let searchvc = SearchViewController()
 //        navigationController?.pushViewController(searchvc, animated: true)
     }
-    
-    func setupLongPressGesture(){
-        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
-        longPress.minimumPressDuration = 1.0 // 1 second press
-        longPress.delegate = self
-        tableView.addGestureRecognizer(longPress)
-
-    }
-    
-    @objc func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer){
-        if gestureRecognizer.state == .began {
-//            let touchPoint = gestureRecognizer.location(in: self.tableView)
-//            if let indexPath = tableView.indexPathForRow(at: touchPoint) {
-//                print("Long press row: \(indexPath.row)")
-//                let configView = ConvConfigController()
-//                configView.configure {
-//                    let itemToDelete = self.dataSource.items[indexPath.row]
-//                    ChatManager.shared.deleteChat(itemToDelete)
-//                }
-//                configView.modalPresentationStyle = UIModalPresentationStyle.custom
-//                configView.transitioningDelegate = self
-//                self.present(configView, animated: true, completion: nil)
-//            }
-        }
-    }
-    
 
     // MARK: Navigation
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        // reload data
+        print("Conv will appear...")
         interactor?.fetchData()
+        
+        
         setupNavigationBarColor() // reset color, if it accidentally changed for other views
     }
 
@@ -294,3 +273,57 @@ extension ConversationController : UITextFieldDelegate {
         tableView.reloadData()
   }
 }
+
+// MARK:  Conversation Config modal
+
+extension ConversationController {
+    func setupLongPressGesture(){
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
+        longPress.minimumPressDuration = 0.5 // 1 second press
+        longPress.delegate = self
+        tableView.addGestureRecognizer(longPress)
+
+    }
+    
+    @objc func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer){
+        if gestureRecognizer.state == .began {
+            let touchPoint = gestureRecognizer.location(in: self.tableView)
+            if let indexPath = tableView.indexPathForRow(at: touchPoint) {
+                print("Long press row: \(indexPath.row)")
+                let configView = ConvConfigController()
+                let itemToConfig = dataSource.getItem(at: indexPath)
+                configView.configure {
+                    self.performDeleteItem(itemToConfig)
+                }
+                configView.modalPresentationStyle = UIModalPresentationStyle.custom
+                configView.transitioningDelegate = self
+                self.present(configView, animated: true, completion: nil)
+            }
+        }
+    }
+    
+    func performDeleteItem(_ item : ConversationDomain){
+        print(" Request delete conv\(item.id)...")
+//        let id = conversation.id
+//
+//        // delete in Conv table
+//        service.deleteItem(id: id, completionHandler: { err in
+//            print(err?.localizedDescription ?? "successfully delete conv : \(id)")
+//        })
+//
+//        // delete in Msg table
+//        msgService?.deleteAllItems(completionHandler: { err in
+//            print(err?.localizedDescription ?? "successfully delete conv : \(id)")
+//        })
+        
+    }
+    
+}
+
+extension ConversationController : UIViewControllerTransitioningDelegate{
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        return HalfSizePresentationController(presentedViewController: presented, presenting: presentingViewController)
+    }
+}
+
+

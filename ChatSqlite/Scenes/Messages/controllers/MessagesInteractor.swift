@@ -53,9 +53,9 @@ class MessagesInteractor : MessagesDislayLogic {
 
         // filter messenges belong to this conversation
         self.conversation = conversation
-        
         createWorker(cid: conversation.id)
-        store!.fetchAllItems(noRecords: noRecords, noPages: 0, desc: false) { [weak self] msgs, err in
+        
+        store!.fetchAllItems(noRecords: noRecords, noPages: 0, desc: true) { [weak self] msgs, err in
             self?.presenter?.presentAllItems(msgs)
             
         }
@@ -63,12 +63,12 @@ class MessagesInteractor : MessagesDislayLogic {
     
     func createWorker(cid : String){
         if store == nil {
-            self.store = MessageWorkerManager.shared.get(cid: cid)
+            self.store = ChatManager.shared.get(cid: cid)
             
         }
     }
     
-    func onScroll(tableOffset : CGFloat){
+    func loadMore(tableOffset : CGFloat){
         //print(tableOffset)
         let pages = Int(tableOffset / offSet)
         guard pages - currPage >= 1 else {
@@ -78,11 +78,12 @@ class MessagesInteractor : MessagesDislayLogic {
         print(pages)
 
         store?.fetchAllItems(noRecords: noRecords, noPages: currPage, desc: false) { [weak self] msgs, err in
+            // empty result -> no need to present
             if msgs == nil || msgs!.isEmpty || err != nil {
                 print("empty fetch!: \(String(describing: self?.currPage))")
                 return
                 
-            } // empty result -> no need to present
+            }
             self?.presenter?.presentAllItems(msgs)
             
         }

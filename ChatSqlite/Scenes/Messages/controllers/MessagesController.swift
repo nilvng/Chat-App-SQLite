@@ -10,7 +10,7 @@ import UIKit
 protocol MessagesDislayLogic {
     func fetchData(friend: FriendDomain)
     func fetchData(conversation: ConversationDomain)
-    func onScroll(tableOffset: CGFloat)
+    func loadMore(tableOffset: CGFloat)
     func sendMessage(content: String, newConv: Bool)
 }
 enum AccentColorMode {
@@ -364,7 +364,7 @@ class MessagesController: UIViewController {
 extension MessagesController : UITableViewDelegate {
     // MARK: Scroll events
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        interactor?.onScroll(tableOffset: tableView.contentOffset.y)
+        interactor?.loadMore(tableOffset: tableView.contentOffset.y)
         
         // change bubble gradient as scrolling
         let ideaRatio = UIScreen.main.bounds.size.height / 17
