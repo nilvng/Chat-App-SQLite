@@ -22,7 +22,6 @@ class FriendMediator : FriendDBMediator{
     
     func fetchData(){
         store.fetchAllItems(completionHandler: { [weak self] items, err in
-            print(items)
             if let friends = items{
                 self?.presenter?.presentItems(friends)
             } else {

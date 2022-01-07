@@ -97,7 +97,7 @@ extension FriendsController : UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let option = dataSource.getItem(ip: indexPath)
-
+        
         // Click Friend
         if let friend = option as? FriendDomain {
             let chatController = MessagesController()
@@ -106,10 +106,22 @@ extension FriendsController : UITableViewDelegate {
             presentingVC?.pushViewController(chatController, animated: true)
             self.dismiss(animated: false, completion: nil)
         } else {
-        // Click on option
-            print("Add Contact view tbd")
+            // Click on option
+            if true {
+                print("Navigate to Add Contact view")
+                let addView = FriendDetailViewController()
+                addView.configure(with: FriendDomain(), isNew: true, changeAction: { friend in
+                    
+                    print("Controller: save to DB - \(friend)")
+                    self.mediator?.addItem(friend)
+                    
+                })
+                let presentingVC = self.presentingViewController as? UINavigationController
+                presentingVC?.pushViewController(addView, animated: true)
+                self.dismiss(animated: false, completion: nil)
+            }
+            
         }
-
     }
 }
 

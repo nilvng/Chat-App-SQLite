@@ -35,7 +35,7 @@ class ConversationCell : UITableViewCell {
 
     }()
     private let thumbnail : AvatarView = {
-        let image = AvatarView(frame: CGRect(x: 0, y: 0, width: 70, height: 70))
+        let image = AvatarView(frame: .zero)
         image.contentMode = .scaleAspectFill
         return image
     }()
@@ -87,7 +87,7 @@ class ConversationCell : UITableViewCell {
     func setupThumbnail() {
         thumbnail.translatesAutoresizingMaskIntoConstraints = false
         
-        let height : CGFloat = 70
+        let height : CGFloat = 67
         let width = height
         
         let constraints : [NSLayoutConstraint] = [

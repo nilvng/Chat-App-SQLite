@@ -100,7 +100,7 @@ extension ConvConfigController : UITableViewDataSource, UITableViewDelegate {
             fatalError()
         }
         takeAction(config: config)
-        print(self.presentingViewController)
+
         if let firstVC = self.presentingViewController as? ConversationController {
             print("HERE: please reload conv?")
                 firstVC.mediator?.fetchData()

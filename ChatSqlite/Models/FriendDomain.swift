@@ -14,12 +14,25 @@ struct FriendDomain {
     
     var phoneNumber: String
     
-    var name: String
+    var name: String {
+        didSet {
+            let arr  = name.components(separatedBy: .whitespacesAndNewlines)
+            if arr.count > 1 {
+            firstName = arr[0]
+            }
+            if arr.count > 2 {
+            lastName = arr[1]
+            }
+        }
+    }
+    
+    var firstName: String?
+    var lastName: String?
     
     init(){
         id = ""
         phoneNumber = ""
-        name = "Default"
+        name = "D"
         avatar = nil
     }
     
@@ -28,6 +41,7 @@ struct FriendDomain {
         self.phoneNumber  = phoneNumber
         self.name = name
         self.avatar = avatar
+
     }
     
 }

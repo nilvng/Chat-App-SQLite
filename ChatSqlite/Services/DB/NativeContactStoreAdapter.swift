@@ -18,6 +18,9 @@ import Foundation
 class NativeContactStoreAdapter : FriendService{
     
     var adaptee : NativeContactStore = NativeContactStore()
+    
+    var items : [Friend] = []
+
     let friendsQueue = DispatchQueue(
         label: "zalo.phonebook.friendList",
         qos: .utility,
@@ -45,6 +48,7 @@ class NativeContactStoreAdapter : FriendService{
     func createItem(_ item: FriendDomain, completionHandler: @escaping (StoreError?) -> Void) {
         friendsQueue.async {
             let contact = self.toNative(domain: item)
+            print("NativeAdapter: Add to native - \(contact)")
             self.adaptee.saveContactToNative(contact, completition: { res in
                 if res {
                     completionHandler(nil)
@@ -104,14 +108,9 @@ class NativeContactStoreAdapter : FriendService{
         var native = FriendContact()
         native.uid = domain.id
         
-        let arr  = domain.name.components(separatedBy: .whitespacesAndNewlines)
-        if arr.count > 1 {
-        native.firstName = arr[0]
-        }
-        if arr.count > 2 {
-        native.firstName = arr[1]
-        }
-
+        native.firstName = domain.firstName != nil ? domain.firstName! : ""
+        native.lastName = domain.lastName != nil ? domain.lastName! : ""
+        
         native.phoneNumbers = [domain.phoneNumber]
         
         return native

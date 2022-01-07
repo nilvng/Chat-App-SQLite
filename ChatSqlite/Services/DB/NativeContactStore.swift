@@ -135,7 +135,7 @@ class NativeContactStore{
     func getAllContactsFromNative()-> [FriendContact]{
         // fetching all contacts from the Contacts.app
         var contacts: [CNContact] = []
-        var keysToFetch : [CNKeyDescriptor] = [CNContactIdentifierKey,CNContactGivenNameKey,CNContactFamilyNameKey,CNContactPhoneNumbersKey, CNContactImageDataKey] as [CNKeyDescriptor]
+        let keysToFetch : [CNKeyDescriptor] = [CNContactIdentifierKey,CNContactGivenNameKey,CNContactFamilyNameKey,CNContactPhoneNumbersKey, CNContactImageDataKey] as [CNKeyDescriptor]
         //keysToFetch += [CNContactViewController.descriptorForRequiredKeys()]
         
         let fetchRequest = CNContactFetchRequest(keysToFetch: keysToFetch)
