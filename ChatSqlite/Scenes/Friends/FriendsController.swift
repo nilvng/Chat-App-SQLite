@@ -7,14 +7,14 @@
 
 import UIKit
 
-protocol FriendsDisplayLogic {
+protocol FriendDBMediator {
     func fetchData()
     func addItem(_ item: FriendDomain)
 }
 
 class FriendsController: UIViewController {
 
-    var interactor : FriendsDisplayLogic?
+    var mediator : FriendDBMediator?
     var dataSource  = FriendDataSource()
     
     var currentSearchText : String = ""
@@ -39,10 +39,6 @@ class FriendsController: UIViewController {
         setupTableView()
         
         navigationItem.title = "Friends"
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
-                                                            target: self,
-                                                            action: #selector(addButtonPressed))
-        
 
     }
     
@@ -64,9 +60,9 @@ class FriendsController: UIViewController {
     
     
     func setup() {
-        let inter = FriendInteractor()
+        let inter = FriendMediator()
         inter.presenter = self
-        interactor = inter
+        mediator = inter
         
     }
     func setupTableView() {
@@ -86,19 +82,11 @@ class FriendsController: UIViewController {
 
     }
 
-    @objc func addButtonPressed(){
-        let names = ["Meme", "Bingo", "WRM"]
-        let friend = FriendDomain(avatar: "hello", id: UUID().uuidString, phoneNumber: "1234", name: names.randomElement()!)
-        
-        presentNewItems(friend)
-        interactor?.addItem(friend)
-    }
-
     // MARK: - Navigation
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        interactor?.fetchData()
+        mediator?.fetchData()
     }
     
 

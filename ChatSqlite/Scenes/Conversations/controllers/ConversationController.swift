@@ -7,10 +7,11 @@
 
 import UIKit
 
-protocol ConversationsDisplayLogic {
+protocol ConversationDBMediator {
     func fetchData()
     func addItem(_ conversation : ConversationDomain)
     func onScroll(tableOffset: CGFloat)
+    func deleteConversation(item: ConversationDomain, indexPath: IndexPath)
 }
 
 class ConversationController: UIViewController, UIGestureRecognizerDelegate {
@@ -47,7 +48,7 @@ class ConversationController: UIViewController, UIGestureRecognizerDelegate {
     lazy var blurEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
     
     // MARK: VC properties
-    var interactor : ConversationsDisplayLogic?
+    var mediator : ConversationDBMediator?
     var dataSource  = ConversationDataSource()
     
     override func viewDidLoad() {
@@ -65,9 +66,9 @@ class ConversationController: UIViewController, UIGestureRecognizerDelegate {
     
     func setup() {
         let service = ConversationStoreProxy.shared
-        let inter = ConversationInteractor(store: service)
+        let inter = ConversationMediator(store: service)
         inter.presenter = self
-        interactor = inter
+        mediator = inter
         }
     // MARK: AutoLayout setups
     private func setupTitle(){
@@ -164,7 +165,7 @@ class ConversationController: UIViewController, UIGestureRecognizerDelegate {
         
         // reload data
         print("Conv will appear...")
-        interactor?.fetchData()
+        mediator?.fetchData()
         
         
         setupNavigationBarColor() // reset color, if it accidentally changed for other views
@@ -190,7 +191,7 @@ extension ConversationController : UITableViewDelegate {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        interactor?.onScroll(tableOffset: tableView.contentOffset.y)
+        mediator?.onScroll(tableOffset: tableView.contentOffset.y)
     }
     
     // MARK: Animate Compose btn
@@ -216,6 +217,14 @@ extension ConversationController : UITableViewDelegate {
 
 // MARK: Presenter
 extension ConversationController : ConversationPresenter{
+    func presentDeleteItem(_ item: ConversationDomain, at index: IndexPath) {
+        self.dataSource.deleteItemAt(index: index)
+        
+        DispatchQueue.main.async {
+            self.tableView.deleteRows(at: [index], with: .automatic)
+        }
+    }
+    
     func presentNewItems(_ item: ConversationDomain) {
         
         print("present new conv tbd")
@@ -282,7 +291,7 @@ extension ConversationController {
         longPress.minimumPressDuration = 0.5 // 1 second press
         longPress.delegate = self
         tableView.addGestureRecognizer(longPress)
-
+        
     }
     
     @objc func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer){
@@ -293,31 +302,14 @@ extension ConversationController {
                 let configView = ConvConfigController()
                 let itemToConfig = dataSource.getItem(at: indexPath)
                 configView.configure {
-                    self.performDeleteItem(itemToConfig)
+                    self.mediator?.deleteConversation(item: itemToConfig, indexPath: indexPath)
                 }
                 configView.modalPresentationStyle = UIModalPresentationStyle.custom
                 configView.transitioningDelegate = self
-                self.present(configView, animated: true, completion: nil)
+                self.present(configView, animated: true)
             }
         }
     }
-    
-    func performDeleteItem(_ item : ConversationDomain){
-        print(" Request delete conv\(item.id)...")
-//        let id = conversation.id
-//
-//        // delete in Conv table
-//        service.deleteItem(id: id, completionHandler: { err in
-//            print(err?.localizedDescription ?? "successfully delete conv : \(id)")
-//        })
-//
-//        // delete in Msg table
-//        msgService?.deleteAllItems(completionHandler: { err in
-//            print(err?.localizedDescription ?? "successfully delete conv : \(id)")
-//        })
-        
-    }
-    
 }
 
 extension ConversationController : UIViewControllerTransitioningDelegate{

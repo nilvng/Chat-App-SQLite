@@ -27,6 +27,7 @@ protocol ConversationService{
     func fetchAllItems(noRecords: Int, noPages: Int, desc : Bool, completionHandler: @escaping ([ConversationDomain]?, StoreError?) -> Void)
     func fetchItemWithId(_ id: String, completionHandler : @escaping (ConversationDomain?, StoreError?) -> Void)
     func createItem(_ item: ConversationDomain,completionHandler : @escaping (StoreError?) -> Void)
+    func upsertItem(_ item: ConversationDomain,completionHandler : @escaping (StoreError?) -> Void)
     func updateItem(_ item: ConversationDomain,completionHandler : @escaping (StoreError?) -> Void)
     func deleteItem(id: String ,completionHandler : @escaping (StoreError?) -> Void)
     func findItemWithFriend(id : String, completion: @escaping (ConversationDomain?, StoreError?) -> Void )

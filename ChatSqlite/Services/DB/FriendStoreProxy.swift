@@ -83,7 +83,7 @@ extension FriendStoreProxy : FriendService {
     
     
     func toUIModel(friend f: Friend) -> FriendDomain{
-        return FriendDomain(avatar: f.avatar, id: f.id, phoneNumber: f.phoneNumber, name: f.name)
+        return FriendDomain(id: f.id, phoneNumber: f.phoneNumber, name: f.name, avatar: f.avatar)
     }
     
     func toDtbModel(friend f: FriendDomain) -> Friend{

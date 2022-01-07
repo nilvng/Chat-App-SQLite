@@ -108,6 +108,24 @@ extension ConversationSQLiteStore : ConversationDataLogic{
         }
     }
     
+    func upsert(newItem: Conversation, completionHandler: @escaping (Conversation?, StoreError?) -> Void) {
+        guard let item = newItem as? ConversationSQLite else {
+            completionHandler(nil, .cantFetch("wrong type"))
+            return
+        }
+        
+        do {
+
+            let rowid = try db?.run(table.upsert(item, onConflictOf: id))
+            
+            print("Create Conversation row: \(String(describing: rowid))")
+            completionHandler(newItem, nil)
+        } catch let e {
+            print("store failed: " + e.localizedDescription)
+            completionHandler(nil,.cantCreate(e.localizedDescription))
+        }
+    }
+    
     func update(item: Conversation, completionHandler: @escaping (Conversation?, StoreError?) -> Void) {
 
         guard let item = item as? ConversationSQLite else {

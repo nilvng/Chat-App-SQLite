@@ -15,10 +15,11 @@ protocol MessagesPresenter : AnyObject{
 
 }
 
-class MessagesInteractor : MessagesDislayLogic {
+class MessagesMediator : MessageDBMediator {
     
     weak var presenter : MessagesPresenter?
     
+    var manager : ChatBusinessLogic
     var store : MessageService?
     lazy var conversationStore : ConversationService = ConversationStoreProxy.shared
     
@@ -29,6 +30,10 @@ class MessagesInteractor : MessagesDislayLogic {
         CGFloat(300)
     }
     var currPage = 0
+    
+    init(){
+        manager = ChatManager.shared
+    }
         
     func fetchData(friend : FriendDomain){
         // find conversation with friend
@@ -95,52 +100,7 @@ class MessagesInteractor : MessagesDislayLogic {
         self.presenter?.presentNewItem(m)
 
         // update db
-        if newConv {
-            // create conversation
-            conversationStore.createItem(conversation, completionHandler: { [weak self] err in
-                guard err == nil else {
-                    print(err!.localizedDescription)
-                    return
-                }
-                print("Conversation added.")
-                self?.saveMessage(content: content)
-            })
-        } else {
-            // create messenge
-            saveMessage(content: content)
-        }
-        
-
-    }
-    
-    private func saveMessage(content: String){
-        let m = MessageDomain(cid: conversation.id, content: content, type: .text, timestamp: Date(), sender: "1")
-        
-        createWorker(cid: conversation.id) // if needed
-        
-        store!.createItem(m, completionHandler: {  [weak self]  err in
-            if err == nil {
-                print("Messages saved.")
-                self?.updateLastMessage(m: m)
-                //self?.presenter?.presentNewItem(msg!)
-            } else {
-                print(err?.localizedDescription ?? "Unknown error")
-            }
-        })
-    }
-    
-    private func updateLastMessage( m: MessageDomain){
-        // update lastMessage
-        conversation.lastMsg = m.content
-        conversation.timestamp = m.timestamp
-        
-        conversationStore.updateItem(conversation, completionHandler: {err in
-            if err == nil {
-                print("Successfully update last message.")
-            } else {
-                print(err?.localizedDescription  ?? "weird error")
-            }
-        })
+        manager.onNewMessage(msg: m, conversation: conversation, isNewConv: newConv)
     }
     
 }

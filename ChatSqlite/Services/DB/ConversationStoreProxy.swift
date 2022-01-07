@@ -12,6 +12,7 @@ protocol ConversationDataLogic {
     func getAll( noRecords : Int, noPages: Int, desc : Bool, completionHandler: @escaping ([Conversation]?, StoreError?) -> Void)
     func getWithId(_ id: String, completionHandler: @escaping (Conversation?, StoreError?) -> Void)
     func add(newItem: Conversation, completionHandler: @escaping (Conversation?, StoreError?) -> Void)
+    func upsert(newItem: Conversation, completionHandler: @escaping (Conversation?, StoreError?) -> Void)
     func delete(id: String, completionHandler: @escaping (StoreError?) -> Void)
     func update(item: Conversation,completionHandler : @escaping (Conversation?, StoreError?) -> Void)
     func findWithFriend(id : String, completion: @escaping (Conversation?, StoreError?) -> Void )
@@ -78,6 +79,15 @@ extension ConversationStoreProxy : ConversationService {
     func createItem(_ item: ConversationDomain, completionHandler: @escaping (StoreError?) -> Void) {
         let mappedItem = toDtbModel(item)
         self.add(newItem: mappedItem, completionHandler: { res, err in
+
+                completionHandler(err)
+            
+        })
+    }
+    
+    func upsertItem(_ item: ConversationDomain, completionHandler: @escaping (StoreError?) -> Void) {
+        let mappedItem = toDtbModel(item)
+        self.upsert(newItem: mappedItem, completionHandler: { res, err in
 
                 completionHandler(err)
             
@@ -185,6 +195,26 @@ extension ConversationStoreProxy : ConversationDataLogic {
         }
     }
     
+    func upsert(newItem: Conversation, completionHandler: @escaping (Conversation?, StoreError?) -> Void) {
+        utilityQueue.async { [self] in
+            
+            // Add in cache
+            if let  index = items.firstIndex(where: {$0.id == newItem.id}) {
+                items[index] = newItem
+            } else {
+                items.insert(newItem, at: 0)
+            }
+            completionHandler(newItem,nil)
+            
+            // Add to db
+            store.upsert(newItem: newItem, completionHandler: { res, err in
+                if err != nil{
+                        completionHandler(nil ,err)
+                }
+            })
+        }
+    }
+    
     func update(item: Conversation, completionHandler: @escaping (Conversation?, StoreError?) -> Void) {
         self.utilityQueue.async { [self] in
             
@@ -216,7 +246,6 @@ extension ConversationStoreProxy : ConversationDataLogic {
             if let deleteIndex = self.items.firstIndex(where: {$0.id == id } ){
                 self.items.remove(at: deleteIndex)
             }
-            print("after deleting conv: \(self.items)")
         // delete in db
             self.store.delete(id: id, completionHandler: completionHandler)
         }

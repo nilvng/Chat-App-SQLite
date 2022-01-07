@@ -12,16 +12,17 @@ protocol FriendPresenter {
     func presentNewItems(_ item : FriendDomain)
 }
 
-class FriendInteractor : FriendsDisplayLogic{
+class FriendMediator : FriendDBMediator{
     var store : FriendService
     var presenter : FriendPresenter? = nil
     
     init(){
-        self.store = FriendStoreProxy.shared
+        self.store = NativeContactStoreAdapter()
     }
     
     func fetchData(){
         store.fetchAllItems(completionHandler: { [weak self] items, err in
+            print(items)
             if let friends = items{
                 self?.presenter?.presentItems(friends)
             } else {

@@ -10,8 +10,7 @@ import UIKit
 class ChatMenuController : UIViewController{
         
     var conversation : ConversationDomain!
-    var service : ConversationService!
-    var msgService : MessageService?
+    var manager : ConversationBusinessLogic!
     
     let deleteButton : UIButton = {
         let button = UIButton()
@@ -26,8 +25,7 @@ class ChatMenuController : UIViewController{
     }()
 
     func setup(){
-        service = ConversationStoreProxy.shared
-        msgService = ChatManager.shared.get(cid: conversation.id)
+        manager = ChatManager.shared
     }
     
     fileprivate func setupDeleteButton() {
@@ -65,17 +63,7 @@ class ChatMenuController : UIViewController{
     
     func performDeleteItem(){
         let id = conversation.id
-        
-        // delete in Conv table
-        service.deleteItem(id: id, completionHandler: { err in
-            print(err?.localizedDescription ?? "successfully delete conv : \(id)")
-        })
-        
-        // delete in Msg table
-        msgService?.deleteAllItems(completionHandler: { err in
-            print(err?.localizedDescription ?? "successfully delete conv : \(id)")
-        })
-        
+        manager.onDeleteConversation(id: id)
     }
     
     

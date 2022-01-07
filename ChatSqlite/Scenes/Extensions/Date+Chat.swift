@@ -8,10 +8,12 @@
 import Foundation
 
 extension Date {
-    static func - (recent: Date, previous: Date) -> (month: Int?, year: Int?){
+    static func - (recent: Date, previous: Date) -> (month: Int?, year: Int?, day: Int?){
         let month = Calendar.current.dateComponents([.month], from: previous, to: recent).month
         let year = Calendar.current.dateComponents([.year], from: previous, to: recent).year
-        return (month, year)
+        let day = Calendar.current.dateComponents([.day], from: previous, to: recent).day
+
+        return (month, year, day)
     }
     
     func toTimestampString() -> String {
@@ -20,8 +22,12 @@ extension Date {
                 
         if let yearDiff = interval.year, yearDiff > 0 {
             formatter.dateFormat = "dd/MM/yy"
-        } else if let monthDiff = interval.month, monthDiff > 0 {
+        } else if let dayDiff = interval.day, dayDiff > 0 {
+            if dayDiff < 7 {
+                formatter.dateFormat = "EEEE"
+            } else {
             formatter.dateFormat = "dd MMM"
+            }
         } else {
             formatter.timeStyle = .short
         }

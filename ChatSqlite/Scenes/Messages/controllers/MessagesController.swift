@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol MessagesDislayLogic {
+protocol MessageDBMediator {
     func fetchData(friend: FriendDomain)
     func fetchData(conversation: ConversationDomain)
     func loadMore(tableOffset: CGFloat)
@@ -19,7 +19,7 @@ enum AccentColorMode {
 }
 class MessagesController: UIViewController {
     // MARK: VC properties
-    var interactor : MessagesDislayLogic?
+    var mediator : MessageDBMediator?
     var dataSource = MessageDataSource()
     var conversation : ConversationDomain?
     
@@ -85,7 +85,7 @@ class MessagesController: UIViewController {
     }
     
     func configure(friend: FriendDomain){
-        interactor?.fetchData(friend: friend)
+        mediator?.fetchData(friend: friend)
         self.conversation = ConversationDomain.fromFriend(friend: friend)
     }
     
@@ -95,9 +95,9 @@ class MessagesController: UIViewController {
     
     // MARK: Setups
     func setup(){
-        let inter = MessagesInteractor()
+        let inter = MessagesMediator()
         inter.presenter = self
-        interactor = inter
+        mediator = inter
     }
     
     func configureTable(){
@@ -263,7 +263,7 @@ class MessagesController: UIViewController {
         super.viewWillAppear(animated)
         setupNavigationBarColor()
         guard let c = conversation else {return}
-        interactor?.fetchData(conversation: c)
+        mediator?.fetchData(conversation: c)
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -287,7 +287,7 @@ class MessagesController: UIViewController {
     @objc func addMess(){
         let text = ["Random talk", "see you", "salute"].randomElement()!
         
-        interactor?.sendMessage(content: text, newConv: isNew)
+        mediator?.sendMessage(content: text, newConv: isNew)
 
         if !isNew {
             print("old chat")
@@ -364,7 +364,7 @@ class MessagesController: UIViewController {
 extension MessagesController : UITableViewDelegate {
     // MARK: Scroll events
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        interactor?.loadMore(tableOffset: tableView.contentOffset.y)
+        mediator?.loadMore(tableOffset: tableView.contentOffset.y)
         
         // change bubble gradient as scrolling
         let ideaRatio = UIScreen.main.bounds.size.height / 17
@@ -500,7 +500,7 @@ extension MessagesController : ChatbarDelegate {
         
         newMessAnimation = true
         
-        interactor?.sendMessage(content: message, newConv: isNew)
+        mediator?.sendMessage(content: message, newConv: isNew)
 
         if !isNew {
             print("old chat")

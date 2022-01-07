@@ -11,17 +11,22 @@ import UIKit
 protocol ConversationPresenter : AnyObject {
     func presentAllItems(_ items : [ConversationDomain]?)
     func presentNewItems(_ item : ConversationDomain)
+    func presentDeleteItem(_ item: ConversationDomain, at: IndexPath)
 }
 
-class ConversationInteractor : ConversationsDisplayLogic{
+class ConversationMediator : ConversationDBMediator{
+    
     var store : ConversationService
     weak var presenter : ConversationPresenter?
+    var manager : ConversationBusinessLogic
+    
     var noRecords : Int = 20
     var currPage = 0
     var offset : CGFloat = 300
     
     init(store: ConversationService){
         self.store = store
+        self.manager = ChatManager.shared
     }
     
     
@@ -62,5 +67,11 @@ class ConversationInteractor : ConversationsDisplayLogic{
             
         }
     }
+    
+    func deleteConversation(item: ConversationDomain, indexPath: IndexPath){
+        manager.onDeleteConversation(id: item.id)
+        self.presenter?.presentDeleteItem(item, at: indexPath)
+    }
+
 
 }

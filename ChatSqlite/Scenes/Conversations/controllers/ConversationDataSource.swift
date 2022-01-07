@@ -16,7 +16,6 @@ class ConversationDataSource : NSObject {
     static var CELL_ID = "messCell"
     
     func loadItems(_ items: [ConversationDomain]){
-        //print("present this: \(items)")
         self.items = items
         filteredItems = items
     }
@@ -42,6 +41,11 @@ class ConversationDataSource : NSObject {
     
     func getItem(at index: IndexPath) -> ConversationDomain{
         return filteredItems[index.row]
+    }
+    
+    func deleteItemAt(index: IndexPath){
+        //items.remove(at: index.row)
+        filteredItems.remove(at: index.row)
     }
     
     func filterItemBy(key: String){

@@ -100,8 +100,14 @@ extension ConvConfigController : UITableViewDataSource, UITableViewDelegate {
             fatalError()
         }
         takeAction(config: config)
-        self.dismiss(animated: true, completion: nil)
+        print(self.presentingViewController)
+        if let firstVC = self.presentingViewController as? ConversationController {
+            print("HERE: please reload conv?")
+                firstVC.mediator?.fetchData()
+        }
+        self.dismiss(animated: true, completion:nil)
     }
+
 }
 
 class HalfSizePresentationController: UIPresentationController {
