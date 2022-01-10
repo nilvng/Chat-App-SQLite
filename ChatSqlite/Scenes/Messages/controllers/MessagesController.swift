@@ -21,7 +21,11 @@ class MessagesController: UIViewController {
     // MARK: VC properties
     var mediator : MessageDBMediator?
     var dataSource = MessageDataSource()
-    var conversation : ConversationDomain?
+    var conversation : ConversationDomain? {
+        didSet{
+            theme = conversation?.theme ?? .basic
+        }
+    }
     
     var isNew : Bool = false
     
@@ -91,6 +95,7 @@ class MessagesController: UIViewController {
     
     func configure(conversation : ConversationDomain){
         self.conversation = conversation
+        mediator?.fetchData(conversation: conversation)
     }
     
     // MARK: Setups
@@ -262,8 +267,8 @@ class MessagesController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setupNavigationBarColor()
-        guard let c = conversation else {return}
-        mediator?.fetchData(conversation: c)
+        //guard let c = conversation else {return}
+        //mediator?.fetchData(conversation: c)
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -283,20 +288,6 @@ class MessagesController: UIViewController {
         unobserveKeyboard()
     }
 
-    // MARK: Action
-    @objc func addMess(){
-        let text = ["Random talk", "see you", "salute"].randomElement()!
-        
-        mediator?.sendMessage(content: text, newConv: isNew)
-
-        if !isNew {
-            print("old chat")
-        } else {
-            print("new chat")
-            isNew = false
-        }
-
-    }
     func unobserveKeyboard(){
         NotificationCenter.default.removeObserver(self)
 
@@ -341,7 +332,7 @@ class MessagesController: UIViewController {
         }
         let moveUp = notification.name == UIResponder.keyboardWillShowNotification
         let animateDuration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as! Double
-        print("\(keyboardFrame.cgRectValue.height) height - \(tableInset)")
+        //print("\(keyboardFrame.cgRectValue.height) height - \(tableInset)")
         let scalingValue =  moveUp ? keyboardFrame.cgRectValue.height : 0
         self.chatBarBottomConstraint.constant = moveUp ? -keyboardFrame.cgRectValue.height : 0
         let inset = tableInset
@@ -452,8 +443,20 @@ extension MessagesController : UITableViewDelegate {
 
 // MARK: Presenter
 extension MessagesController : MessagesPresenter {
+    func showInitialItems(_ items: [MessageDomain]?) {
+        if items == nil {
+            isNew = true
+            return
+        }
+        
+        dataSource.setItems(items!)
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
     
-    func presentAllItems(_ items: [MessageDomain]?) {
+    
+    func presentMoreItems(_ items: [MessageDomain]?) {
         if items == nil {
             isNew = true
             return
@@ -476,10 +479,10 @@ extension MessagesController : MessagesPresenter {
     }
     
     func loadConversation(_ c: ConversationDomain, isNew : Bool){
-        DispatchQueue.main.async {
+        
         self.isNew = isNew
         self.conversation = c
-        }
+        
     }
     
     
@@ -499,7 +502,7 @@ extension MessagesController : ChatbarDelegate {
         print("msg submit")
         
         newMessAnimation = true
-        
+                
         mediator?.sendMessage(content: message, newConv: isNew)
 
         if !isNew {

@@ -147,6 +147,7 @@ class NativeContactStore{
             print("Failed to fetch contacts: ",err)
         }
         let res = contacts.map { FriendContact(contact: $0) }
+        //print("CNStore: \(res)")
         return res
     }
     

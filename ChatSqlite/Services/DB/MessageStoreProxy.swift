@@ -33,7 +33,6 @@ class MessageStoreProxy{
                                       autoreleaseFrequency: .workItem,
                                       target: nil)
     init (cid : String){
-        print("worker created.")
         self.conversationID = cid
         store.conversationID = cid
     }
@@ -116,25 +115,24 @@ extension MessageStoreProxy : MessageDataLogic {
                 completionHandler(nil,.cantFetch("Exceed amount of Messages"))
                 return
             }
-            print("\(startIndex) - \(endIndex) : \(messages.count) - done? \(isDoneFetching)")
+            print("Proxy: \(startIndex) - \(endIndex) : \(messages.count) - done? \(isDoneFetching)")
 
-            if endIndex < messages.count || self.isDoneFetching{
-                print("Cached msgs.")
+            if self.isDoneFetching{
+                print("Proxy: Cached msgs.")
                 let end = endIndex < self.messages.count ? endIndex : messages.count - 1
-                print("\(startIndex) - end: \(end)")
+                print("Proxy start: \(startIndex) - end: \(end)")
 
                 if (startIndex <= end){
                     completionHandler(Array(messages[startIndex...end]), nil)
                 }
                 return
             }
-            print("Fetch msgs.")
+            print("Proxy: Fetch msgs.")
 
             // Fetch in db
             store.getAll(noRecords: noRecords, noPages: noPages, desc: desc, completionHandler: { res, err in
                 
                 if (res != nil){
-                    print("fetch data once..")
                     if (res!.isEmpty) {
                         self.isDoneFetching =  true
                         completionHandler(res,err)
@@ -159,7 +157,7 @@ extension MessageStoreProxy : MessageDataLogic {
         utilityQueue.async { [self] in
             
             // Add in cache
-            print("Worker add msg.")
+            print("Proxy: add msg.")
             messages.insert(newItem, at: 0)
             
                 completionHandler(newItem,nil)

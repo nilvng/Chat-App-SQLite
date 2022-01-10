@@ -16,7 +16,6 @@ protocol ConversationPresenter : AnyObject {
 
 class ConversationMediator : ConversationDBMediator{
     
-    var store : ConversationService
     weak var presenter : ConversationPresenter?
     var manager : ConversationBusinessLogic
     
@@ -24,15 +23,13 @@ class ConversationMediator : ConversationDBMediator{
     var currPage = 0
     var offset : CGFloat = 300
     
-    init(store: ConversationService){
-        self.store = store
+    init(){
         self.manager = ChatManager.shared
     }
     
     
-    func fetchData(){
-        print("get all conv...")
-        store.fetchAllItems(noRecords: noRecords, noPages: 0, desc: true, completionHandler: { [weak self] res, err in
+    func loadData(){
+        manager.fetchData(noRecords: noRecords, noPages: 0, desc: true, completionHandler: { [weak self] res, err in
             if let convs = res {
                 self?.presenter?.presentAllItems(convs)
             } else {
@@ -40,25 +37,18 @@ class ConversationMediator : ConversationDBMediator{
             }
         })
     }
-    func addItem(_ item : ConversationDomain){
-        // map to db model
-        store.createItem(item, completionHandler: { err in
-
-                print(err?.localizedDescription ?? "")
-            
-        })
-    }
     
-    func onScroll(tableOffset : CGFloat){
-        print(tableOffset)
+    func loadMoreData(tableOffset : CGFloat){
         let pages = Int(tableOffset / offset)
-        print(pages)
+        //print(pages)
+        
         guard pages - currPage >= 1 else {
             return
         }
+        
         currPage = pages
         
-        store.fetchAllItems(noRecords: noRecords, noPages: pages, desc: true) { [weak self] res, err in
+        manager.fetchData(noRecords: noRecords, noPages: pages, desc: true) { [weak self] res, err in
             if res == nil || res!.isEmpty {
                 print("empty fetch!")
                 return}
@@ -68,8 +58,11 @@ class ConversationMediator : ConversationDBMediator{
         }
     }
     
+    
     func deleteConversation(item: ConversationDomain, indexPath: IndexPath){
+        
         manager.onDeleteConversation(id: item.id)
+        
         self.presenter?.presentDeleteItem(item, at: indexPath)
     }
 

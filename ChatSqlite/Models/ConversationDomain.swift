@@ -9,13 +9,13 @@ import Foundation
 
 struct ConversationDomain {
     static func fromFriend(friend: FriendDomain) -> ConversationDomain {
-        return ConversationDomain(theme: nil, thumbnail: nil,
+        return ConversationDomain(theme: .basic, thumbnail: nil,
                                   title: friend.name, id: UUID().uuidString,
                                   members: friend.id,
                                   lastMsg: "", timestamp: Date())
     }
     
-    var theme: String?
+    var theme: Theme?
     
     var thumbnail: String?
     

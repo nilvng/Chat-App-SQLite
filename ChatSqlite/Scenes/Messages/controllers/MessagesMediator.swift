@@ -9,7 +9,8 @@ import Foundation
 import UIKit
 
 protocol MessagesPresenter : AnyObject{
-    func presentAllItems(_ items : [MessageDomain]?)
+    func showInitialItems(_ items: [MessageDomain]?)
+    func presentMoreItems(_ items : [MessageDomain]?)
     func presentNewItem(_ item : MessageDomain)
     func loadConversation(_ c: ConversationDomain, isNew : Bool)
 
@@ -24,6 +25,7 @@ class MessagesMediator : MessageDBMediator {
     lazy var conversationStore : ConversationService = ConversationStoreProxy.shared
     
     var conversation : ConversationDomain!
+    var newFriend : FriendDomain?
     
     var noRecords : Int = 20
     var offSet : CGFloat {
@@ -37,16 +39,19 @@ class MessagesMediator : MessageDBMediator {
         
     func fetchData(friend : FriendDomain){
         // find conversation with friend
-        conversationStore.findItemWithFriend(id: friend.id, completion: { res, err in
+        manager.loadConversationWith(fid: friend.id, completionHandler: { res, err in
             // found it
             if let c = res {
-                print("past chat")
+                print("Mediator: past chat")
                 self.fetchData(conversation: c)
+                self.conversation = c
+                print(c)
                 self.presenter?.loadConversation(c, isNew: false)
             } else {
-                print("new chat")
+                print("Mediator: new chat")
                 // if conversation not exist
                 self.conversation = ConversationDomain.fromFriend(friend: friend)
+                self.newFriend = friend
                 self.presenter?.loadConversation(self.conversation, isNew: true)
             }
 
@@ -58,10 +63,9 @@ class MessagesMediator : MessageDBMediator {
 
         // filter messenges belong to this conversation
         self.conversation = conversation
-        createWorker(cid: conversation.id)
         
-        store!.fetchAllItems(noRecords: noRecords, noPages: 0, desc: true) { [weak self] msgs, err in
-            self?.presenter?.presentAllItems(msgs)
+        manager.loadMessages(cid: conversation.id,noRecords: noRecords, noPages: 0, desc: true) { [weak self] msgs, err in
+            self?.presenter?.showInitialItems(msgs)
             
         }
     }
@@ -80,27 +84,31 @@ class MessagesMediator : MessageDBMediator {
             return
         }
         currPage = pages
-        print(pages)
 
-        store?.fetchAllItems(noRecords: noRecords, noPages: currPage, desc: false) { [weak self] msgs, err in
+        manager.loadMessages(cid: conversation.id, noRecords: noRecords, noPages: currPage, desc: false) { [weak self] msgs, err in
             // empty result -> no need to present
             if msgs == nil || msgs!.isEmpty || err != nil {
                 print("empty fetch!: \(String(describing: self?.currPage))")
                 return
                 
             }
-            self?.presenter?.presentAllItems(msgs)
+            self?.presenter?.presentMoreItems(msgs)
             
         }
     }
 
     func sendMessage(content: String, newConv : Bool  = true){
         // show the user first
+        
         let m = MessageDomain(cid: conversation.id, content: content, type: .text, timestamp: Date(), sender: "1")
+        
         self.presenter?.presentNewItem(m)
 
         // update db
-        manager.onNewMessage(msg: m, conversation: conversation, isNewConv: newConv)
+        manager.onNewMessage(msg: m, conversation: conversation)
+        if let f = newFriend, newConv{
+            manager.onNewFriend(friend: f)
+        }
     }
     
 }

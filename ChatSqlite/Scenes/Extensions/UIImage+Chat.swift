@@ -34,3 +34,45 @@ extension UIImage{
 
     }
 }
+
+extension UIImage {
+      func getPixelColor(pos: CGPoint) -> UIColor? {
+        
+        guard let cgImage = self.cgImage,
+              let pixelData = cgImage.dataProvider?.data,
+              let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData) else {
+            print("Problem in getting gradient image")
+            return nil
+        }
+        
+        let bytesPerRow = cgImage.bytesPerRow
+        let bytesPerPixel = cgImage.bitsPerPixel / cgImage.bitsPerComponent
+
+        let pixelInfo : Int = Int(pos.y) * bytesPerRow + Int(pos.x) * bytesPerPixel
+        
+        
+        if (pixelInfo < 0){
+            return .black
+        }
+          let r = CGFloat(data[pixelInfo]) / CGFloat(255.0)
+          let g = CGFloat(data[pixelInfo+1]) / CGFloat(255.0)
+          let b = CGFloat(data[pixelInfo+2]) / CGFloat(255.0)
+          let a = CGFloat(data[pixelInfo+3]) / CGFloat(255.0)
+
+          return UIColor(red: b, green: g, blue: r, alpha: a)
+      }
+  }
+
+extension UIImage {
+    static func gradientImageWithBounds(bounds: CGRect, colors: [CGColor]) -> UIImage {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = bounds
+        gradientLayer.colors = colors
+        
+        UIGraphicsBeginImageContext(gradientLayer.bounds.size)
+        gradientLayer.render(in: UIGraphicsGetCurrentContext()!)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image!
+    }
+}

@@ -166,7 +166,7 @@ extension ConversationStoreProxy : ConversationDataLogic {
         self.utilityQueue.async {
 
             self.store.findWithFriend(id: id){ res, err in
-                
+                    //print("Proxy: Found Conv of a friend: \(res)")
                     completion(res,err)
 
             }
@@ -204,6 +204,7 @@ extension ConversationStoreProxy : ConversationDataLogic {
             } else {
                 items.insert(newItem, at: 0)
             }
+            items.sort(by: {$0.timestamp > $1.timestamp})
             completionHandler(newItem,nil)
             
             // Add to db

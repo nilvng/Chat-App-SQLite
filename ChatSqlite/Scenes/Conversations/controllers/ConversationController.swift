@@ -8,9 +8,8 @@
 import UIKit
 
 protocol ConversationDBMediator {
-    func fetchData()
-    func addItem(_ conversation : ConversationDomain)
-    func onScroll(tableOffset: CGFloat)
+    func loadData()
+    func loadMoreData(tableOffset: CGFloat)
     func deleteConversation(item: ConversationDomain, indexPath: IndexPath)
 }
 
@@ -65,8 +64,7 @@ class ConversationController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func setup() {
-        let service = ConversationStoreProxy.shared
-        let inter = ConversationMediator(store: service)
+        let inter = ConversationMediator()
         inter.presenter = self
         mediator = inter
         }
@@ -165,7 +163,7 @@ class ConversationController: UIViewController, UIGestureRecognizerDelegate {
         
         // reload data
         print("Conv will appear...")
-        mediator?.fetchData()
+        mediator?.loadData()
         
         
         setupNavigationBarColor() // reset color, if it accidentally changed for other views
@@ -191,7 +189,7 @@ extension ConversationController : UITableViewDelegate {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        mediator?.onScroll(tableOffset: tableView.contentOffset.y)
+        mediator?.loadMoreData(tableOffset: tableView.contentOffset.y)
     }
     
     // MARK: Animate Compose btn

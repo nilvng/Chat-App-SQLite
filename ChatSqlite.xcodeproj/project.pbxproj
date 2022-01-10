@@ -135,7 +135,6 @@
 			isa = PBXGroup;
 			children = (
 				0EFDD96C276B7B0000323984 /* ServiceBasicAPIs.swift */,
-				0E15EC3127742B790082FA1B /* ChatManager.swift */,
 				0E6666BC2771882A00786E57 /* MessageStoreProxy.swift */,
 				0EDA95792775A08300646051 /* ConversationStoreProxy.swift */,
 				0E66A9AA277A189E00525C3B /* FriendStoreProxy.swift */,
@@ -151,7 +150,6 @@
 				0E124246277EDA020054D069 /* BackgroundFactory.swift */,
 				0E124245277EDA010054D069 /* ImageStore.swift */,
 				0E124247277EDA020054D069 /* PhotoRequest.swift */,
-				0E124248277EDA020054D069 /* Theme.swift */,
 			);
 			path = Image;
 			sourceTree = "<group>";
@@ -292,6 +290,7 @@
 			children = (
 				0EFDD946276B72C400323984 /* AppDelegate.swift */,
 				0EFDD948276B72C400323984 /* SceneDelegate.swift */,
+				0E15EC3127742B790082FA1B /* ChatManager.swift */,
 				0E66A9A9277A139400525C3B /* SQLIteStores */,
 				0EDA95782774628700646051 /* Services */,
 				0EFDD95F276B79C300323984 /* Models */,
@@ -326,6 +325,7 @@
 				0E2395BA2770834C006B2DE2 /* ConversationDomain.swift */,
 				0EFDD96A276B7A5400323984 /* Message.swift */,
 				0E2395BC2770835A006B2DE2 /* MessageDomain.swift */,
+				0E124248277EDA020054D069 /* Theme.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";

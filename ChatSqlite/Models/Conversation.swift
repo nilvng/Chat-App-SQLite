@@ -11,7 +11,7 @@ import SQLite
 
 protocol Conversation {
 
-    var theme: String? {get set}
+    var theme: ThemeOptions? {get set}
     var thumbnail: String? {get set}
     var title: String! {get set}
     var id: String! {get set}
@@ -23,12 +23,17 @@ protocol Conversation {
 }
 
 struct ConversationSQLite : SQLiteModel, Conversation {
+    
     func toUIModel() -> ConversationDomain {
-    return ConversationDomain(theme: theme, thumbnail: thumbnail, title: title, id: id, members: members, lastMsg: lastMsg, timestamp: timestamp)
+    var c =  ConversationDomain(theme: nil, thumbnail: thumbnail, title: title, id: id, members: members, lastMsg: lastMsg, timestamp: timestamp)
+        c.theme = self.theme?.getTheme()
+        return c
     }
     
     mutating func fromUIModel(c: ConversationDomain){
-    theme =  c.theme
+        if let t = c.theme {
+           theme =  ThemeOptions.fromTheme(t)
+        }
     thumbnail = c.thumbnail
     title = c.title
     id = c.id
@@ -39,9 +44,6 @@ struct ConversationSQLite : SQLiteModel, Conversation {
     
     init(){}
     
-    
-    var theme: String?
-    
     var thumbnail: String?
     
     var title: String!
@@ -49,6 +51,8 @@ struct ConversationSQLite : SQLiteModel, Conversation {
     var id: String!
     
     var members: String!
+    
+    var theme: ThemeOptions?
 
     var lastMsg : String!
     

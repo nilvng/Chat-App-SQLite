@@ -12,9 +12,18 @@ class MessageDataSource : NSObject {
     var items : [MessageDomain] = []
     static var CELL_ID = "messCell"
     
+    func setItems(_ items: [MessageDomain]){
+        self.items = items
+    }
+    
     func appendItems(_ items: [MessageDomain]){
+        
+        print("MsgDS: append to \(self.items)")
+        
         self.items += items
     }
+    
+    
     func appendNewItem(_ item: MessageDomain){
         self.items.insert(item, at: 0)
     }

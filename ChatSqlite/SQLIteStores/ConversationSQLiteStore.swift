@@ -17,10 +17,10 @@ class ConversationSQLiteStore {
     var id = Expression<String>("id")
     var title = Expression<String>("title")
     var members = Expression<String>("members")
-    var theme = Expression<String?>("theme")
+    var theme = Expression<Int?>("theme")
     var thumbnail = Expression<String?>("thumbnail")
     var lastMsg = Expression<String>("lastMsg")
-    var timestamp = Expression<String>("timestamp")
+    var timestamp = Expression<Date>("timestamp")
 
     
     init(){
@@ -53,7 +53,7 @@ class ConversationSQLiteStore {
         try db?.run(table.create(ifNotExists: true) { t in
             t.column(id, primaryKey: true)
             t.column(title)
-            t.column(members)
+            t.column(members, unique: true)
             t.column(theme)
             t.column(thumbnail)
             t.column(lastMsg)
@@ -74,8 +74,19 @@ extension ConversationSQLiteStore : ConversationDataLogic{
                 
             queries = desc ? queries.order(timestamp.desc) : queries.order(timestamp.asc)
             
-            let result : [ConversationSQLite] = try db!.prepare(queries).map { row in
-                return try row.decode()
+            let result : [ConversationSQLite] = try db!.prepareRowIterator(queries).map { row in
+                var m = ConversationSQLite()
+                m.id = row[id]
+                m.title = row[title]
+                m.members = row[members]
+                m.timestamp = row[timestamp]
+                m.lastMsg = row[lastMsg]
+                m.thumbnail = row[thumbnail]
+                print("Store read theme: \(row[theme])")
+                if let t = row[theme] {
+                m.theme = ThemeOptions(rawValue: t)
+                }
+                return m
             }
             items = result
             completionHandler(items,nil)
@@ -157,10 +168,23 @@ extension ConversationSQLiteStore : ConversationDataLogic{
         
         do {
             let result : [ConversationSQLite] = try db.prepare(query).map{ row in
-                return try row.decode()
+                var m = ConversationSQLite()
+                m.id = row[self.id]
+                m.title = row[title]
+                m.members = row[members]
+                m.timestamp = row[timestamp]
+                m.lastMsg = row[lastMsg]
+                m.thumbnail = row[thumbnail]
+                //print("Store read theme: \(row[theme])")
+                if let t = row[theme] {
+                m.theme = ThemeOptions(rawValue: t)
+                }
+                return m
             }
+            //print("Find result: \(result)")
             completion(result.first, nil)
         } catch let e{
+            print(e)
             completion(nil,.cantFetch(e.localizedDescription))
         }
     }

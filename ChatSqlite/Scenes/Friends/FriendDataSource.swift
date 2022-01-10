@@ -69,7 +69,7 @@ class FriendDataSource : NSObject {
 extension FriendDataSource {
     
     func appendItems(_ items: [FriendDomain]){
-        self.items += items
+        self.items = items
         sortByAlphabet() // resort data
     }
     func updateItem(){
