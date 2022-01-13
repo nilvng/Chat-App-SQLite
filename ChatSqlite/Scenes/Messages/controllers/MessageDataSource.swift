@@ -50,7 +50,7 @@ extension MessageDataSource : UITableViewDataSource {
         let reverseIndex = indexPath.row
         let message =  items[reverseIndex]
         
-        var isLastContinuous = false
+        var isLastContinuous = reverseIndex == 0
         
         if reverseIndex - 1 >= 0 {
             let laterMessage = items[reverseIndex - 1]

@@ -57,7 +57,14 @@ extension FriendStoreProxy : FriendService {
     }
     
     func fetchItemWithId(_ id: String, completionHandler: @escaping (FriendDomain?, StoreError?) -> Void) {
-        fatalError()
+        self.getWithId(id){ res, err in
+            if let item = res {
+                let mapped = self.toUIModel(friend: item)
+                completionHandler(mapped, err)
+            } else {
+                completionHandler(nil,err)
+            }
+        }
     }
     
     func createItem(_ item: FriendDomain, completionHandler: @escaping (StoreError?) -> Void) {

@@ -37,7 +37,7 @@ class MessageCell: UITableViewCell {
     }()
     
     var avatarView : AvatarView = {
-        let view = AvatarView(frame: CGRect(x: 0, y: 0, width: 33, height: 33))
+        let view = AlamoAvatarView(frame: CGRect(x: 0, y: 0, width: 33, height: 33))
         view.contentMode = .scaleAspectFill
         return view
     }()
@@ -101,7 +101,6 @@ class MessageCell: UITableViewCell {
             messageBodyLabel.textColor = .black
             // show avatar view if is the last continuous message a friend sent
             avatarView.isHidden = !lastContinuousMess
-            print("Show avatar")
             
             if lastContinuousMess{
                 showAvatar(fid: model.sender)

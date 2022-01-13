@@ -65,7 +65,18 @@ extension FriendSQLiteStore : FriendDataLogic{
     }
     
     func getWithId(_ id: String, completionHandler: @escaping (Friend?, StoreError?) -> Void) {
-        fatalError()
+        let query = table.filter(self.id == id)
+        
+        
+        do {
+            let result : [FriendSqlite] = try db!.prepare(query).map { row in
+                return try row.decode()
+            }
+            completionHandler(result.first, nil)
+        } catch let e {
+            print(e.localizedDescription)
+            completionHandler(nil, .cantFetch("Can't fetch row with id \(id)"))
+        }
     }
     
     func add(newItem: Friend, completionHandler: @escaping (Friend?, StoreError?) -> Void) {

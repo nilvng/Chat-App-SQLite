@@ -35,7 +35,7 @@ class ConversationCell : UITableViewCell {
 
     }()
     private let thumbnail : AvatarView = {
-        let image = AvatarView(frame: .zero)
+        let image = AlamoAvatarView(frame: .zero)
         image.contentMode = .scaleAspectFill
         return image
     }()

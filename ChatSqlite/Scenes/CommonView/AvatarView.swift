@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AlamofireImage
 
 class AvatarView: UIImageView {
     
@@ -17,24 +18,18 @@ class AvatarView: UIImageView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func update(url: String?, text: String?){
+    func update(url: String?, text: String){
         // check if contact has image, or else create an image of their first letter name
         let theKey = url != nil ? url! : text
 
-        guard theKey != nil else {
-            print("using hulk avatar")
-            self.image = UIImage(named: "default")
-            return
-        }
-        //self.image = UIImage(named: "default") // placeholder avatar
-        
-        ImageStore.shared.getImage(forUrl: theKey!, type: .rounded){ res in
+
+        ImageStore.shared.getImage(forUrl: theKey, type: .rounded){ res in
         if case let .success(image) = res{
                 self.image = image
                 //print("show avatar")
         } else {
             print("use placeholder avatar...")
-            self.usePlaceholderAvatar(with: text!)
+            self.usePlaceholderAvatar(with: text)
             }
         }
     }

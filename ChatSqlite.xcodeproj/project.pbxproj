@@ -39,9 +39,12 @@
 		0E7008DC278806E400998BBB /* FriendAvatarEditCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7008D5278806E400998BBB /* FriendAvatarEditCell.swift */; };
 		0E7008DD278806E400998BBB /* FriendDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7008D6278806E400998BBB /* FriendDetailController.swift */; };
 		0E7008DE278806E400998BBB /* FriendEditDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7008D7278806E400998BBB /* FriendEditDataSource.swift */; };
+		0E70090B278EB76100998BBB /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70090A278EB76100998BBB /* ImageService.swift */; };
+		0E700911278EBDE100998BBB /* AlamofireImage in Frameworks */ = {isa = PBXBuildFile; productRef = 0E700910278EBDE100998BBB /* AlamofireImage */; };
 		0E727F50278571AA002EA7E3 /* NativeContactStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E727F4F278571AA002EA7E3 /* NativeContactStore.swift */; };
 		0E727F5227857416002EA7E3 /* NativeContactStoreAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E727F5127857416002EA7E3 /* NativeContactStoreAdapter.swift */; };
 		0EDA957A2775A08300646051 /* ConversationStoreProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDA95792775A08300646051 /* ConversationStoreProxy.swift */; };
+		0EF89B62278ECEEF005C3BE1 /* AlamoAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF89B61278ECEEF005C3BE1 /* AlamoAvatarView.swift */; };
 		0EFDD947276B72C400323984 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD946276B72C400323984 /* AppDelegate.swift */; };
 		0EFDD949276B72C400323984 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD948276B72C400323984 /* SceneDelegate.swift */; };
 		0EFDD94B276B72C400323984 /* ConversationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD94A276B72C400323984 /* ConversationController.swift */; };
@@ -95,9 +98,11 @@
 		0E7008D5278806E400998BBB /* FriendAvatarEditCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendAvatarEditCell.swift; sourceTree = "<group>"; };
 		0E7008D6278806E400998BBB /* FriendDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendDetailController.swift; sourceTree = "<group>"; };
 		0E7008D7278806E400998BBB /* FriendEditDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendEditDataSource.swift; sourceTree = "<group>"; };
+		0E70090A278EB76100998BBB /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
 		0E727F4F278571AA002EA7E3 /* NativeContactStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeContactStore.swift; sourceTree = "<group>"; };
 		0E727F5127857416002EA7E3 /* NativeContactStoreAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeContactStoreAdapter.swift; sourceTree = "<group>"; };
 		0EDA95792775A08300646051 /* ConversationStoreProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationStoreProxy.swift; sourceTree = "<group>"; };
+		0EF89B61278ECEEF005C3BE1 /* AlamoAvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlamoAvatarView.swift; sourceTree = "<group>"; };
 		0EFDD943276B72C400323984 /* ChatSqlite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatSqlite.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EFDD946276B72C400323984 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0EFDD948276B72C400323984 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -125,6 +130,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0EFDD95C276B798D00323984 /* SQLite in Frameworks */,
+				0E700911278EBDE100998BBB /* AlamofireImage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -150,6 +156,7 @@
 				0E124246277EDA020054D069 /* BackgroundFactory.swift */,
 				0E124245277EDA010054D069 /* ImageStore.swift */,
 				0E124247277EDA020054D069 /* PhotoRequest.swift */,
+				0E70090A278EB76100998BBB /* ImageService.swift */,
 			);
 			path = Image;
 			sourceTree = "<group>";
@@ -158,6 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				0E12423A277ED9560054D069 /* AvatarView.swift */,
+				0EF89B61278ECEEF005C3BE1 /* AlamoAvatarView.swift */,
 			);
 			path = CommonView;
 			sourceTree = "<group>";
@@ -377,6 +385,7 @@
 			name = ChatSqlite;
 			packageProductDependencies = (
 				0EFDD95B276B798D00323984 /* SQLite */,
+				0E700910278EBDE100998BBB /* AlamofireImage */,
 			);
 			productName = ChatSqlite;
 			productReference = 0EFDD943276B72C400323984 /* ChatSqlite.app */;
@@ -408,6 +417,7 @@
 			mainGroup = 0EFDD93A276B72C400323984;
 			packageReferences = (
 				0EFDD95A276B798D00323984 /* XCRemoteSwiftPackageReference "SQLite.swift" */,
+				0E70090F278EBDE100998BBB /* XCRemoteSwiftPackageReference "AlamofireImage" */,
 			);
 			productRefGroup = 0EFDD944276B72C400323984 /* Products */;
 			projectDirPath = "";
@@ -479,9 +489,11 @@
 				0E7008D8278806E400998BBB /* FriendDeleteCell.swift in Sources */,
 				0E3C0D1A2783F9EF00B23E21 /* ChatMenuController.swift in Sources */,
 				0EFDD96B276B7A5400323984 /* Message.swift in Sources */,
+				0EF89B62278ECEEF005C3BE1 /* AlamoAvatarView.swift in Sources */,
 				0E12424B277EDA020054D069 /* PhotoRequest.swift in Sources */,
 				0E7008D9278806E400998BBB /* FriendTextEditCell.swift in Sources */,
 				0E124251277EF3A10054D069 /* ConversationCell.swift in Sources */,
+				0E70090B278EB76100998BBB /* ImageService.swift in Sources */,
 				0E727F5227857416002EA7E3 /* NativeContactStoreAdapter.swift in Sources */,
 				0EFDD979276C2C4700323984 /* MessagesMediator.swift in Sources */,
 				0E124259277EF82B0054D069 /* BubbleConstant.swift in Sources */,
@@ -696,6 +708,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		0E70090F278EBDE100998BBB /* XCRemoteSwiftPackageReference "AlamofireImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/AlamofireImage.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
 		0EFDD95A276B798D00323984 /* XCRemoteSwiftPackageReference "SQLite.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/stephencelis/SQLite.swift.git";
@@ -707,6 +727,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0E700910278EBDE100998BBB /* AlamofireImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E70090F278EBDE100998BBB /* XCRemoteSwiftPackageReference "AlamofireImage" */;
+			productName = AlamofireImage;
+		};
 		0EFDD95B276B798D00323984 /* SQLite */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 0EFDD95A276B798D00323984 /* XCRemoteSwiftPackageReference "SQLite.swift" */;
