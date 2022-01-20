@@ -15,6 +15,8 @@ class MessageCell: UITableViewCell {
     var inboundConstraint : NSLayoutConstraint!
     var outboundConstraint : NSLayoutConstraint!
     var continuousConstraint : NSLayoutConstraint!
+    var downloadConstraint : NSLayoutConstraint!
+    var notDownloadConstraint : NSLayoutConstraint!
 
     
     let messageBodyLabel : UILabel = {
@@ -31,6 +33,9 @@ class MessageCell: UITableViewCell {
         label.font = UIFont.systemFont(ofSize: 10)
         return label
     }()
+    
+
+    
     var bubbleImageView : UIImageView = {
         let imageView = UIImageView()
         return imageView
@@ -41,6 +46,8 @@ class MessageCell: UITableViewCell {
         view.contentMode = .scaleAspectFill
         return view
     }()
+    
+    lazy var downloadButton : DownloadBtnView = DownloadBtnView()
     
     var incomingBubbleConfig : BackgroundConfig = {
         let config = BackgroundConfig()
@@ -68,46 +75,91 @@ class MessageCell: UITableViewCell {
         setupAvatarView()
         setupMessageBody()
         setupBubbleBackground()
-        
+        setupDownloadButton()
+                
         }
     
     // MARK: Configuration
+
+    
     func configure(with model: MessageDomain, lastContinuousMess: Bool = false){
         
         backgroundView = .none
         backgroundColor = .clear
 
         message = model
-        messageBodyLabel.text = model.content
-
-        // align bubble based on whether the sender is the user themselves
-    
-        if model.sender == "1" {
-            // get bubble
-           bubbleImageView.image = BackgroundFactory.shared.getBackground(config: outgoingBubbleConfig)
-            // sent message will align to the right
-            inboundConstraint?.isActive = false
-            outboundConstraint?.isActive = true
-            // remove avatar view as message is sent by me
-            avatarView.isHidden = true
-            // bubble will have color so, text color = .white
-            messageBodyLabel.textColor = .white
-        } else {
-            // get the bubble image
-            bubbleImageView.image = BackgroundFactory.shared.getBackground(config: incomingBubbleConfig)
-            // received message will align to the left
-            outboundConstraint?.isActive = false
-            inboundConstraint?.isActive = true
-            messageBodyLabel.textColor = .black
-            // show avatar view if is the last continuous message a friend sent
-            avatarView.isHidden = !lastContinuousMess
-            
-            if lastContinuousMess{
-                showAvatar(fid: model.sender)
-            }
+        let isReceived = isReceived(sender: model.sender)
+        // Style bubble based on the type content
+        switch model.type {
+        case .text:
+            styleDownloadbleBubble(isIt: false)
+            messageBodyLabel.text = model.content
+        case .file:
+            styleDownloadbleBubble(isIt: true, content: model.content, isReceived: isReceived)
+        default:
+            styleDownloadbleBubble(isIt: false)
+            messageBodyLabel.text = "Unprocessed bubble:" + model.content
         }
-            // continuous message would be closer to each other
-            continuousConstraint.constant = !lastContinuousMess ? -bubbleVPadding + 4 : -bubbleVPadding
+
+        // Align bubble based on whether the sender is the user themselves
+        if !isReceived {
+            alignSentBubble()
+        } else {
+            alignReceivedBubble(lastContinuousMess, model)
+        }
+        // Continuous message would be closer to each other
+        continuousConstraint.constant = !lastContinuousMess ? -bubbleVPadding + 4 : -bubbleVPadding
+        
+
+    }
+    
+    func isReceived(sender: String) -> Bool{
+        //print("sender: \(sender)")
+        return sender != "1"
+    }
+    
+    // MARK: Style bubble
+    
+    func styleDownloadbleBubble(isIt: Bool, content: String = "", isReceived: Bool = false){
+        // show download button next to content message
+        let size : CGFloat = 16
+        messageBodyLabel.font = isIt ? UIFont.boldSystemFont(ofSize: size) : UIFont.systemFont(ofSize: size)
+        messageBodyLabel.text = "boom.txt"
+        
+        let showDownload = isIt && isReceived
+        
+        downloadButton.isHidden = !showDownload
+        
+        if showDownload{
+            downloadButton.setURL(content)
+        }
+        
+    }
+    fileprivate func alignSentBubble() {
+        // get bubble
+        bubbleImageView.image = BackgroundFactory.shared.getBackground(config: outgoingBubbleConfig)
+        // sent message will align to the right
+        inboundConstraint?.isActive = false
+        outboundConstraint?.isActive = true
+        // remove avatar view as message is sent by me
+        avatarView.isHidden = true
+        // bubble will have color so, text color = .white
+        messageBodyLabel.textColor = .white
+    }
+    
+    fileprivate func alignReceivedBubble(_ lastContinuousMess: Bool, _ model: MessageDomain) {
+        // get the bubble image
+        bubbleImageView.image = BackgroundFactory.shared.getBackground(config: incomingBubbleConfig)
+        // received message will align to the left
+        outboundConstraint?.isActive = false
+        inboundConstraint?.isActive = true
+        messageBodyLabel.textColor = .black
+        // show avatar view if is the last continuous message a friend sent
+        avatarView.isHidden = !lastContinuousMess
+        
+        if lastContinuousMess{
+            showAvatar(fid: model.sender)
+        }
     }
     
     func showAvatar(fid: String){
@@ -117,6 +169,8 @@ class MessageCell: UITableViewCell {
                 DispatchQueue.main.async {
                     self.avatarView.update(url: url, text: friend.name)
                 }
+            } else {
+                print("Error fetching friend: \(fid)")
             }
         })
 
@@ -143,6 +197,7 @@ class MessageCell: UITableViewCell {
         self.bubbleImageView.tintColor = color
     }
     
+    // MARK: Setup views
     
     func setupMessageBody(){
         messageBodyLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -184,6 +239,19 @@ class MessageCell: UITableViewCell {
             avatarView.heightAnchor.constraint(equalToConstant: BubbleConstant.avatarSize)
         ]
         NSLayoutConstraint.activate(constraints)
+    }
+    func setupDownloadButton(){
+        contentView.addSubview(downloadButton)
+        downloadButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        NSLayoutConstraint.activate([
+            downloadButton.centerYAnchor.constraint(equalTo: centerYAnchor),
+            downloadButton.leadingAnchor.constraint(equalTo: bubbleImageView.trailingAnchor, constant: 0),
+            downloadButton.widthAnchor.constraint(equalToConstant: 35),
+            downloadButton.heightAnchor.constraint(equalToConstant: 35)
+        ])
+        
     }
     
     func setupTimestampLabel(){

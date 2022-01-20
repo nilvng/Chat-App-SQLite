@@ -57,7 +57,7 @@ extension MessageDataSource : UITableViewDataSource {
             isLastContinuous = laterMessage.sender != message.sender
         }
         
-        if (isLastContinuous){ print("last continuous \(message.content) - \(reverseIndex)")}
+        //if (isLastContinuous){ print("last continuous \(message.content) - \(reverseIndex)")}
         
         cell.configure(with: message, lastContinuousMess: isLastContinuous)
         

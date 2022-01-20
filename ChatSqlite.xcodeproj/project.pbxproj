@@ -43,6 +43,7 @@
 		0E700911278EBDE100998BBB /* AlamofireImage in Frameworks */ = {isa = PBXBuildFile; productRef = 0E700910278EBDE100998BBB /* AlamofireImage */; };
 		0E727F50278571AA002EA7E3 /* NativeContactStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E727F4F278571AA002EA7E3 /* NativeContactStore.swift */; };
 		0E727F5227857416002EA7E3 /* NativeContactStoreAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E727F5127857416002EA7E3 /* NativeContactStoreAdapter.swift */; };
+		0E94D0EC27991A26003485AF /* DownloadBtnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E94D0EB27991A26003485AF /* DownloadBtnView.swift */; };
 		0EDA957A2775A08300646051 /* ConversationStoreProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDA95792775A08300646051 /* ConversationStoreProxy.swift */; };
 		0EF89B62278ECEEF005C3BE1 /* AlamoAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF89B61278ECEEF005C3BE1 /* AlamoAvatarView.swift */; };
 		0EFDD947276B72C400323984 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD946276B72C400323984 /* AppDelegate.swift */; };
@@ -101,6 +102,7 @@
 		0E70090A278EB76100998BBB /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
 		0E727F4F278571AA002EA7E3 /* NativeContactStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeContactStore.swift; sourceTree = "<group>"; };
 		0E727F5127857416002EA7E3 /* NativeContactStoreAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeContactStoreAdapter.swift; sourceTree = "<group>"; };
+		0E94D0EB27991A26003485AF /* DownloadBtnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadBtnView.swift; sourceTree = "<group>"; };
 		0EDA95792775A08300646051 /* ConversationStoreProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationStoreProxy.swift; sourceTree = "<group>"; };
 		0EF89B61278ECEEF005C3BE1 /* AlamoAvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlamoAvatarView.swift; sourceTree = "<group>"; };
 		0EFDD943276B72C400323984 /* ChatSqlite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatSqlite.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -197,6 +199,7 @@
 				0E124256277EF82B0054D069 /* BubbleConstant.swift */,
 				0E124254277EF82B0054D069 /* ChatbarView.swift */,
 				0E124255277EF82B0054D069 /* MessageCell.swift */,
+				0E94D0EB27991A26003485AF /* DownloadBtnView.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -478,6 +481,7 @@
 				0E15EC3227742B790082FA1B /* ChatManager.swift in Sources */,
 				0E124253277EF4590054D069 /* ConvConfigController.swift in Sources */,
 				0E7008DA278806E400998BBB /* FriendDetailDataSource.swift in Sources */,
+				0E94D0EC27991A26003485AF /* DownloadBtnView.swift in Sources */,
 				0E124237277EB6E20054D069 /* FriendDataSource.swift in Sources */,
 				0E727F50278571AA002EA7E3 /* NativeContactStore.swift in Sources */,
 				0E12424C277EDA020054D069 /* Theme.swift in Sources */,

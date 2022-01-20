@@ -34,10 +34,10 @@ class ChatManager{
     
     func get(cid: String) -> MessageService{
         if let w = workers[cid] {
-            print("exisitng worker: \(cid)")
+            //print("exisitng worker: \(cid)")
             return w
         }
-        print("create worker: \(cid)")
+        //print("create worker: \(cid)")
         // create proxy worker
         let w = MessageStoreProxy(cid: cid)
         workers[cid] = w

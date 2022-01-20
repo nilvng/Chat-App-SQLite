@@ -10,8 +10,10 @@ import SQLite
 
 enum MessageType : Int, Codable {
     case text = 0
+    case file
     case image
     case gif
+    case sticker
 }
 
 protocol Message{
