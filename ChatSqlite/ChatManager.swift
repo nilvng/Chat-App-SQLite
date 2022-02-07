@@ -98,6 +98,18 @@ extension ChatManager : ChatBusinessLogic{
         })
     }
     
+    func updateMsg(_ msg : MessageDomain){
+        guard let worker = workers[msg.cid] else {
+            return
+        }
+        print("Message to update: \(msg)")
+        worker.updateItem(msg, completionHandler: { err in
+            if err != nil {
+                print(err?.localizedDescription)
+            }
+        })
+    }
+    
 
 
 }

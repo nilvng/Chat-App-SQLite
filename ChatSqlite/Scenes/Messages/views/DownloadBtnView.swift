@@ -9,13 +9,16 @@ import Foundation
 import UIKit
 import Alamofire
 
+protocol DownloadBtnDelegate{
+    func start()
+}
+
 class DownloadBtnView : UIView {
     lazy var progressCircleLayer : CAShapeLayer  = {
         let layer = CAShapeLayer()
-        print(self.center)
     
         let circlepath = UIBezierPath(arcCenter: self.center, radius: 10,
-                                      startAngle: -CGFloat.pi / 2, endAngle: CGFloat.pi * 2,
+                                      startAngle: 0, endAngle: CGFloat.pi * 2,
                                       clockwise: true)
         
         layer.path = circlepath.cgPath
@@ -38,17 +41,13 @@ class DownloadBtnView : UIView {
         return button
     }()
     
-    var url : String?
+    var delegate : DownloadBtnDelegate?
 
     
     init(){
         super.init(frame: CGRect(x: 0, y: 0, width: 35, height: 35))
         self.setupButton()
         self.setupCircle()
-    }
-    
-    func setURL(_ url : String){
-        self.url = url
     }
     
     func setupCircle(){
@@ -71,34 +70,18 @@ class DownloadBtnView : UIView {
     @objc func buttonPressed(){
         print("downloading...")
         
-        guard let u = url else {
+        guard progressCircleLayer.strokeEnd == 0 else {
+            print("DownloadBtn: already active...")
             return
         }
-        
-        AF.download(u)
-            .downloadProgress { progress in
-                let val = progress.fractionCompleted
-                print("Downloading: ... \(val * 100)%")
-                DispatchQueue.main.async {
-                    self.progressTo(val: val)
-                }
-                
-            }
-            .responseURL { file in
-            print("download file to: \(file)")
 
-        }
+        delegate?.start()
+        
         
     }
     
     func progressTo(val : Double){
-        let basicAnimation = CABasicAnimation(keyPath: "strokeEnd")
-        basicAnimation.toValue = val
-        basicAnimation.fillMode = .forwards
-        basicAnimation.isRemovedOnCompletion = false
-        
-        
-        progressCircleLayer.add(basicAnimation, forKey: "download")
+        progressCircleLayer.strokeEnd = val
     }
     
     required init?(coder: NSCoder) {

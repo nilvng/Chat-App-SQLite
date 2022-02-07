@@ -7,9 +7,11 @@
 
 import Foundation
 import UIKit
+import Alamofire
 
 class MessageDataSource : NSObject {
     var items : [MessageDomain] = []
+    var msgViewController : MessagesController?
     static var CELL_ID = "messCell"
     
     func setItems(_ items: [MessageDomain]){
@@ -17,9 +19,7 @@ class MessageDataSource : NSObject {
     }
     
     func appendItems(_ items: [MessageDomain]){
-        
-        print("MsgDS: append to \(self.items)")
-        
+                
         self.items += items
     }
     
@@ -49,6 +49,7 @@ extension MessageDataSource : UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: MessageCell.identifier, for: indexPath) as! MessageCell
         let reverseIndex = indexPath.row
         let message =  items[reverseIndex]
+        message.dropSubscriber()
         
         var isLastContinuous = reverseIndex == 0
         
@@ -64,6 +65,10 @@ extension MessageDataSource : UITableViewDataSource {
         cell.transform = CGAffineTransform(scaleX: 1, y: -1)
         
         return cell
+    }
+    
+    func isDownloadable(model: MessageDomain) -> Bool{
+        return model.sender != "1" && model.type == .file
     }
     
 }

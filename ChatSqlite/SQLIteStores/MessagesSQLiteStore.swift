@@ -22,6 +22,7 @@ class MessagesSQLStore : MessageDataLogic {
     var timestamp = Expression<Date>("timestamp")
     var type = Expression<Int>("type")
     var sender = Expression<String>("sender")
+    var downloaded = Expression<Bool>("downloaded")
     
         
     let serialQueue = DispatchQueue(
@@ -67,6 +68,7 @@ class MessagesSQLStore : MessageDataLogic {
             t.column(timestamp)
             t.column(sender)
             t.column(type)
+            t.column(downloaded)
         })
         } catch let e {
             print(e.localizedDescription)
@@ -92,6 +94,7 @@ extension MessagesSQLStore{
                 m.type = MessageType(rawValue:row[type])
                 m.timestamp = row[timestamp]
                 m.sender = row[sender]
+                m.downloaded = row[downloaded]
                 return m
             }
             completionHandler(result,nil)
@@ -124,12 +127,17 @@ extension MessagesSQLStore{
         }
     }
     
-    func update(item: Message, completionHandler: @escaping (Message?, StoreError?) -> Void) {
+    func update(item: Message, completionHandler: @escaping (StoreError?) -> Void) {
         guard let item = item as? MessageSQLite else {
-            completionHandler(nil, .cantFetch("wrong type"))
+            completionHandler(.cantFetch("wrong type"))
             return
         }
-        fatalError()
+        do {
+        try table.update(item)
+            completionHandler(nil)
+        }catch let e {
+            completionHandler(.cantUpdate("Cant update message: \(mid)"))
+        }
     }
     
     func delete(id: String, completionHandler: @escaping (StoreError?) -> Void) {

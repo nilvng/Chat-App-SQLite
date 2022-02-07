@@ -11,6 +11,7 @@ class MessageCell: UITableViewCell {
 
     lazy var friendSerivce : FriendService = FriendStoreProxy.shared
     var message : MessageDomain?
+    
     static let identifier = "MessageCell"
     var inboundConstraint : NSLayoutConstraint!
     var outboundConstraint : NSLayoutConstraint!
@@ -88,6 +89,8 @@ class MessageCell: UITableViewCell {
         backgroundColor = .clear
 
         message = model
+        model.subscribe(self)
+        
         let isReceived = isReceived(sender: model.sender)
         // Style bubble based on the type content
         switch model.type {
@@ -109,7 +112,6 @@ class MessageCell: UITableViewCell {
         }
         // Continuous message would be closer to each other
         continuousConstraint.constant = !lastContinuousMess ? -bubbleVPadding + 4 : -bubbleVPadding
-        
 
     }
     
@@ -130,9 +132,12 @@ class MessageCell: UITableViewCell {
         
         downloadButton.isHidden = !showDownload
         
-        if showDownload{
-            downloadButton.setURL(content)
+        if message!.downloaded {
+            downloadButton.progressTo(val: 1)
+        } else {
+            downloadButton.progressTo(val: 0)
         }
+        
         
     }
     fileprivate func alignSentBubble() {
@@ -242,6 +247,7 @@ class MessageCell: UITableViewCell {
     }
     func setupDownloadButton(){
         contentView.addSubview(downloadButton)
+        downloadButton.delegate = self
         downloadButton.translatesAutoresizingMaskIntoConstraints = false
         
         
@@ -261,5 +267,23 @@ class MessageCell: UITableViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension MessageCell : DownloadBtnDelegate {
+    func start() {
+        message?.download(sub: self)
+    }
+}
+
+extension MessageCell : MessageSubscriber {
+    func progressTo(val: Double) {
+        DispatchQueue.main.async { [self] in
+            downloadButton.progressTo(val: val)
+        }
+    }
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        message?.dropSubscriber()
     }
 }

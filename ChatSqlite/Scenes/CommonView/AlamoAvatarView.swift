@@ -31,7 +31,7 @@ class AlamoAvatarView : AvatarView {
                              filter: filter)
         } else {
             print("Default avatar...")
-            self.af.setImage(withURL: URL(fileURLWithPath: text), placeholderImage: placeholder, filter: filter)
+            self.image = placeholder
         }
     }
 }

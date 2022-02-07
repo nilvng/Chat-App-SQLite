@@ -100,7 +100,7 @@ class MessagesMediator : MessageDBMediator {
     func sendMessage(content: String, newConv : Bool  = true){
         // show the user first
         
-        let m = MessageDomain(cid: conversation.id, content: content, type: .text, timestamp: Date(), sender: "1")
+        let m = MessageDomain(mid: UUID().uuidString,cid: conversation.id, content: content, type: .text, timestamp: Date(), sender: "1")
         
         self.presenter?.presentNewItem(m)
 

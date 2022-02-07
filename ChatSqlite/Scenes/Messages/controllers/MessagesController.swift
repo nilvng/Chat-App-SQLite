@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Alamofire
 
 protocol MessageDBMediator {
     func fetchData(friend: FriendDomain)
@@ -293,10 +294,15 @@ class MessagesController: UIViewController {
 
     }
     
+    // MARK: Actions
     @objc func menuButtonPressed(){
         let menuViewController = ChatMenuController()
         menuViewController.configure(conversation!)
         navigationController?.pushViewController(menuViewController, animated: true)
+    }
+    
+    @objc func handleTap(){
+        view.endEditing(true)
     }
     
     func scrollToLastMessage(animated: Bool = true){
@@ -308,11 +314,6 @@ class MessagesController: UIViewController {
             let lastindex = IndexPath(row: 0, section: 0)
             self.tableView.scrollToRow(at: lastindex, at: .bottom, animated: animated)
         }
-    }
-
-    
-    @objc func handleTap(){
-        view.endEditing(true)
     }
  
     var lastPage : Int = 0
@@ -352,7 +353,9 @@ class MessagesController: UIViewController {
 
 }
 
+// MARK: UITableViewDelegate
 extension MessagesController : UITableViewDelegate {
+    
     // MARK: Scroll events
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         mediator?.loadMore(tableOffset: tableView.contentOffset.y)
@@ -439,6 +442,8 @@ extension MessagesController : UITableViewDelegate {
             self.bbFlyConstraint.constant = -BubbleConstant.contentVPadding
         })
     }
+    
+    
 }
 
 // MARK: Presenter

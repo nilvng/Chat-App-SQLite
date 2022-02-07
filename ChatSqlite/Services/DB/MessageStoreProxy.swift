@@ -17,6 +17,7 @@ protocol MessageDataLogic {
     func add(newItem: Message, completionHandler: @escaping (Message?, StoreError?) -> Void)
     func delete(id: String, completionHandler: @escaping (StoreError?) -> Void)
     func deleteAllMessages(completion: @escaping (StoreError?) -> Void)
+    func update(item: Message, completionHandler: @escaping (StoreError?) -> Void)
 }
 class MessageStoreProxy{
     
@@ -74,7 +75,7 @@ extension MessageStoreProxy : MessageService {
     
     func updateItem(_ item: MessageDomain, completionHandler: @escaping (StoreError?) -> Void) {
         let mapped = toDtbModel(item: item)
-        self.update(item: mapped, completionHandler:  { res, err in
+        self.update(item: mapped, completionHandler:  { err in
         
                 completionHandler(err)
         })
@@ -101,6 +102,8 @@ extension MessageStoreProxy : MessageService {
 
 // MARK: StoreProxy
 extension MessageStoreProxy : MessageDataLogic {
+
+    
     
     func getAll( noRecords : Int, noPages: Int, desc : Bool = false, completionHandler: @escaping ([Message]?, StoreError?) -> Void) {
         
@@ -172,8 +175,13 @@ extension MessageStoreProxy : MessageDataLogic {
         }
     }
     
-    func update(item: Message, completionHandler: @escaping (Message?, StoreError?) -> Void) {
-        fatalError()
+    func update(item: Message, completionHandler: @escaping (StoreError?) -> Void) {
+
+        utilityQueue.async {
+            self.store.update(item: item, completionHandler: { err in
+                completionHandler(err)
+            })
+        }
     }
     
     func delete(id: String, completionHandler: @escaping (StoreError?) -> Void) {
