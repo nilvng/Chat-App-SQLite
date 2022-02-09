@@ -16,6 +16,12 @@ enum MessageType : Int, Codable {
     case sticker
 }
 
+enum MessageStatus : Int, Codable{
+    case sent
+    case received
+    case seen
+}
+
 protocol Message{
     var cid : String! {get set}
     var mid : String! {get}
@@ -24,6 +30,7 @@ protocol Message{
     var timestamp : Date! {get}
     var sender : String! {get}
     var downloaded : Bool! {get}
+    var status : MessageStatus! {get}
     
         
     func toUIModel() -> MessageDomain
@@ -36,6 +43,7 @@ protocol SQLiteModel : Codable{
 }
 
 struct MessageSQLite : Message, Codable {
+    
     func toUIModel() -> MessageDomain {
         return MessageDomain(mid: mid, cid: cid, content: content, type: type, timestamp: timestamp, sender: sender,downloaded: downloaded)
     }
@@ -57,6 +65,8 @@ struct MessageSQLite : Message, Codable {
     var content: String!
     
     var type: MessageType!
+    
+    var status: MessageStatus!
     
     var timestamp: Date!
     

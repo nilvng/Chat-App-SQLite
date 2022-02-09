@@ -23,6 +23,7 @@ class MessageDomain {
     var sender: String
     
     var downloaded : Bool = false
+    var status : MessageStatus = .sent
  
     // download subscriber
     var subscriber : MessageSubscriber?
@@ -67,8 +68,4 @@ extension MessageDomain {
         subscriber = sr
     }
 
-}
-
-protocol MessageSubscriber {
-    func progressTo(val : Double)
 }

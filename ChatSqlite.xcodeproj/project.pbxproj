@@ -39,11 +39,14 @@
 		0E7008DC278806E400998BBB /* FriendAvatarEditCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7008D5278806E400998BBB /* FriendAvatarEditCell.swift */; };
 		0E7008DD278806E400998BBB /* FriendDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7008D6278806E400998BBB /* FriendDetailController.swift */; };
 		0E7008DE278806E400998BBB /* FriendEditDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7008D7278806E400998BBB /* FriendEditDataSource.swift */; };
-		0E70090B278EB76100998BBB /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70090A278EB76100998BBB /* ImageService.swift */; };
+		0E70090B278EB76100998BBB /* FileDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70090A278EB76100998BBB /* FileDownloader.swift */; };
 		0E700911278EBDE100998BBB /* AlamofireImage in Frameworks */ = {isa = PBXBuildFile; productRef = 0E700910278EBDE100998BBB /* AlamofireImage */; };
 		0E727F50278571AA002EA7E3 /* NativeContactStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E727F4F278571AA002EA7E3 /* NativeContactStore.swift */; };
 		0E727F5227857416002EA7E3 /* NativeContactStoreAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E727F5127857416002EA7E3 /* NativeContactStoreAdapter.swift */; };
 		0E94D0EC27991A26003485AF /* DownloadBtnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E94D0EB27991A26003485AF /* DownloadBtnView.swift */; };
+		0E98F91227B0FA1800F7564E /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E98F91127B0FA1800F7564E /* AppRouter.swift */; };
+		0E98F91427B11CE900F7564E /* MessageListInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E98F91327B11CE900F7564E /* MessageListInteractor.swift */; };
+		0E9DC4F427B35C1F00BF21B0 /* SceneBusinessLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9DC4F327B35C1F00BF21B0 /* SceneBusinessLogic.swift */; };
 		0EDA957A2775A08300646051 /* ConversationStoreProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDA95792775A08300646051 /* ConversationStoreProxy.swift */; };
 		0EF89B62278ECEEF005C3BE1 /* AlamoAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF89B61278ECEEF005C3BE1 /* AlamoAvatarView.swift */; };
 		0EFDD947276B72C400323984 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD946276B72C400323984 /* AppDelegate.swift */; };
@@ -99,10 +102,13 @@
 		0E7008D5278806E400998BBB /* FriendAvatarEditCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendAvatarEditCell.swift; sourceTree = "<group>"; };
 		0E7008D6278806E400998BBB /* FriendDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendDetailController.swift; sourceTree = "<group>"; };
 		0E7008D7278806E400998BBB /* FriendEditDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendEditDataSource.swift; sourceTree = "<group>"; };
-		0E70090A278EB76100998BBB /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
+		0E70090A278EB76100998BBB /* FileDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDownloader.swift; sourceTree = "<group>"; };
 		0E727F4F278571AA002EA7E3 /* NativeContactStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeContactStore.swift; sourceTree = "<group>"; };
 		0E727F5127857416002EA7E3 /* NativeContactStoreAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeContactStoreAdapter.swift; sourceTree = "<group>"; };
 		0E94D0EB27991A26003485AF /* DownloadBtnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadBtnView.swift; sourceTree = "<group>"; };
+		0E98F91127B0FA1800F7564E /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
+		0E98F91327B11CE900F7564E /* MessageListInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageListInteractor.swift; sourceTree = "<group>"; };
+		0E9DC4F327B35C1F00BF21B0 /* SceneBusinessLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneBusinessLogic.swift; sourceTree = "<group>"; };
 		0EDA95792775A08300646051 /* ConversationStoreProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationStoreProxy.swift; sourceTree = "<group>"; };
 		0EF89B61278ECEEF005C3BE1 /* AlamoAvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlamoAvatarView.swift; sourceTree = "<group>"; };
 		0EFDD943276B72C400323984 /* ChatSqlite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatSqlite.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -158,7 +164,7 @@
 				0E124246277EDA020054D069 /* BackgroundFactory.swift */,
 				0E124245277EDA010054D069 /* ImageStore.swift */,
 				0E124247277EDA020054D069 /* PhotoRequest.swift */,
-				0E70090A278EB76100998BBB /* ImageService.swift */,
+				0E70090A278EB76100998BBB /* FileDownloader.swift */,
 			);
 			path = Image;
 			sourceTree = "<group>";
@@ -189,6 +195,7 @@
 				0EFDD976276C2C2A00323984 /* MessagesController.swift */,
 				0E124233277EA53D0054D069 /* MessageDataSource.swift */,
 				0EFDD978276C2C4700323984 /* MessagesMediator.swift */,
+				0E98F91327B11CE900F7564E /* MessageListInteractor.swift */,
 			);
 			path = controllers;
 			sourceTree = "<group>";
@@ -196,7 +203,6 @@
 		0E3C0D172783F99800B23E21 /* views */ = {
 			isa = PBXGroup;
 			children = (
-				0E124256277EF82B0054D069 /* BubbleConstant.swift */,
 				0E124254277EF82B0054D069 /* ChatbarView.swift */,
 				0E124255277EF82B0054D069 /* MessageCell.swift */,
 				0E94D0EB27991A26003485AF /* DownloadBtnView.swift */,
@@ -271,6 +277,27 @@
 			path = controllers;
 			sourceTree = "<group>";
 		};
+		0E98F90F27B0F95100F7564E /* InMemo */ = {
+			isa = PBXGroup;
+			children = (
+				0E124248277EDA020054D069 /* Theme.swift */,
+				0E2395B827708340006B2DE2 /* FriendDomain.swift */,
+				0E2395BA2770834C006B2DE2 /* ConversationDomain.swift */,
+				0E2395BC2770835A006B2DE2 /* MessageDomain.swift */,
+			);
+			path = InMemo;
+			sourceTree = "<group>";
+		};
+		0E98F91027B0F96400F7564E /* External */ = {
+			isa = PBXGroup;
+			children = (
+				0EFDD966276B7A3E00323984 /* Friend.swift */,
+				0EFDD968276B7A4A00323984 /* Conversation.swift */,
+				0EFDD96A276B7A5400323984 /* Message.swift */,
+			);
+			path = External;
+			sourceTree = "<group>";
+		};
 		0EDA95782774628700646051 /* Services */ = {
 			isa = PBXGroup;
 			children = (
@@ -302,6 +329,7 @@
 				0EFDD946276B72C400323984 /* AppDelegate.swift */,
 				0EFDD948276B72C400323984 /* SceneDelegate.swift */,
 				0E15EC3127742B790082FA1B /* ChatManager.swift */,
+				0E98F91127B0FA1800F7564E /* AppRouter.swift */,
 				0E66A9A9277A139400525C3B /* SQLIteStores */,
 				0EDA95782774628700646051 /* Services */,
 				0EFDD95F276B79C300323984 /* Models */,
@@ -316,6 +344,7 @@
 		0EFDD95E276B79BD00323984 /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				0E9DC4F327B35C1F00BF21B0 /* SceneBusinessLogic.swift */,
 				0E12423C277ED97D0054D069 /* Extensions */,
 				0E124235277EB6BF0054D069 /* CommonView */,
 				0EFDD97A276C2E8F00323984 /* Conversations */,
@@ -330,13 +359,8 @@
 		0EFDD95F276B79C300323984 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				0EFDD966276B7A3E00323984 /* Friend.swift */,
-				0E2395B827708340006B2DE2 /* FriendDomain.swift */,
-				0EFDD968276B7A4A00323984 /* Conversation.swift */,
-				0E2395BA2770834C006B2DE2 /* ConversationDomain.swift */,
-				0EFDD96A276B7A5400323984 /* Message.swift */,
-				0E2395BC2770835A006B2DE2 /* MessageDomain.swift */,
-				0E124248277EDA020054D069 /* Theme.swift */,
+				0E98F91027B0F96400F7564E /* External */,
+				0E98F90F27B0F95100F7564E /* InMemo */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -364,6 +388,7 @@
 		0EFDD97C276C2E9B00323984 /* Messages */ = {
 			isa = PBXGroup;
 			children = (
+				0E124256277EF82B0054D069 /* BubbleConstant.swift */,
 				0E3C0D172783F99800B23E21 /* views */,
 				0E3C0D162783F98C00B23E21 /* controllers */,
 			);
@@ -451,12 +476,14 @@
 				0EFDD975276B8BB100323984 /* FriendMediator.swift in Sources */,
 				0E124258277EF82B0054D069 /* MessageCell.swift in Sources */,
 				0E2395BD2770835A006B2DE2 /* MessageDomain.swift in Sources */,
+				0E9DC4F427B35C1F00BF21B0 /* SceneBusinessLogic.swift in Sources */,
 				0E124257277EF82B0054D069 /* ChatbarView.swift in Sources */,
 				0EFDD97E276C357E00323984 /* MessagesSQLiteStore.swift in Sources */,
 				0EFDD969276B7A4A00323984 /* Conversation.swift in Sources */,
 				0EFDD971276B86AD00323984 /* FriendsController.swift in Sources */,
 				0EFDD967276B7A3E00323984 /* Friend.swift in Sources */,
 				0EFDD977276C2C2A00323984 /* MessagesController.swift in Sources */,
+				0E98F91427B11CE900F7564E /* MessageListInteractor.swift in Sources */,
 				0E12423B277ED9560054D069 /* AvatarView.swift in Sources */,
 				0E7008DE278806E400998BBB /* FriendEditDataSource.swift in Sources */,
 				0E124242277ED9E00054D069 /* Date+Chat.swift in Sources */,
@@ -484,6 +511,7 @@
 				0E94D0EC27991A26003485AF /* DownloadBtnView.swift in Sources */,
 				0E124237277EB6E20054D069 /* FriendDataSource.swift in Sources */,
 				0E727F50278571AA002EA7E3 /* NativeContactStore.swift in Sources */,
+				0E98F91227B0FA1800F7564E /* AppRouter.swift in Sources */,
 				0E12424C277EDA020054D069 /* Theme.swift in Sources */,
 				0E7008DC278806E400998BBB /* FriendAvatarEditCell.swift in Sources */,
 				0E12424A277EDA020054D069 /* BackgroundFactory.swift in Sources */,
@@ -497,7 +525,7 @@
 				0E12424B277EDA020054D069 /* PhotoRequest.swift in Sources */,
 				0E7008D9278806E400998BBB /* FriendTextEditCell.swift in Sources */,
 				0E124251277EF3A10054D069 /* ConversationCell.swift in Sources */,
-				0E70090B278EB76100998BBB /* ImageService.swift in Sources */,
+				0E70090B278EB76100998BBB /* FileDownloader.swift in Sources */,
 				0E727F5227857416002EA7E3 /* NativeContactStoreAdapter.swift in Sources */,
 				0EFDD979276C2C4700323984 /* MessagesMediator.swift in Sources */,
 				0E124259277EF82B0054D069 /* BubbleConstant.swift in Sources */,

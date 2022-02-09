@@ -9,9 +9,13 @@ import Foundation
 import UIKit
 import Alamofire
 
+protocol BubbleListViewDelegate {
+    func bubbleList(downloadItemOfCell: MessageCell)
+}
+
 class MessageDataSource : NSObject {
     var items : [MessageDomain] = []
-    var msgViewController : MessagesController?
+    var bubbleViewDelegate : BubbleListViewDelegate?
     static var CELL_ID = "messCell"
     
     func setItems(_ items: [MessageDomain]){
@@ -61,6 +65,9 @@ extension MessageDataSource : UITableViewDataSource {
         //if (isLastContinuous){ print("last continuous \(message.content) - \(reverseIndex)")}
         
         cell.configure(with: message, lastContinuousMess: isLastContinuous)
+        cell.downloadAction = { cell in
+            self.bubbleViewDelegate?.bubbleList(downloadItemOfCell: cell)
+        }
         
         cell.transform = CGAffineTransform(scaleX: 1, y: -1)
         

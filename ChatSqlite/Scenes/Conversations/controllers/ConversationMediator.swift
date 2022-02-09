@@ -14,7 +14,7 @@ protocol ConversationPresenter : AnyObject {
     func presentDeleteItem(_ item: ConversationDomain, at: IndexPath)
 }
 
-class ConversationMediator : ConversationDBMediator{
+class ConversationMediator : ConversationListInteractor{
     
     weak var presenter : ConversationPresenter?
     var manager : ConversationBusinessLogic

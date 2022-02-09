@@ -16,7 +16,7 @@ protocol MessagesPresenter : AnyObject{
 
 }
 
-class MessagesMediator : MessageDBMediator {
+class MessagesMediator : MessageListInteractor {
     
     weak var presenter : MessagesPresenter?
     
@@ -42,13 +42,13 @@ class MessagesMediator : MessageDBMediator {
         manager.loadConversationWith(fid: friend.id, completionHandler: { res, err in
             // found it
             if let c = res {
-                print("Mediator: past chat")
+                //print("Mediator: past chat")
                 self.fetchData(conversation: c)
                 self.conversation = c
-                print(c)
+                //print(c)
                 self.presenter?.loadConversation(c, isNew: false)
             } else {
-                print("Mediator: new chat")
+                //print("Mediator: new chat")
                 // if conversation not exist
                 self.conversation = ConversationDomain.fromFriend(friend: friend)
                 self.newFriend = friend
@@ -97,15 +97,19 @@ class MessagesMediator : MessageDBMediator {
         }
     }
 
-    func sendMessage(content: String, newConv : Bool  = true){
+    func onSendMessage(content: String, newConv : Bool  = true){
         // show the user first
         
-        let m = MessageDomain(mid: UUID().uuidString,cid: conversation.id, content: content, type: .text, timestamp: Date(), sender: "1")
+        let m = MessageDomain(mid: UUID().uuidString,
+                              cid: conversation.id,
+                              content: content, type: .text,
+                              timestamp: Date(), sender: "1")
         
         self.presenter?.presentNewItem(m)
 
         // update db
         manager.onNewMessage(msg: m, conversation: conversation)
+        
         if let f = newFriend, newConv{
             manager.onNewFriend(friend: f)
         }

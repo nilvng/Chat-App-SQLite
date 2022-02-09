@@ -8,11 +8,14 @@
 import UIKit
 import Alamofire
 
-protocol MessageDBMediator {
+protocol MessageListInteractor {
+    var presenter : MessagesPresenter? {get set}
+    
     func fetchData(friend: FriendDomain)
     func fetchData(conversation: ConversationDomain)
     func loadMore(tableOffset: CGFloat)
-    func sendMessage(content: String, newConv: Bool)
+    func onSendMessage(content: String, newConv: Bool)
+    
 }
 enum AccentColorMode {
     case light
@@ -20,12 +23,13 @@ enum AccentColorMode {
 }
 class MessagesController: UIViewController {
     // MARK: VC properties
-    var mediator : MessageDBMediator?
+    var interactor : MessageListInteractor?
     var dataSource = MessageDataSource()
+    
     var conversation : ConversationDomain? {
         didSet{
             theme = conversation?.theme ?? .basic
-        }
+    }
     }
     
     var isNew : Bool = false
@@ -82,7 +86,6 @@ class MessagesController: UIViewController {
     // MARK: Init
     init(){
         super.init(nibName: nil, bundle: nil)
-        setup()
     }
     
     required init?(coder: NSCoder) {
@@ -90,25 +93,27 @@ class MessagesController: UIViewController {
     }
     
     func configure(friend: FriendDomain){
-        mediator?.fetchData(friend: friend)
+        interactor?.fetchData(friend: friend)
         self.conversation = ConversationDomain.fromFriend(friend: friend)
     }
     
     func configure(conversation : ConversationDomain){
         self.conversation = conversation
-        mediator?.fetchData(conversation: conversation)
+        interactor?.fetchData(conversation: conversation)
     }
     
     // MARK: Setups
-    func setup(){
-        let inter = MessagesMediator()
+    func setup(interactor: MessageListInteractor){
+        var inter = interactor
         inter.presenter = self
-        mediator = inter
+        self.interactor = inter
     }
     
     func configureTable(){
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         view.isUserInteractionEnabled = true
+        dataSource.bubbleViewDelegate = self
+        
         tableView.addGestureRecognizer(tapGesture)
 
         tableView.register(MessageCell.self, forCellReuseIdentifier: MessageCell.identifier)
@@ -358,7 +363,7 @@ extension MessagesController : UITableViewDelegate {
     
     // MARK: Scroll events
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        mediator?.loadMore(tableOffset: tableView.contentOffset.y)
+        interactor?.loadMore(tableOffset: tableView.contentOffset.y)
         
         // change bubble gradient as scrolling
         let ideaRatio = UIScreen.main.bounds.size.height / 17
@@ -478,6 +483,12 @@ extension MessagesController : MessagesPresenter {
         
         dataSource.appendNewItem(item)
         
+        newMessAnimation = true
+
+        isNew = false
+        
+        floatBubble.text = item.content
+        
         DispatchQueue.main.async {
             self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .top)
         }
@@ -504,20 +515,15 @@ extension MessagesController : ChatbarDelegate {
     }
     
     func messageSubmitted(message: String) {
-        print("msg submit")
-        
-        newMessAnimation = true
-                
-        mediator?.sendMessage(content: message, newConv: isNew)
-
-        if !isNew {
-            print("old chat")
-        } else {
-            print("new chat")
-            isNew = false
-        }
-        
-        floatBubble.text = message
+        //print("msg submit")
+        interactor?.onSendMessage(content: message, newConv: isNew)
         }
 }
 
+extension MessagesController : BubbleListViewDelegate {
+    func bubbleList(downloadItemOfCell: MessageCell) {
+        print(downloadItemOfCell.message)
+    }
+    
+    
+}

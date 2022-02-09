@@ -8,9 +8,12 @@
 import UIKit
 
 class MessageCell: UITableViewCell {
-
+    
+    typealias MessageCellAction = (MessageCell) -> Void
+    
     lazy var friendSerivce : FriendService = FriendStoreProxy.shared
-    var message : MessageDomain?
+    var message : MessageDomain!
+    var downloadAction : MessageCellAction?
     
     static let identifier = "MessageCell"
     var inboundConstraint : NSLayoutConstraint!
@@ -269,17 +272,19 @@ class MessageCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 }
-
+//MARK: - DownloadBtnDelegate
 extension MessageCell : DownloadBtnDelegate {
     func start() {
+        downloadAction?(self)
         message?.download(sub: self)
     }
 }
 
+//MARK: - MessageSubscriber
 extension MessageCell : MessageSubscriber {
     func progressTo(val: Double) {
-        DispatchQueue.main.async { [self] in
-            downloadButton.progressTo(val: val)
+        DispatchQueue.main.async { [weak self] in
+            self?.downloadButton.progressTo(val: val)
         }
     }
     override func prepareForReuse() {

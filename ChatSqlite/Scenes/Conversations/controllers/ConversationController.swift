@@ -7,7 +7,8 @@
 
 import UIKit
 
-protocol ConversationDBMediator {
+protocol ConversationListInteractor {
+    var presenter : ConversationPresenter? {get set}
     func loadData()
     func loadMoreData(tableOffset: CGFloat)
     func deleteConversation(item: ConversationDomain, indexPath: IndexPath)
@@ -47,14 +48,13 @@ class ConversationController: UIViewController, UIGestureRecognizerDelegate {
     lazy var blurEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
     
     // MARK: VC properties
-    var mediator : ConversationDBMediator?
+    var interactor : ConversationListInteractor?
     var dataSource  = ConversationDataSource()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        setup()
         setupTitle()
         setupNavigationBar()
         setupNavigationBarColor()
@@ -63,11 +63,12 @@ class ConversationController: UIViewController, UIGestureRecognizerDelegate {
         setupLongPressGesture()
     }
     
-    func setup() {
-        let inter = ConversationMediator()
+    func setup(interactor : ConversationListInteractor) {
+        var inter = interactor
         inter.presenter = self
-        mediator = inter
-        }
+        self.interactor = inter
+    }
+    
     // MARK: AutoLayout setups
     private func setupTitle(){
         searchField.delegate = self
@@ -163,7 +164,7 @@ class ConversationController: UIViewController, UIGestureRecognizerDelegate {
         
         // reload data
         print("Conv will appear...")
-        mediator?.loadData()
+        interactor?.loadData()
         
         
         setupNavigationBarColor() // reset color, if it accidentally changed for other views
@@ -189,7 +190,7 @@ extension ConversationController : UITableViewDelegate {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        mediator?.loadMoreData(tableOffset: tableView.contentOffset.y)
+        interactor?.loadMoreData(tableOffset: tableView.contentOffset.y)
     }
     
     // MARK: Animate Compose btn
@@ -300,7 +301,7 @@ extension ConversationController {
                 let configView = ConvConfigController()
                 let itemToConfig = dataSource.getItem(at: indexPath)
                 configView.configure {
-                    self.mediator?.deleteConversation(item: itemToConfig, indexPath: indexPath)
+                    self.interactor?.deleteConversation(item: itemToConfig, indexPath: indexPath)
                 }
                 configView.modalPresentationStyle = UIModalPresentationStyle.custom
                 configView.transitioningDelegate = self
