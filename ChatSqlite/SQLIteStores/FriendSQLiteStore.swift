@@ -50,7 +50,7 @@ class FriendSQLiteStore {
     }
 }
 
-extension FriendSQLiteStore : FriendDataLogic{    
+extension FriendSQLiteStore : FriendDBStore{    
     
     func getAll(completionHandler: @escaping ([Friend]?, StoreError?) -> Void){
         do {

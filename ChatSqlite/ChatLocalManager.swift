@@ -7,22 +7,20 @@
 
 import Foundation
 
-protocol ChatBusinessLogic {
+protocol ChatLocalLogic {
     func loadConversationWith(fid: String, completionHandler: @escaping (ConversationDomain?, StoreError?) -> Void)
-    func onNewMessage(msg: MessageDomain, conversation: ConversationDomain)
-    func onNewFriend(friend: FriendDomain)
-    func reactMessage(msg: MessageDomain)
+    func saveNewMessage(msg: MessageDomain, conversation: ConversationDomain, friend: FriendDomain?)
     func loadMessages(cid: String, noRecords: Int, noPages: Int, desc : Bool, completionHandler: @escaping ([MessageDomain]?, StoreError?) -> Void)
 
 }
 
-protocol ConversationBusinessLogic{
-    func fetchData(noRecords: Int, noPages: Int, desc : Bool, completionHandler: @escaping ([ConversationDomain]?, StoreError?) -> Void)
+protocol ConversationLocalLogic {
+    func loadConversations(noRecords: Int, noPages: Int, desc : Bool, completionHandler: @escaping ([ConversationDomain]?, StoreError?) -> Void)
     func onDeleteConversation(id: String)
 }
 
-class ChatManager{
-    static var shared = ChatManager()
+class ChatLocalManager{
+    static var shared = ChatLocalManager()
     var workers = [String: MessageService]()
     var convService : ConversationService
     var friendService : FriendService
@@ -45,7 +43,7 @@ class ChatManager{
     }
 }
 
-extension ChatManager : ChatBusinessLogic{
+extension ChatLocalManager : ChatLocalLogic{
     func loadConversationWith(fid: String, completionHandler: @escaping (ConversationDomain?, StoreError?) -> Void) {
         convService.findItemWithFriend(id: fid, completion: completionHandler)
     }
@@ -63,7 +61,7 @@ extension ChatManager : ChatBusinessLogic{
         fatalError("tbd")
     }
     
-    func onNewMessage(msg: MessageDomain, conversation: ConversationDomain){
+    func saveNewMessage(msg: MessageDomain, conversation: ConversationDomain, friend: FriendDomain?){
         
         // Add new msg to msgService
         let store = get(cid: conversation.id)
@@ -76,11 +74,10 @@ extension ChatManager : ChatBusinessLogic{
             }
         })
         
-        // Update last msg (possibly add new conv) to ConvService
+        // Update last msg (and possibly add new conv) to ConvService
         var conCopy = conversation
         conCopy.lastMsg = msg.content
         conCopy.timestamp = msg.timestamp
-        //print(conCopy)
         
         convService.upsertItem(conCopy, completionHandler: { err in
             guard err == nil else {
@@ -89,6 +86,11 @@ extension ChatManager : ChatBusinessLogic{
             }
             print("Conversation upserted.")
         })
+        
+        // add to FriendStore if this is the first conversation with this friend
+        if let f = friend {
+            self.onNewFriend(friend: f)
+        }
         
     }
     // save friend to sqlite db
@@ -105,7 +107,7 @@ extension ChatManager : ChatBusinessLogic{
         print("Message to update: \(msg)")
         worker.updateItem(msg, completionHandler: { err in
             if err != nil {
-                print(err?.localizedDescription)
+                print(err?.localizedDescription ?? "weird")
             }
         })
     }
@@ -114,8 +116,8 @@ extension ChatManager : ChatBusinessLogic{
 
 }
 
-extension ChatManager : ConversationBusinessLogic{
-    func fetchData(noRecords: Int, noPages: Int, desc: Bool, completionHandler: @escaping ([ConversationDomain]?, StoreError?) -> Void) {
+extension ChatLocalManager : ConversationLocalLogic{
+    func loadConversations(noRecords: Int, noPages: Int, desc: Bool, completionHandler: @escaping ([ConversationDomain]?, StoreError?) -> Void) {
         convService.fetchAllItems(noRecords: noRecords, noPages: noPages, desc: desc, completionHandler: completionHandler)
     }
     

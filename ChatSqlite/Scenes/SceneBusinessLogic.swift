@@ -9,9 +9,9 @@ import Foundation
 
 protocol MessageListBusinessLogic {
 
-    func messageList(sendMessage: MessageDomain)
-    func messageList(receiveMessage: MessageDomain)
-    func messageList(downloadMessage: MessageDomain)
+    func sendMessage(msg: MessageDomain)
+    func receiveMessage(msg: MessageDomain)
+    func downloadMessage(msg: MessageDomain)
     
 }
 

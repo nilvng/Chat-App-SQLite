@@ -17,19 +17,19 @@ protocol ConversationPresenter : AnyObject {
 class ConversationMediator : ConversationListInteractor{
     
     weak var presenter : ConversationPresenter?
-    var manager : ConversationBusinessLogic
+    var manager : ConversationLocalLogic
     
     var noRecords : Int = 20
     var currPage = 0
     var offset : CGFloat = 300
     
     init(){
-        self.manager = ChatManager.shared
+        self.manager = ChatLocalManager.shared
     }
     
     
     func loadData(){
-        manager.fetchData(noRecords: noRecords, noPages: 0, desc: true, completionHandler: { [weak self] res, err in
+        manager.loadConversations(noRecords: noRecords, noPages: 0, desc: true, completionHandler: { [weak self] res, err in
             if let convs = res {
                 self?.presenter?.presentAllItems(convs)
             } else {
@@ -48,7 +48,7 @@ class ConversationMediator : ConversationListInteractor{
         
         currPage = pages
         
-        manager.fetchData(noRecords: noRecords, noPages: pages, desc: true) { [weak self] res, err in
+        manager.loadConversations(noRecords: noRecords, noPages: pages, desc: true) { [weak self] res, err in
             if res == nil || res!.isEmpty {
                 print("empty fetch!")
                 return}

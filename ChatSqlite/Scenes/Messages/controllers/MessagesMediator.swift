@@ -12,7 +12,7 @@ protocol MessagesPresenter : AnyObject{
     func showInitialItems(_ items: [MessageDomain]?)
     func presentMoreItems(_ items : [MessageDomain]?)
     func presentNewItem(_ item : MessageDomain)
-    func loadConversation(_ c: ConversationDomain, isNew : Bool)
+    func loadConversation(_ c: ConversationDomain)
 
 }
 
@@ -20,9 +20,7 @@ class MessagesMediator : MessageListInteractor {
     
     weak var presenter : MessagesPresenter?
     
-    var manager : ChatBusinessLogic
-    var store : MessageService?
-    lazy var conversationStore : ConversationService = ConversationStoreProxy.shared
+    var localStore : ChatLocalLogic
     
     var conversation : ConversationDomain!
     var newFriend : FriendDomain?
@@ -34,25 +32,27 @@ class MessagesMediator : MessageListInteractor {
     var currPage = 0
     
     init(){
-        manager = ChatManager.shared
+        localStore = ChatLocalManager.shared
     }
+    
+    
         
     func fetchData(friend : FriendDomain){
         // find conversation with friend
-        manager.loadConversationWith(fid: friend.id, completionHandler: { res, err in
+        localStore.loadConversationWith(fid: friend.id, completionHandler: { res, err in
             // found it
             if let c = res {
                 //print("Mediator: past chat")
                 self.fetchData(conversation: c)
                 self.conversation = c
                 //print(c)
-                self.presenter?.loadConversation(c, isNew: false)
+                self.presenter?.loadConversation(c)
             } else {
                 //print("Mediator: new chat")
                 // if conversation not exist
                 self.conversation = ConversationDomain.fromFriend(friend: friend)
                 self.newFriend = friend
-                self.presenter?.loadConversation(self.conversation, isNew: true)
+                self.presenter?.loadConversation(self.conversation)
             }
 
         })
@@ -64,15 +64,8 @@ class MessagesMediator : MessageListInteractor {
         // filter messenges belong to this conversation
         self.conversation = conversation
         
-        manager.loadMessages(cid: conversation.id,noRecords: noRecords, noPages: 0, desc: true) { [weak self] msgs, err in
+        localStore.loadMessages(cid: conversation.id,noRecords: noRecords, noPages: 0, desc: true) { [weak self] msgs, err in
             self?.presenter?.showInitialItems(msgs)
-            
-        }
-    }
-    
-    func createWorker(cid : String){
-        if store == nil {
-            self.store = ChatManager.shared.get(cid: cid)
             
         }
     }
@@ -85,7 +78,7 @@ class MessagesMediator : MessageListInteractor {
         }
         currPage = pages
 
-        manager.loadMessages(cid: conversation.id, noRecords: noRecords, noPages: currPage, desc: false) { [weak self] msgs, err in
+        localStore.loadMessages(cid: conversation.id, noRecords: noRecords, noPages: currPage, desc: false) { [weak self] msgs, err in
             // empty result -> no need to present
             if msgs == nil || msgs!.isEmpty || err != nil {
                 print("empty fetch!: \(String(describing: self?.currPage))")
@@ -97,9 +90,8 @@ class MessagesMediator : MessageListInteractor {
         }
     }
 
-    func onSendMessage(content: String, newConv : Bool  = true){
-        // show the user first
-        
+    func onSendMessage(content: String){
+        // display message
         let m = MessageDomain(mid: UUID().uuidString,
                               cid: conversation.id,
                               content: content, type: .text,
@@ -108,11 +100,11 @@ class MessagesMediator : MessageListInteractor {
         self.presenter?.presentNewItem(m)
 
         // update db
-        manager.onNewMessage(msg: m, conversation: conversation)
+        localStore.saveNewMessage(msg: m, conversation: conversation, friend: newFriend)
+        newFriend = nil
+
+        // publish changes to server....
         
-        if let f = newFriend, newConv{
-            manager.onNewFriend(friend: f)
-        }
     }
     
 }

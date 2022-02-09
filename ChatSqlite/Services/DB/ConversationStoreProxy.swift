@@ -7,7 +7,7 @@
 
 import Foundation
 // MARK: DataLogic protocol
-protocol ConversationDataLogic {
+protocol ConversationDBLogic {
     
     func getAll( noRecords : Int, noPages: Int, desc : Bool, completionHandler: @escaping ([Conversation]?, StoreError?) -> Void)
     func getWithId(_ id: String, completionHandler: @escaping (Conversation?, StoreError?) -> Void)
@@ -20,7 +20,7 @@ protocol ConversationDataLogic {
 
 // MARK: Proxy Class
 class ConversationStoreProxy {
-    var store : ConversationDataLogic = ConversationSQLiteStore()
+    var store : ConversationDBLogic = ConversationSQLiteStore()
     
     var items : [Conversation] = []
     
@@ -115,7 +115,7 @@ extension ConversationStoreProxy : ConversationService {
 }
 
 // MARK: ConversationDataLogic: queue
-extension ConversationStoreProxy : ConversationDataLogic {
+extension ConversationStoreProxy : ConversationDBLogic {
     
     func getAll( noRecords : Int, noPages: Int, desc : Bool = true, completionHandler: @escaping ([Conversation]?, StoreError?) -> Void) {
         utilityQueue.async { [self] in

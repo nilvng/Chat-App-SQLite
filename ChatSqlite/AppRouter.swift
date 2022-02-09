@@ -9,6 +9,9 @@ import Foundation
 import UIKit
 
 class AppRouter : NSObject{
+    static var shared = AppRouter()
+    var window: UIWindow?
+    
     var rootViewController: UIViewController {
         guard let first = navigationStack.first else {
             fatalError("There must always be at least one navigation controller")
@@ -23,17 +26,36 @@ class AppRouter : NSObject{
         }
         return top
     }
-    override init(){
+    private override init(){
         navigationStack = [UINavigationController(navigationBarClass: nil, toolbarClass: nil)]
+
         super.init()
+
     }
-    func toChatPage(){
-        let detail = MessagesController()
+    
+    func start(sceneWindow: UIWindowScene){
+        if window == nil {
+            window = UIWindow(windowScene: sceneWindow)
+            window?.rootViewController = rootViewController
+            window?.makeKeyAndVisible()
+        }
+        toHomepage()
+    }
+    func toChatPage(ofConversation conv: ConversationDomain){
+        let detail = MessageListViewController()
         detail.setup(interactor: MessagesMediator())
+        detail.configure(conversation: conv)
         showViewController(detail)
     }
+    func toChatPage(withFriend friend: FriendDomain){
+        let detail = MessageListViewController()
+        detail.setup(interactor: MessagesMediator())
+        detail.configure(friend: friend)
+        showViewController(detail)
+    }
+    
     func toHomepage(){
-        let conv = ConversationController()
+        let conv = ConversationListViewController()
         conv.setup(interactor: ConversationMediator())
         showViewController(conv)
     }
@@ -67,4 +89,13 @@ class AppRouter : NSObject{
         }
     }
 
+}
+extension UIWindow {
+    
+    convenience init(rootViewController: UIViewController) {
+        self.init(frame: UIScreen.main.bounds)
+        self.rootViewController = rootViewController
+        self.makeKeyAndVisible()
+    }
+    
 }

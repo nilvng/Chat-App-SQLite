@@ -12,7 +12,7 @@ protocol FriendDBMediator {
     func addItem(_ item: FriendDomain)
 }
 
-class FriendsController: UIViewController {
+class FriendListViewController: UIViewController {
 
     var mediator : FriendDBMediator?
     var dataSource  = FriendDataSource()
@@ -93,14 +93,14 @@ class FriendsController: UIViewController {
 }
 
 // MARK: TableDelegate
-extension FriendsController : UITableViewDelegate {
+extension FriendListViewController : UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let option = dataSource.getItem(ip: indexPath)
         
         // Click Friend
         if let friend = option as? FriendDomain {
-            let chatController = MessagesController()
+            let chatController = MessageListViewController()
             chatController.configure(friend: friend)
             let presentingVC = self.presentingViewController as? UINavigationController
             presentingVC?.pushViewController(chatController, animated: true)
@@ -126,7 +126,7 @@ extension FriendsController : UITableViewDelegate {
 }
 
 // MARK: Presenter
-extension FriendsController : FriendPresenter {
+extension FriendListViewController : FriendPresenter {
     func presentNewItems(_ item: FriendDomain) {
         dataSource.appendItems([item])
         
@@ -151,7 +151,7 @@ extension FriendsController : FriendPresenter {
 }
 
 //MARK: SearchBarDelegate
-extension FriendsController: UISearchBarDelegate {
+extension FriendListViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText == ""{

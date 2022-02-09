@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: DataLogic Protocol
-protocol MessageDataLogic {
+protocol MessageDBLogic {
     
     var conversationID : String { get set}
     
@@ -21,7 +21,7 @@ protocol MessageDataLogic {
 }
 class MessageStoreProxy{
     
-    var store : MessageDataLogic = MessagesSQLStore()
+    var store : MessageDBLogic = MessagesSQLStore()
     
     var messages : [Message] = []
     
@@ -101,7 +101,7 @@ extension MessageStoreProxy : MessageService {
 }
 
 // MARK: StoreProxy
-extension MessageStoreProxy : MessageDataLogic {
+extension MessageStoreProxy : MessageDBLogic {
 
     
     

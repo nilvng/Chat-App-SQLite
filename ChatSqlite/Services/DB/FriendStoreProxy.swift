@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol DataLogic {
+protocol DatabaseStore {
     associatedtype T
     
     func getAll(completionHandler: @escaping ([T]?, StoreError?) -> Void)
@@ -17,7 +17,7 @@ protocol DataLogic {
     func delete(id: String, completionHandler: @escaping (StoreError?) -> Void)
 }
 
-protocol FriendDataLogic{
+protocol FriendDBStore{
     func getAll(completionHandler: @escaping ([Friend]?, StoreError?) -> Void)
     func getWithId(_ id: String, completionHandler: @escaping (Friend?, StoreError?) -> Void)
     func add(newItem: Friend, completionHandler: @escaping (Friend?, StoreError?) -> Void)
@@ -26,7 +26,7 @@ protocol FriendDataLogic{
 }
 
 class FriendStoreProxy {
-    let store : FriendDataLogic = FriendSQLiteStore()
+    let store : FriendDBStore = FriendSQLiteStore()
     
     var items : [Friend] = []
     
@@ -98,7 +98,7 @@ extension FriendStoreProxy : FriendService {
     }
 }
 
-extension FriendStoreProxy : FriendDataLogic {
+extension FriendStoreProxy : FriendDBStore {
     func delete(id: String, completionHandler: @escaping (StoreError?) -> Void) {
         // find and delete in items
         

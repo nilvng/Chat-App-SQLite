@@ -8,7 +8,7 @@
 import Foundation
 import SQLite
 
-class MessagesSQLStore : MessageDataLogic {
+class MessagesSQLStore : MessageDBLogic {
     
     var conversationID: String
     

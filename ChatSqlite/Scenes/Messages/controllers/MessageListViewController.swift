@@ -14,14 +14,14 @@ protocol MessageListInteractor {
     func fetchData(friend: FriendDomain)
     func fetchData(conversation: ConversationDomain)
     func loadMore(tableOffset: CGFloat)
-    func onSendMessage(content: String, newConv: Bool)
+    func onSendMessage(content: String)
     
 }
 enum AccentColorMode {
     case light
     case dark
 }
-class MessagesController: UIViewController {
+class MessageListViewController: UIViewController {
     // MARK: VC properties
     var interactor : MessageListInteractor?
     var dataSource = MessageDataSource()
@@ -31,9 +31,7 @@ class MessagesController: UIViewController {
             theme = conversation?.theme ?? .basic
     }
     }
-    
-    var isNew : Bool = false
-    
+        
     // MARK: UI Properties
     var theme : Theme = .basic
     var mode : AccentColorMode = .light
@@ -359,56 +357,33 @@ class MessagesController: UIViewController {
 }
 
 // MARK: UITableViewDelegate
-extension MessagesController : UITableViewDelegate {
+extension MessageListViewController : UITableViewDelegate {
     
-    // MARK: Scroll events
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
         interactor?.loadMore(tableOffset: tableView.contentOffset.y)
         
         // change bubble gradient as scrolling
-        let ideaRatio = UIScreen.main.bounds.size.height / 17
-        let lag : CGFloat = scrollView.isTracking ? 18 : ideaRatio
-        let currentPage = (Int) (scrollView.contentOffset.y / lag)
-        
-        if (currentPage != lastPage){
-            lastPage = currentPage
+        if shouldBubbleColorChanged(scrollView: scrollView){
             self.updatesBubble()
         }
     }
     
-    func updatesBubble(givenIndices: [IndexPath]? = nil){
-       var indices = givenIndices
-        DispatchQueue.main.async {
-            if indices == nil {
-                indices = self.tableView.indexPathsForVisibleRows
-                guard indices != nil else {
-                    print("no cell!")
-                    return
-                }
-
-            }
-            
-            for i in indices!{
-                guard let cell = self.tableView.cellForRow(at: i) as? MessageCell else{
-                    //print("no cell for that index")
-                    continue
-                }
-                
-                let pos = self.tableView.rectForRow(at: i)
-                let relativePos = self.tableView.convert(pos, to: self.tableView.superview)
-                
-                cell.updateGradient(currentFrame: relativePos, theme: self.theme)
-            }
-        }
-    }
-    
-    // MARK: Animate Bubble
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         
         // update gradient color of visible bubbles
         updatesBubble(givenIndices: [indexPath])
         
-        // sent message? -> animate bubble
+        // sent message? yes, animate bubble
+        requestAnimateBubble()
+    }
+}
+
+// MARK: Animate Bubble
+
+extension MessageListViewController {
+    
+    func requestAnimateBubble(){
         guard newMessAnimation else {return;}
         DispatchQueue.main.async {
             self.animateFloatBb()
@@ -451,11 +426,50 @@ extension MessagesController : UITableViewDelegate {
     
 }
 
+// MARK: BubbleView action
+extension MessageListViewController {
+    
+    func shouldBubbleColorChanged(scrollView : UIScrollView) -> Bool{
+        let ideaRatio = UIScreen.main.bounds.size.height / 17
+        let lag : CGFloat = scrollView.isTracking ? 18 : ideaRatio
+        let currentPage = (Int) (scrollView.contentOffset.y / lag)
+        
+        let res = currentPage != lastPage
+        lastPage = currentPage
+        return res
+    }
+    
+    func updatesBubble(givenIndices: [IndexPath]? = nil){
+       var indices = givenIndices
+        DispatchQueue.main.async {
+            if indices == nil {
+                indices = self.tableView.indexPathsForVisibleRows
+                guard indices != nil else {
+                    print("no cell!")
+                    return
+                }
+
+            }
+            
+            for i in indices!{
+                guard let cell = self.tableView.cellForRow(at: i) as? MessageCell else{
+                    //print("no cell for that index")
+                    continue
+                }
+                
+                let pos = self.tableView.rectForRow(at: i)
+                let relativePos = self.tableView.convert(pos, to: self.tableView.superview)
+                
+                cell.updateGradient(currentFrame: relativePos, theme: self.theme)
+            }
+        }
+    }
+}
+
 // MARK: Presenter
-extension MessagesController : MessagesPresenter {
+extension MessageListViewController : MessagesPresenter {
     func showInitialItems(_ items: [MessageDomain]?) {
         if items == nil {
-            isNew = true
             return
         }
         
@@ -468,7 +482,6 @@ extension MessagesController : MessagesPresenter {
     
     func presentMoreItems(_ items: [MessageDomain]?) {
         if items == nil {
-            isNew = true
             return
         }
         
@@ -484,8 +497,6 @@ extension MessagesController : MessagesPresenter {
         dataSource.appendNewItem(item)
         
         newMessAnimation = true
-
-        isNew = false
         
         floatBubble.text = item.content
         
@@ -494,9 +505,8 @@ extension MessagesController : MessagesPresenter {
         }
     }
     
-    func loadConversation(_ c: ConversationDomain, isNew : Bool){
+    func loadConversation(_ c: ConversationDomain){
         
-        self.isNew = isNew
         self.conversation = c
         
     }
@@ -504,7 +514,7 @@ extension MessagesController : MessagesPresenter {
     
 }
 // MARK: Chatbar Delegate
-extension MessagesController : ChatbarDelegate {
+extension MessageListViewController : ChatbarDelegate {
     func adjustHeight(amount: CGFloat) {
         if (-tableInset != tableView.contentOffset.y){
             print("scroll table as user typing text")
@@ -516,11 +526,11 @@ extension MessagesController : ChatbarDelegate {
     
     func messageSubmitted(message: String) {
         //print("msg submit")
-        interactor?.onSendMessage(content: message, newConv: isNew)
+        interactor?.onSendMessage(content: message)
         }
 }
 
-extension MessagesController : BubbleListViewDelegate {
+extension MessageListViewController : BubbleListViewDelegate {
     func bubbleList(downloadItemOfCell: MessageCell) {
         print(downloadItemOfCell.message)
     }

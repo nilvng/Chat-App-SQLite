@@ -14,7 +14,7 @@ protocol ConversationListInteractor {
     func deleteConversation(item: ConversationDomain, indexPath: IndexPath)
 }
 
-class ConversationController: UIViewController, UIGestureRecognizerDelegate {
+class ConversationListViewController: UIViewController, UIGestureRecognizerDelegate {
     // MARK: UI Properties
     var currentSearchText : String = ""
     
@@ -137,7 +137,7 @@ class ConversationController: UIViewController, UIGestureRecognizerDelegate {
         
     @objc func composeButtonPressed(){
         print("Compose message...")
-        let cmc = FriendsController()
+        let cmc = FriendListViewController()
         self.present(cmc, animated: true, completion: nil)
     }
 
@@ -178,19 +178,18 @@ class ConversationController: UIViewController, UIGestureRecognizerDelegate {
 }
 
 // MARK: tableDelegate
-extension ConversationController : UITableViewDelegate {
+extension ConversationListViewController : UITableViewDelegate {
 
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let controller = MessagesController()
-        let c = dataSource.getItem(ip: indexPath)
-        controller.configure(conversation: c)
         
-        navigationController?.pushViewController(controller, animated: true)
+        let c = dataSource.getItem(ip: indexPath)
+        AppRouter.shared.toChatPage(ofConversation: c)
+
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        interactor?.loadMoreData(tableOffset: tableView.contentOffset.y)
+        interactor?.loadMoreData(tableOffset: scrollView.contentOffset.y)
     }
     
     // MARK: Animate Compose btn
@@ -215,7 +214,7 @@ extension ConversationController : UITableViewDelegate {
 }
 
 // MARK: Presenter
-extension ConversationController : ConversationPresenter{
+extension ConversationListViewController : ConversationPresenter{
     func presentDeleteItem(_ item: ConversationDomain, at index: IndexPath) {
         self.dataSource.deleteItemAt(index: index)
         
@@ -253,7 +252,7 @@ extension ConversationController : ConversationPresenter{
     
 }
 // MARK: Searching
-extension ConversationController : UITextFieldDelegate {
+extension ConversationListViewController : UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if let originalText = textField.text {
             let title = (originalText as NSString).replacingCharacters(in: range, with: string)
@@ -284,7 +283,7 @@ extension ConversationController : UITextFieldDelegate {
 
 // MARK:  Conversation Config modal
 
-extension ConversationController {
+extension ConversationListViewController {
     func setupLongPressGesture(){
         let longPress = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
         longPress.minimumPressDuration = 0.5 // 1 second press
@@ -311,7 +310,7 @@ extension ConversationController {
     }
 }
 
-extension ConversationController : UIViewControllerTransitioningDelegate{
+extension ConversationListViewController : UIViewControllerTransitioningDelegate{
     func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
         return HalfSizePresentationController(presentedViewController: presented, presenting: presentingViewController)
     }

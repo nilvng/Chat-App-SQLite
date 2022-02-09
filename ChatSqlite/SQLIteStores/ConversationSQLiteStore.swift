@@ -65,7 +65,7 @@ class ConversationSQLiteStore {
     }
 }
 
-extension ConversationSQLiteStore : ConversationDataLogic{
+extension ConversationSQLiteStore : ConversationDBLogic{
     
 
     func getAll( noRecords : Int, noPages: Int, desc : Bool = true, completionHandler: @escaping ([Conversation]?, StoreError?) -> Void) {
