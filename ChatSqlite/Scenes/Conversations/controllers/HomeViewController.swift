@@ -14,15 +14,16 @@ protocol ConversationListInteractor {
     func deleteConversation(item: ConversationDomain, indexPath: IndexPath)
 }
 
-class ConversationListViewController: UIViewController, UIGestureRecognizerDelegate {
+class HomeViewController: UIViewController {
+    
     // MARK: UI Properties
     var currentSearchText : String = ""
+    var originalItems : [ConversationDomain]?
     
-    var tableView : UITableView = {
-        let table = UITableView()
-        table.separatorStyle = .none
-        table.rowHeight = 86
-        return table
+    lazy var conversationListViewController : ConversationListViewController = {
+        let view =  ConversationListViewController()
+        view.delegate = self
+        return view
     }()
     
     var composeButton : UIButton = {
@@ -44,12 +45,9 @@ class ConversationListViewController: UIViewController, UIGestureRecognizerDeleg
     }()
     
     var xbutton : UIBarButtonItem?
-    
-    lazy var blurEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
-    
+        
     // MARK: VC properties
     var interactor : ConversationListInteractor?
-    var dataSource  = ConversationDataSource()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,13 +58,12 @@ class ConversationListViewController: UIViewController, UIGestureRecognizerDeleg
         setupNavigationBarColor()
         setupTableView()
         setupComposeButton()
-        setupLongPressGesture()
     }
     
     func setup(interactor : ConversationListInteractor) {
         var inter = interactor
-        inter.presenter = self
-        self.interactor = inter
+        inter.presenter = conversationListViewController
+        conversationListViewController.interactor = inter
     }
     
     // MARK: AutoLayout setups
@@ -101,11 +98,13 @@ class ConversationListViewController: UIViewController, UIGestureRecognizerDeleg
     // MARK: Setup Data source
     func setupTableView(){
         
-        view.addSubview(tableView)
+    
+        add(conversationListViewController)
         
-        tableView.dataSource = dataSource
-        tableView.delegate = self
-        tableView.register(ConversationCell.self, forCellReuseIdentifier: ConversationCell.identifier)
+        guard let tableView = conversationListViewController.tableView else {
+            print("No table view?")
+            return
+        }
         
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -142,12 +141,7 @@ class ConversationListViewController: UIViewController, UIGestureRecognizerDeleg
     }
 
     // MARK: Actions
-    fileprivate func clearSearchField() {
-        searchField.text = ""
-        dataSource.clearSearch()
-        tableView.reloadData()
-        navigationItem.rightBarButtonItem = nil
-    }
+
     
     @objc func cancelSearchPressed(){
         print("cancel")
@@ -177,82 +171,26 @@ class ConversationListViewController: UIViewController, UIGestureRecognizerDeleg
     
 }
 
-// MARK: tableDelegate
-extension ConversationListViewController : UITableViewDelegate {
-
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        let c = dataSource.getItem(ip: indexPath)
-        AppRouter.shared.toChatPage(ofConversation: c)
-
+// MARK: ConversationListViewDelegate
+extension HomeViewController : ConversationListViewDelegate {
+    func viewBeginDragging(view: UIScrollView) {
+        fatalError()
     }
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        interactor?.loadMoreData(tableOffset: scrollView.contentOffset.y)
-    }
-    
-    // MARK: Animate Compose btn
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        
-        var goingUp: Bool
-        let velocity = scrollView.panGestureRecognizer.velocity(in: scrollView).y
-        /// `Velocity` is 0 when user is not dragging.
-        if (velocity == 0){
-            goingUp = scrollView.panGestureRecognizer.translation(in: scrollView).y < 0
-        } else {
-            goingUp = velocity < 0
-        }
-        
-        if goingUp && composeButton.alpha > 0 {
-            composeButton.fadeOut(duration: 0.2, delay: 0)
-        } else {
-            composeButton.fadeIn(duration: 0.2, delay: 0)
-        }
-    }
-    
-}
-
-// MARK: Presenter
-extension ConversationListViewController : ConversationPresenter{
-    func presentDeleteItem(_ item: ConversationDomain, at index: IndexPath) {
-        self.dataSource.deleteItemAt(index: index)
-        
-        DispatchQueue.main.async {
-            self.tableView.deleteRows(at: [index], with: .automatic)
-        }
-    }
-    
-    func presentNewItems(_ item: ConversationDomain) {
-        
-        print("present new conv tbd")
-        //self.dataSource.appendItems([item])
-        
-        DispatchQueue.main.async {
-            
-            self.tableView.reloadData()
-        
-        }
-    }
-    
-    func presentAllItems(_ items: [ConversationDomain]?) {
-        
-        if items == nil {
-            return
-        }
-        
-        self.dataSource.loadItems(items!)
-        
-        DispatchQueue.main.async {
-            
-            self.tableView.reloadData()
-        
-        }
-    }
     
 }
 // MARK: Searching
-extension ConversationListViewController : UITextFieldDelegate {
+extension HomeViewController : UITextFieldDelegate {
+    fileprivate func clearSearchField() {
+        
+        searchField.text = ""
+        
+        conversationListViewController.reloadData()
+        originalItems = nil
+                
+        navigationItem.rightBarButtonItem = nil
+    }
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if let originalText = textField.text {
             let title = (originalText as NSString).replacingCharacters(in: range, with: string)
@@ -260,7 +198,6 @@ extension ConversationListViewController : UITextFieldDelegate {
             //  remove leading and trailing whitespace
             let cleanText = title.trimmingCharacters(in: .whitespacesAndNewlines)
             
-            print("search \(cleanText)")
             // only update when it truly changes
             if cleanText != currentSearchText{
                 filterItemForSearchKey(cleanText)
@@ -274,46 +211,18 @@ extension ConversationListViewController : UITextFieldDelegate {
         if key == ""{
             clearSearchField()
         } else{
-            dataSource.filterItemBy(key: key)
-            navigationItem.rightBarButtonItem = xbutton
-        }
-        tableView.reloadData()
-  }
-}
-
-// MARK:  Conversation Config modal
-
-extension ConversationListViewController {
-    func setupLongPressGesture(){
-        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress))
-        longPress.minimumPressDuration = 0.5 // 1 second press
-        longPress.delegate = self
-        tableView.addGestureRecognizer(longPress)
-        
-    }
-    
-    @objc func handleLongPress(_ gestureRecognizer: UILongPressGestureRecognizer){
-        if gestureRecognizer.state == .began {
-            let touchPoint = gestureRecognizer.location(in: self.tableView)
-            if let indexPath = tableView.indexPathForRow(at: touchPoint) {
-                print("Long press row: \(indexPath.row)")
-                let configView = ConvConfigController()
-                let itemToConfig = dataSource.getItem(at: indexPath)
-                configView.configure {
-                    self.interactor?.deleteConversation(item: itemToConfig, indexPath: indexPath)
-                }
-                configView.modalPresentationStyle = UIModalPresentationStyle.custom
-                configView.transitioningDelegate = self
-                self.present(configView, animated: true)
+            
+            if originalItems == nil {
+                originalItems = conversationListViewController.items // WARNING: items may not up to date!
+            }
+            
+            if let filteredItems = originalItems?.filter({ item in
+                return item.title.lowercased().contains(key.lowercased())
+            }) {
+                conversationListViewController.setItems(filteredItems)
+                navigationItem.rightBarButtonItem = xbutton
             }
         }
-    }
+  }
 }
-
-extension ConversationListViewController : UIViewControllerTransitioningDelegate{
-    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-        return HalfSizePresentationController(presentedViewController: presented, presenting: presentingViewController)
-    }
-}
-
 

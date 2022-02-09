@@ -14,22 +14,22 @@ protocol ConversationPresenter : AnyObject {
     func presentDeleteItem(_ item: ConversationDomain, at: IndexPath)
 }
 
-class ConversationMediator : ConversationListInteractor{
+class ConversationsInteractorImpl : ConversationListInteractor{
     
     weak var presenter : ConversationPresenter?
-    var manager : ConversationLocalLogic
+    var localStore : ConversationLocalLogic
     
     var noRecords : Int = 20
     var currPage = 0
     var offset : CGFloat = 300
     
     init(){
-        self.manager = ChatLocalManager.shared
+        self.localStore = ChatLocalManager.shared
     }
     
     
     func loadData(){
-        manager.loadConversations(noRecords: noRecords, noPages: 0, desc: true, completionHandler: { [weak self] res, err in
+        localStore.loadConversations(noRecords: noRecords, noPages: 0, desc: true, completionHandler: { [weak self] res, err in
             if let convs = res {
                 self?.presenter?.presentAllItems(convs)
             } else {
@@ -48,7 +48,7 @@ class ConversationMediator : ConversationListInteractor{
         
         currPage = pages
         
-        manager.loadConversations(noRecords: noRecords, noPages: pages, desc: true) { [weak self] res, err in
+        localStore.loadConversations(noRecords: noRecords, noPages: pages, desc: true) { [weak self] res, err in
             if res == nil || res!.isEmpty {
                 print("empty fetch!")
                 return}
@@ -61,7 +61,7 @@ class ConversationMediator : ConversationListInteractor{
     
     func deleteConversation(item: ConversationDomain, indexPath: IndexPath){
         
-        manager.onDeleteConversation(id: item.id)
+        localStore.onDeleteConversation(id: item.id)
         
         self.presenter?.presentDeleteItem(item, at: indexPath)
     }

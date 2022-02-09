@@ -54,7 +54,7 @@ class ChatMenuController : UIViewController{
         }
 
         for firstViewController in viewControllers {
-            if firstViewController is ConversationListViewController {
+            if firstViewController is HomeViewController {
                 self.navigationController?.popToViewController(firstViewController, animated: true)
                 break
             }

@@ -16,9 +16,11 @@ protocol MessagesPresenter : AnyObject{
 
 }
 
-class MessagesMediator : MessageListInteractor {
+class MessagesInteractorImpl : MessageListInteractor {
     
     weak var presenter : MessagesPresenter?
+    
+    var registerSelfAction : ((String) -> Void )?
     
     var localStore : ChatLocalLogic
     
@@ -45,6 +47,7 @@ class MessagesMediator : MessageListInteractor {
                 //print("Mediator: past chat")
                 self.fetchData(conversation: c)
                 self.conversation = c
+                self.registerSelf()
                 //print(c)
                 self.presenter?.loadConversation(c)
             } else {
@@ -104,7 +107,14 @@ class MessagesMediator : MessageListInteractor {
         newFriend = nil
 
         // publish changes to server....
+        self.registerSelf()
         
+    }
+    
+    // pass only once
+    func registerSelf(){
+        self.registerSelfAction?(conversation.id)
+        registerSelfAction = nil
     }
     
 }
