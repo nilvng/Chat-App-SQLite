@@ -17,10 +17,13 @@ protocol ChatLocalLogic {
 protocol ConversationLocalLogic {
     func loadConversations(noRecords: Int, noPages: Int, desc : Bool, completionHandler: @escaping ([ConversationDomain]?, StoreError?) -> Void)
     func onDeleteConversation(id: String)
+    func filterConversation(by key: String, completion: @escaping ([ConversationDomain]?, StoreError?) -> Void)
 }
 
-class ChatLocalManager{
-    static var shared = ChatLocalManager()
+class SQLiteManager{
+
+    
+    static var shared = SQLiteManager()
     var workers = [String: MessageService]()
     var convService : ConversationService
     var friendService : FriendService
@@ -43,7 +46,8 @@ class ChatLocalManager{
     }
 }
 
-extension ChatLocalManager : ChatLocalLogic{
+extension SQLiteManager : ChatLocalLogic{
+    
     func loadConversationWith(fid: String, completionHandler: @escaping (ConversationDomain?, StoreError?) -> Void) {
         convService.findItemWithFriend(id: fid, completion: completionHandler)
     }
@@ -116,7 +120,11 @@ extension ChatLocalManager : ChatLocalLogic{
 
 }
 
-extension ChatLocalManager : ConversationLocalLogic{
+extension SQLiteManager : ConversationLocalLogic{
+    func filterConversation(by key: String, completion: @escaping ([ConversationDomain]?, StoreError?) -> Void) {
+        convService.filterBy(key: key, completion: completion)
+    }
+    
     func loadConversations(noRecords: Int, noPages: Int, desc: Bool, completionHandler: @escaping ([ConversationDomain]?, StoreError?) -> Void) {
         convService.fetchAllItems(noRecords: noRecords, noPages: noPages, desc: desc, completionHandler: completionHandler)
     }

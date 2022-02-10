@@ -12,9 +12,11 @@ protocol ConversationPresenter : AnyObject {
     func presentAllItems(_ items : [ConversationDomain]?)
     func presentNewItems(_ item : ConversationDomain)
     func presentDeleteItem(_ item: ConversationDomain, at: IndexPath)
+    func presentFilteredItems(_ items: [ConversationDomain]?)
 }
 
 class ConversationsInteractorImpl : ConversationListInteractor{
+ 
     
     weak var presenter : ConversationPresenter?
     var localStore : ConversationLocalLogic
@@ -24,9 +26,18 @@ class ConversationsInteractorImpl : ConversationListInteractor{
     var offset : CGFloat = 300
     
     init(){
-        self.localStore = ChatLocalManager.shared
+        self.localStore = SQLiteManager.shared
     }
     
+    func filterBy(key: String) {
+        localStore.filterConversation(by: key) { [weak self] items, err in
+            guard let items = items, items.count > 0 else {
+                print("filter return nothing")
+                return
+            }
+            self?.presenter?.presentFilteredItems(items)
+        }
+    }
     
     func loadData(){
         localStore.loadConversations(noRecords: noRecords, noPages: 0, desc: true, completionHandler: { [weak self] res, err in

@@ -12,6 +12,7 @@ protocol ConversationListInteractor {
     func loadData()
     func loadMoreData(tableOffset: CGFloat)
     func deleteConversation(item: ConversationDomain, indexPath: IndexPath)
+    func filterBy(key: String)
 }
 
 class HomeViewController: UIViewController {
@@ -173,10 +174,26 @@ class HomeViewController: UIViewController {
 
 // MARK: ConversationListViewDelegate
 extension HomeViewController : ConversationListViewDelegate {
-    func viewBeginDragging(view: UIScrollView) {
-        fatalError()
+    func viewBeginDragging(scrollView: UIScrollView) {
+        animateComposeButton(btn: composeButton, scrollView: scrollView)
     }
     
+    fileprivate func animateComposeButton(btn composeButton: UIButton, scrollView: UIScrollView){
+        var goingUp: Bool
+                let velocity = scrollView.panGestureRecognizer.velocity(in: scrollView).y
+                /// `Velocity` is 0 when user is not dragging.
+                if (velocity == 0){
+                    goingUp = scrollView.panGestureRecognizer.translation(in: scrollView).y < 0
+                } else {
+                    goingUp = velocity < 0
+                }
+                
+                if goingUp && composeButton.alpha > 0 {
+                    composeButton.fadeOut(duration: 0.2, delay: 0)
+                } else {
+                    composeButton.fadeIn(duration: 0.2, delay: 0)
+                }
+    }
     
 }
 // MARK: Searching
@@ -211,17 +228,8 @@ extension HomeViewController : UITextFieldDelegate {
         if key == ""{
             clearSearchField()
         } else{
-            
-            if originalItems == nil {
-                originalItems = conversationListViewController.items // WARNING: items may not up to date!
-            }
-            
-            if let filteredItems = originalItems?.filter({ item in
-                return item.title.lowercased().contains(key.lowercased())
-            }) {
-                conversationListViewController.setItems(filteredItems)
-                navigationItem.rightBarButtonItem = xbutton
-            }
+            navigationItem.rightBarButtonItem = xbutton
+            conversationListViewController.filterBy(key: key)
         }
   }
 }

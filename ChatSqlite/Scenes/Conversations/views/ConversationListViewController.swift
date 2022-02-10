@@ -8,15 +8,43 @@
 import UIKit
 
 protocol ConversationListViewDelegate{
-    func viewBeginDragging(view: UIScrollView)
+    func viewBeginDragging(scrollView: UIScrollView)
 }
 
 class ConversationListViewController: UITableViewController {
-    
+    // MARK: - variables
     var items : [ConversationDomain] = []
     var interactor : ConversationListInteractor?
     var delegate : ConversationListViewDelegate?
     
+    // MARK: - methods
+    func setItems(_ items: [ConversationDomain]){
+        self.items = items
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+    
+    func reloadData(){
+        interactor?.loadData()
+    }
+    
+    func filterBy(key: String){
+        print("filtering...\(key)")
+        guard items.count > 0 else {
+            return
+        }
+        
+        let filteredItems = items.filter({ item in
+            return item.title.lowercased().contains(key.lowercased())
+        })
+        self.setItems(filteredItems)
+        
+        // call Interactor to actually filter data
+        interactor?.filterBy(key: key)
+    }
+    
+    // MARK: Setups
     func setupMyTableView(){
         let table = UITableView()
         table.separatorStyle = .none
@@ -24,6 +52,7 @@ class ConversationListViewController: UITableViewController {
         tableView = table
     }
 
+    // MARK: Navigation
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -38,18 +67,10 @@ class ConversationListViewController: UITableViewController {
         super.viewWillAppear(animated)
         interactor?.loadData()
     }
-    
-    func setItems(_ items: [ConversationDomain]){
-        self.items = items
-        DispatchQueue.main.async {
-            
-            self.tableView.reloadData()
-        }
-    }
-    
-    func reloadData(){
-        interactor?.loadData()
-    }
+
+}
+
+extension ConversationListViewController {
 
     // MARK: - Table view data source
     func getItem(at index: IndexPath) -> ConversationDomain{
@@ -57,12 +78,10 @@ class ConversationListViewController: UITableViewController {
     }
     
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
         return items.count
     }
 
@@ -91,17 +110,27 @@ extension ConversationListViewController {
     }
     
     override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        delegate?.viewBeginDragging(view: scrollView)
+        delegate?.viewBeginDragging(scrollView: scrollView)
     }
 
 }
+
+// MARK: Presenter
 extension ConversationListViewController : ConversationPresenter{
+    
+    func presentFilteredItems(_ items: [ConversationDomain]?) {
+        // #warning: append to current result if it's different from given items
+        
+        if items != nil && self.items != items! {
+            self.setItems(items!)
+        }
+    }
+    
     func presentNewItems(_ item: ConversationDomain) {
         fatalError()
     }
     
     func presentDeleteItem(_ item: ConversationDomain, at index: IndexPath) {
-        
         
         DispatchQueue.main.async {
             self.tableView.deleteRows(at: [index], with: .automatic)

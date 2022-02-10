@@ -31,6 +31,7 @@ protocol ConversationService{
     func updateItem(_ item: ConversationDomain,completionHandler : @escaping (StoreError?) -> Void)
     func deleteItem(id: String ,completionHandler : @escaping (StoreError?) -> Void)
     func findItemWithFriend(id : String, completion: @escaping (ConversationDomain?, StoreError?) -> Void )
+    func filterBy(key: String, completion: @escaping ([ConversationDomain]?, StoreError?) -> Void )
 }
 
 protocol FriendService{

@@ -31,3 +31,9 @@ struct ConversationDomain {
     
     
 }
+
+extension ConversationDomain : Equatable {
+    static func == (lhs: ConversationDomain, rhs: ConversationDomain) -> Bool {
+        return lhs.id == rhs.id
+    }
+}

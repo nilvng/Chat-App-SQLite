@@ -25,7 +25,7 @@ class ChatMenuController : UIViewController{
     }()
 
     func setup(){
-        manager = ChatLocalManager.shared
+        manager = SQLiteManager.shared
     }
     
     fileprivate func setupDeleteButton() {

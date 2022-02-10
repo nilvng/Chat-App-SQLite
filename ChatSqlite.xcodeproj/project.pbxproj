@@ -24,7 +24,7 @@
 		0E124257277EF82B0054D069 /* ChatbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124254277EF82B0054D069 /* ChatbarView.swift */; };
 		0E124258277EF82B0054D069 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124255277EF82B0054D069 /* MessageCell.swift */; };
 		0E124259277EF82B0054D069 /* BubbleConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124256277EF82B0054D069 /* BubbleConstant.swift */; };
-		0E15EC3227742B790082FA1B /* ChatLocalManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15EC3127742B790082FA1B /* ChatLocalManager.swift */; };
+		0E15EC3227742B790082FA1B /* SQLiteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15EC3127742B790082FA1B /* SQLiteManager.swift */; };
 		0E2395B927708340006B2DE2 /* FriendDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2395B827708340006B2DE2 /* FriendDomain.swift */; };
 		0E2395BB2770834C006B2DE2 /* ConversationDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2395BA2770834C006B2DE2 /* ConversationDomain.swift */; };
 		0E2395BD2770835A006B2DE2 /* MessageDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2395BC2770835A006B2DE2 /* MessageDomain.swift */; };
@@ -89,7 +89,7 @@
 		0E124254277EF82B0054D069 /* ChatbarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatbarView.swift; sourceTree = "<group>"; };
 		0E124255277EF82B0054D069 /* MessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		0E124256277EF82B0054D069 /* BubbleConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleConstant.swift; sourceTree = "<group>"; };
-		0E15EC3127742B790082FA1B /* ChatLocalManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatLocalManager.swift; sourceTree = "<group>"; };
+		0E15EC3127742B790082FA1B /* SQLiteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLiteManager.swift; sourceTree = "<group>"; };
 		0E2395B827708340006B2DE2 /* FriendDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendDomain.swift; sourceTree = "<group>"; };
 		0E2395BA2770834C006B2DE2 /* ConversationDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDomain.swift; sourceTree = "<group>"; };
 		0E2395BC2770835A006B2DE2 /* MessageDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDomain.swift; sourceTree = "<group>"; };
@@ -333,7 +333,7 @@
 			children = (
 				0EFDD946276B72C400323984 /* AppDelegate.swift */,
 				0EFDD948276B72C400323984 /* SceneDelegate.swift */,
-				0E15EC3127742B790082FA1B /* ChatLocalManager.swift */,
+				0E15EC3127742B790082FA1B /* SQLiteManager.swift */,
 				0E98F91127B0FA1800F7564E /* AppRouter.swift */,
 				0E393FBD27B37C020011CB68 /* WorkerManager.swift */,
 				0E66A9A9277A139400525C3B /* SQLIteStores */,
@@ -512,7 +512,7 @@
 				0E124234277EA53D0054D069 /* MessageDataSource.swift in Sources */,
 				0E2395BB2770834C006B2DE2 /* ConversationDomain.swift in Sources */,
 				0E2395B927708340006B2DE2 /* FriendDomain.swift in Sources */,
-				0E15EC3227742B790082FA1B /* ChatLocalManager.swift in Sources */,
+				0E15EC3227742B790082FA1B /* SQLiteManager.swift in Sources */,
 				0E124253277EF4590054D069 /* ConvConfigController.swift in Sources */,
 				0E7008DA278806E400998BBB /* FriendDetailDataSource.swift in Sources */,
 				0E393FC027B3B8A30011CB68 /* MessageListView.swift in Sources */,

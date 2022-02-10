@@ -34,7 +34,7 @@ class MessagesInteractorImpl : MessageListInteractor {
     var currPage = 0
     
     init(){
-        localStore = ChatLocalManager.shared
+        localStore = SQLiteManager.shared
     }
     
     

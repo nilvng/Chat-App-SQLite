@@ -14,6 +14,8 @@ class ConversationSQLiteStore {
     var items : [ConversationSQLite] = []
     
     var table = Table("Conversation")
+    var searchTable = VirtualTable("search-conversation")
+    
     var id = Expression<String>("id")
     var title = Expression<String>("title")
     var members = Expression<String>("members")
@@ -63,33 +65,58 @@ class ConversationSQLiteStore {
             print(e.localizedDescription)
         }
     }
+    
+    func createSearchTable(){
+        let config = FTS4Config()
+            .column(title)
+        do {
+        try db?.run(searchTable.create(.FTS4(config)))
+        } catch let e{
+            print(e.localizedDescription)
+        }
+    }
 }
 
+// MARK: DB Logic
 extension ConversationSQLiteStore : ConversationDBLogic{
     
+    func parseData(_ row : RowIterator.Element) -> ConversationSQLite {
+        var m = ConversationSQLite()
+        m.id = row[self.id]
+        m.title = row[title]
+        m.members = row[members]
+        m.timestamp = row[timestamp]
+        m.lastMsg = row[lastMsg]
+        m.thumbnail = row[thumbnail]
+        //print("Store read theme: \(row[theme])")
+        if let t = row[theme] {
+        m.theme = ThemeOptions(rawValue: t)
+        }
+        return m
+    }
+    
+    func filter(by key: String, completion: @escaping ([Conversation]?, StoreError?) -> Void){
+        //createSearchTable()
+        do{
+            let query = searchTable.filter(title.match(key))
+            let result : [ConversationSQLite] = try db.prepare(query).map{ row in parseData(row) }
+            print("filter result: \(result)")
+            completion(result, nil)
+        } catch let e {
+            print(e)
+            completion(nil,.cantFetch("ConversationSQLiteStore: Cant filter"))
+        }
+    }
 
     func getAll( noRecords : Int, noPages: Int, desc : Bool = true, completionHandler: @escaping ([Conversation]?, StoreError?) -> Void) {
         do {
-            var queries = table.limit(noRecords, offset: noRecords * noPages)
+            var query = table.limit(noRecords, offset: noRecords * noPages)
                 
-            queries = desc ? queries.order(timestamp.desc) : queries.order(timestamp.asc)
+            query = desc ? query.order(timestamp.desc) : query.order(timestamp.asc)
             
-            let result : [ConversationSQLite] = try db!.prepareRowIterator(queries).map { row in
-                var m = ConversationSQLite()
-                m.id = row[id]
-                m.title = row[title]
-                m.members = row[members]
-                m.timestamp = row[timestamp]
-                m.lastMsg = row[lastMsg]
-                m.thumbnail = row[thumbnail]
-                print("Store read theme: \(row[theme])")
-                if let t = row[theme] {
-                m.theme = ThemeOptions(rawValue: t)
-                }
-                return m
-            }
-            items = result
-            completionHandler(items,nil)
+            let result : [ConversationSQLite] = try db.prepare(query).map{ row in parseData(row) }
+            completionHandler(result, nil)
+
         } catch let e{
             print(e.localizedDescription)
             completionHandler(nil,.cantFetch("Cant fetch"))
@@ -167,27 +194,11 @@ extension ConversationSQLiteStore : ConversationDBLogic{
         let query = table.filter(members == id)
         
         do {
-            let result : [ConversationSQLite] = try db.prepare(query).map{ row in
-                var m = ConversationSQLite()
-                m.id = row[self.id]
-                m.title = row[title]
-                m.members = row[members]
-                m.timestamp = row[timestamp]
-                m.lastMsg = row[lastMsg]
-                m.thumbnail = row[thumbnail]
-                //print("Store read theme: \(row[theme])")
-                if let t = row[theme] {
-                m.theme = ThemeOptions(rawValue: t)
-                }
-                return m
-            }
-            //print("Find result: \(result)")
+            let result : [ConversationSQLite] = try db.prepare(query).map{ row in parseData(row) }
             completion(result.first, nil)
         } catch let e{
             print(e)
             completion(nil,.cantFetch(e.localizedDescription))
         }
     }
-    
-    
 }

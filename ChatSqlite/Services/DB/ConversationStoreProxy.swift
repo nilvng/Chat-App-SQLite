@@ -16,6 +16,7 @@ protocol ConversationDBLogic {
     func delete(id: String, completionHandler: @escaping (StoreError?) -> Void)
     func update(item: Conversation,completionHandler : @escaping (Conversation?, StoreError?) -> Void)
     func findWithFriend(id : String, completion: @escaping (Conversation?, StoreError?) -> Void )
+    func filter(by key : String, completion: @escaping ([Conversation]?, StoreError?) -> Void )
 }
 
 // MARK: Proxy Class
@@ -39,6 +40,17 @@ class ConversationStoreProxy {
 
 // MARK: ConversationService
 extension ConversationStoreProxy : ConversationService {
+    func filterBy(key: String, completion: @escaping ([ConversationDomain]?, StoreError?) -> Void) {
+        self.filter(by: key){ res, err in
+            if let items = res {
+                let mappedItems = items.map { $0.toUIModel() }
+                completion(mappedItems, err)
+            } else {
+                completion(nil,err)
+            }
+        }
+    }
+    
     
     func fetchAllItems(noRecords: Int, noPages: Int, desc: Bool, completionHandler: @escaping ([ConversationDomain]?, StoreError?) -> Void) {
         
@@ -116,6 +128,12 @@ extension ConversationStoreProxy : ConversationService {
 
 // MARK: ConversationDataLogic: queue
 extension ConversationStoreProxy : ConversationDBLogic {
+    func filter(by key: String, completion: @escaping ([Conversation]?, StoreError?) -> Void) {
+        utilityQueue.async { [self] in
+            store.filter(by: key, completion: completion)
+        }
+    }
+    
     
     func getAll( noRecords : Int, noPages: Int, desc : Bool = true, completionHandler: @escaping ([Conversation]?, StoreError?) -> Void) {
         utilityQueue.async { [self] in
