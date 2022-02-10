@@ -17,9 +17,13 @@ protocol ConversationListInteractor {
 
 class HomeViewController: UIViewController {
     
+    // MARK: properties
+    var interactor : ConversationListInteractor?
+    var router : HomeRouter?
+    
     // MARK: UI Properties
     var currentSearchText : String = ""
-    var originalItems : [ConversationDomain]?
+    
     
     lazy var conversationListViewController : ConversationListViewController = {
         let view =  ConversationListViewController()
@@ -47,8 +51,6 @@ class HomeViewController: UIViewController {
     
     var xbutton : UIBarButtonItem?
         
-    // MARK: VC properties
-    var interactor : ConversationListInteractor?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -137,8 +139,9 @@ class HomeViewController: UIViewController {
         
     @objc func composeButtonPressed(){
         print("Compose message...")
-        let cmc = FriendListViewController()
-        self.present(cmc, animated: true, completion: nil)
+//        let cmc = FriendListViewController()
+//        self.present(cmc, animated: true, completion: nil)
+        router?.showComposeView()
     }
 
     // MARK: Actions
@@ -202,8 +205,7 @@ extension HomeViewController : UITextFieldDelegate {
         
         searchField.text = ""
         
-        conversationListViewController.reloadData()
-        originalItems = nil
+        conversationListViewController.clearFilter()
                 
         navigationItem.rightBarButtonItem = nil
     }

@@ -46,6 +46,8 @@
 		0E700911278EBDE100998BBB /* AlamofireImage in Frameworks */ = {isa = PBXBuildFile; productRef = 0E700910278EBDE100998BBB /* AlamofireImage */; };
 		0E727F50278571AA002EA7E3 /* NativeContactStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E727F4F278571AA002EA7E3 /* NativeContactStore.swift */; };
 		0E727F5227857416002EA7E3 /* NativeContactStoreAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E727F5127857416002EA7E3 /* NativeContactStoreAdapter.swift */; };
+		0E837C0B27B4F47C00317E0B /* HomeModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E837C0A27B4F47C00317E0B /* HomeModule.swift */; };
+		0E837C0D27B4F8B000317E0B /* HomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E837C0C27B4F8B000317E0B /* HomeRouter.swift */; };
 		0E94D0EC27991A26003485AF /* DownloadBtnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E94D0EB27991A26003485AF /* DownloadBtnView.swift */; };
 		0E98F91227B0FA1800F7564E /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E98F91127B0FA1800F7564E /* AppRouter.swift */; };
 		0E9DC4F427B35C1F00BF21B0 /* SceneBusinessLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9DC4F327B35C1F00BF21B0 /* SceneBusinessLogic.swift */; };
@@ -110,6 +112,8 @@
 		0E70090A278EB76100998BBB /* FileDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDownloader.swift; sourceTree = "<group>"; };
 		0E727F4F278571AA002EA7E3 /* NativeContactStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeContactStore.swift; sourceTree = "<group>"; };
 		0E727F5127857416002EA7E3 /* NativeContactStoreAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeContactStoreAdapter.swift; sourceTree = "<group>"; };
+		0E837C0A27B4F47C00317E0B /* HomeModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeModule.swift; sourceTree = "<group>"; };
+		0E837C0C27B4F8B000317E0B /* HomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeRouter.swift; sourceTree = "<group>"; };
 		0E94D0EB27991A26003485AF /* DownloadBtnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadBtnView.swift; sourceTree = "<group>"; };
 		0E98F91127B0FA1800F7564E /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
 		0E9DC4F327B35C1F00BF21B0 /* SceneBusinessLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneBusinessLogic.swift; sourceTree = "<group>"; };
@@ -238,7 +242,6 @@
 			children = (
 				0EFDD94A276B72C400323984 /* HomeViewController.swift */,
 				0EFDD972276B86BC00323984 /* ConversationsInteractorImpl.swift */,
-				0E124252277EF4590054D069 /* ConvConfigController.swift */,
 			);
 			path = controllers;
 			sourceTree = "<group>";
@@ -248,6 +251,7 @@
 			children = (
 				0E124250277EF3A10054D069 /* ConversationCell.swift */,
 				0E393FC127B3C1A40011CB68 /* ConversationListViewController.swift */,
+				0E124252277EF4590054D069 /* ConvConfigController.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -374,6 +378,8 @@
 		0EFDD97A276C2E8F00323984 /* Conversations */ = {
 			isa = PBXGroup;
 			children = (
+				0E837C0A27B4F47C00317E0B /* HomeModule.swift */,
+				0E837C0C27B4F8B000317E0B /* HomeRouter.swift */,
 				0E7008CF2787F3C800998BBB /* views */,
 				0E7008CE2787F3AC00998BBB /* controllers */,
 			);
@@ -488,6 +494,7 @@
 				0EFDD97E276C357E00323984 /* MessagesSQLiteStore.swift in Sources */,
 				0EFDD969276B7A4A00323984 /* Conversation.swift in Sources */,
 				0EFDD971276B86AD00323984 /* FriendListViewController.swift in Sources */,
+				0E837C0B27B4F47C00317E0B /* HomeModule.swift in Sources */,
 				0EFDD967276B7A3E00323984 /* Friend.swift in Sources */,
 				0EFDD977276C2C2A00323984 /* MessageListViewController.swift in Sources */,
 				0E12423B277ED9560054D069 /* AvatarView.swift in Sources */,
@@ -527,6 +534,7 @@
 				0E124241277ED9E00054D069 /* UIColor+Chat.swift in Sources */,
 				0E7008D8278806E400998BBB /* FriendDeleteCell.swift in Sources */,
 				0E3C0D1A2783F9EF00B23E21 /* ChatMenuController.swift in Sources */,
+				0E837C0D27B4F8B000317E0B /* HomeRouter.swift in Sources */,
 				0EFDD96B276B7A5400323984 /* Message.swift in Sources */,
 				0EF89B62278ECEEF005C3BE1 /* AlamoAvatarView.swift in Sources */,
 				0E12424B277EDA020054D069 /* PhotoRequest.swift in Sources */,

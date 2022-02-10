@@ -14,7 +14,10 @@ protocol ConversationListViewDelegate{
 class ConversationListViewController: UITableViewController {
     // MARK: - variables
     var items : [ConversationDomain] = []
+    var ogItems : [ConversationDomain]?
+    
     var interactor : ConversationListInteractor?
+    var router : HomeRouter?
     var delegate : ConversationListViewDelegate?
     
     // MARK: - methods
@@ -29,13 +32,27 @@ class ConversationListViewController: UITableViewController {
         interactor?.loadData()
     }
     
+    func clearFilter(){
+        if ogItems != nil {
+            self.setItems(ogItems!)
+        }
+        ogItems = nil
+
+        // may need to call interactor to reload
+    }
+    
     func filterBy(key: String){
         print("filtering...\(key)")
+        
         guard items.count > 0 else {
             return
         }
         
-        let filteredItems = items.filter({ item in
+        if ogItems == nil {
+            ogItems = items
+        }
+        
+        let filteredItems = ogItems!.filter({ item in
             return item.title.lowercased().contains(key.lowercased())
         })
         self.setItems(filteredItems)
@@ -101,7 +118,7 @@ extension ConversationListViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let c = self.getItem(at: indexPath)
-        AppRouter.shared.toChatPage(ofConversation: c)
+        router?.showChats(for: c)
 
     }
     
@@ -121,9 +138,7 @@ extension ConversationListViewController : ConversationPresenter{
     func presentFilteredItems(_ items: [ConversationDomain]?) {
         // #warning: append to current result if it's different from given items
         
-        if items != nil && self.items != items! {
-            self.setItems(items!)
-        }
+        //presentAllItems(items)
     }
     
     func presentNewItems(_ item: ConversationDomain) {
@@ -138,7 +153,7 @@ extension ConversationListViewController : ConversationPresenter{
     }
     
     func presentAllItems(_ items: [ConversationDomain]?) {
-        if items == nil {
+        if items != nil && self.items == items! {
             return
         }
         self.setItems(items!)

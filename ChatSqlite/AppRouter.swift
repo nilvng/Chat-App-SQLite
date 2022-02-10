@@ -63,10 +63,7 @@ class AppRouter : NSObject{
     }
     
     func toHomepage(){
-        let conv = HomeViewController()
-        let interactor = WorkerManager.shared.getConversationWorker()
-
-        conv.setup(interactor: interactor)
+        let conv = HomeModule().build()
         showViewController(conv)
     }
     
