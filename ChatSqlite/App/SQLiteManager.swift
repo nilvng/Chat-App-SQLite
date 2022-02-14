@@ -9,7 +9,7 @@ import Foundation
 
 protocol ChatLocalLogic {
     func loadConversationWith(fid: String, completionHandler: @escaping (ConversationDomain?, StoreError?) -> Void)
-    func saveNewMessage(msg: MessageDomain, conversation: ConversationDomain, friend: FriendDomain?)
+    func saveNewMessage(msg: MessageDomain)
     func loadMessages(cid: String, noRecords: Int, noPages: Int, desc : Bool, completionHandler: @escaping ([MessageDomain]?, StoreError?) -> Void)
 
 }
@@ -65,10 +65,10 @@ extension SQLiteManager : ChatLocalLogic{
         fatalError("tbd")
     }
     
-    func saveNewMessage(msg: MessageDomain, conversation: ConversationDomain, friend: FriendDomain?){
+    func saveNewMessage(msg: MessageDomain){
         
         // Add new msg to msgService
-        let store = get(cid: conversation.id)
+        let store = get(cid: msg.cid)
         
         store.createItem(msg, completionHandler: {  err in
             if err == nil {
@@ -79,24 +79,41 @@ extension SQLiteManager : ChatLocalLogic{
         })
         
         // Update last msg (and possibly add new conv) to ConvService
-        var conCopy = conversation
-        conCopy.lastMsg = msg.content
-        conCopy.timestamp = msg.timestamp
         
-        convService.upsertItem(conCopy, completionHandler: { err in
-            guard err == nil else {
-                print(err!.localizedDescription)
-                return
-            }
-            print("Conversation upserted.")
-        })
+        findConversation(id: msg.cid) { c in
+            var copy = c
+            copy.lastMsg = msg.content
+            copy.timestamp = msg.timestamp
+            
+            self.convService.upsertItem(copy, completionHandler: { err in
+                guard err == nil else {
+                    print(err!.localizedDescription)
+                    return
+                }
+                print("Conversation upserted.")
+            })
+        }
         
         // add to FriendStore if this is the first conversation with this friend
-        if let f = friend {
-            self.onNewFriend(friend: f)
+        findFriend(id: msg.sender) { friend in
+            self.onNewFriend(friend: friend)
         }
         
     }
+    
+    func findConversation(id: String, callback: @escaping(ConversationDomain) -> Void){
+        convService.fetchItemWithId(id, completionHandler: { c, err in
+            guard let c = c else {return}
+            callback(c)
+        })
+    }
+    func findFriend(id: String, callback: @escaping(FriendDomain) -> Void){
+        friendService.fetchItemWithId(id, completionHandler: { c, err in
+            guard let c = c else {return}
+            callback(c)
+        })
+    }
+
     // save friend to sqlite db
     func onNewFriend(friend: FriendDomain){
         friendService.createItem(friend, completionHandler: { err in

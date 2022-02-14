@@ -11,6 +11,8 @@ class MessageCell: UITableViewCell {
     
     typealias MessageCellAction = (MessageCell) -> Void
     
+    var interactor : MessageCellInteractor?
+    
     lazy var friendSerivce : FriendService = FriendStoreProxy.shared
     var message : MessageDomain!
     var downloadAction : MessageCellAction?
@@ -80,11 +82,17 @@ class MessageCell: UITableViewCell {
         setupMessageBody()
         setupBubbleBackground()
         setupDownloadButton()
+        
+        setInteractor()
                 
         }
     
     // MARK: Configuration
 
+    func setInteractor(){
+        interactor = MessageCellInteractor()
+        interactor?.presenter = self
+    }
     
     func configure(with model: MessageDomain, lastContinuousMess: Bool = false){
         
@@ -276,12 +284,13 @@ class MessageCell: UITableViewCell {
 extension MessageCell : DownloadBtnDelegate {
     func start() {
         downloadAction?(self)
-        message?.download(sub: self)
+        interactor?.downloadMessage(message)
     }
 }
 
-//MARK: - MessageSubscriber
-extension MessageCell : MessageSubscriber {
+extension MessageCell : MessageCellPresenter {
+    
+    //MARK: - MessageSubscriber
     func progressTo(val: Double) {
         DispatchQueue.main.async { [weak self] in
             self?.downloadButton.progressTo(val: val)
@@ -292,3 +301,5 @@ extension MessageCell : MessageSubscriber {
         message?.dropSubscriber()
     }
 }
+
+

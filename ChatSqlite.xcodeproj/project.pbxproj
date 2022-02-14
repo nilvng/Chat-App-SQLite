@@ -28,7 +28,6 @@
 		0E2395B927708340006B2DE2 /* FriendDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2395B827708340006B2DE2 /* FriendDomain.swift */; };
 		0E2395BB2770834C006B2DE2 /* ConversationDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2395BA2770834C006B2DE2 /* ConversationDomain.swift */; };
 		0E2395BD2770835A006B2DE2 /* MessageDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2395BC2770835A006B2DE2 /* MessageDomain.swift */; };
-		0E393FBE27B37C020011CB68 /* WorkerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E393FBD27B37C020011CB68 /* WorkerManager.swift */; };
 		0E393FC227B3C1A40011CB68 /* ConversationListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E393FC127B3C1A40011CB68 /* ConversationListViewController.swift */; };
 		0E393FC427B3CE410011CB68 /* UIViewController+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E393FC327B3CE410011CB68 /* UIViewController+extension.swift */; };
 		0E3C0D1A2783F9EF00B23E21 /* ChatMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E3C0D192783F9EF00B23E21 /* ChatMenuController.swift */; };
@@ -53,6 +52,9 @@
 		0E98F91227B0FA1800F7564E /* AppRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E98F91127B0FA1800F7564E /* AppRouter.swift */; };
 		0E9DC4F427B35C1F00BF21B0 /* SceneBusinessLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E9DC4F327B35C1F00BF21B0 /* SceneBusinessLogic.swift */; };
 		0EDA957A2775A08300646051 /* ConversationStoreProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDA95792775A08300646051 /* ConversationStoreProxy.swift */; };
+		0EDC669827BA07F900A2792E /* MemoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDC669727BA07F900A2792E /* MemoManager.swift */; };
+		0EDC669A27BA651600A2792E /* MessageCellInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDC669927BA651600A2792E /* MessageCellInteractor.swift */; };
+		0EDC669C27BA698A00A2792E /* FriendRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDC669B27BA698A00A2792E /* FriendRouter.swift */; };
 		0EF89B62278ECEEF005C3BE1 /* AlamoAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF89B61278ECEEF005C3BE1 /* AlamoAvatarView.swift */; };
 		0EFDD947276B72C400323984 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD946276B72C400323984 /* AppDelegate.swift */; };
 		0EFDD949276B72C400323984 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD948276B72C400323984 /* SceneDelegate.swift */; };
@@ -96,7 +98,6 @@
 		0E2395B827708340006B2DE2 /* FriendDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendDomain.swift; sourceTree = "<group>"; };
 		0E2395BA2770834C006B2DE2 /* ConversationDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDomain.swift; sourceTree = "<group>"; };
 		0E2395BC2770835A006B2DE2 /* MessageDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDomain.swift; sourceTree = "<group>"; };
-		0E393FBD27B37C020011CB68 /* WorkerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkerManager.swift; sourceTree = "<group>"; };
 		0E393FC127B3C1A40011CB68 /* ConversationListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationListViewController.swift; sourceTree = "<group>"; };
 		0E393FC327B3CE410011CB68 /* UIViewController+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+extension.swift"; sourceTree = "<group>"; };
 		0E3C0D192783F9EF00B23E21 /* ChatMenuController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMenuController.swift; sourceTree = "<group>"; };
@@ -120,6 +121,9 @@
 		0E98F91127B0FA1800F7564E /* AppRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRouter.swift; sourceTree = "<group>"; };
 		0E9DC4F327B35C1F00BF21B0 /* SceneBusinessLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneBusinessLogic.swift; sourceTree = "<group>"; };
 		0EDA95792775A08300646051 /* ConversationStoreProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationStoreProxy.swift; sourceTree = "<group>"; };
+		0EDC669727BA07F900A2792E /* MemoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoManager.swift; sourceTree = "<group>"; };
+		0EDC669927BA651600A2792E /* MessageCellInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCellInteractor.swift; sourceTree = "<group>"; };
+		0EDC669B27BA698A00A2792E /* FriendRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRouter.swift; sourceTree = "<group>"; };
 		0EF89B61278ECEEF005C3BE1 /* AlamoAvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlamoAvatarView.swift; sourceTree = "<group>"; };
 		0EFDD943276B72C400323984 /* ChatSqlite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatSqlite.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EFDD946276B72C400323984 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -158,6 +162,7 @@
 		0E124231277E9B7C0054D069 /* DB */ = {
 			isa = PBXGroup;
 			children = (
+				0E66A9A9277A139400525C3B /* SQLIteStores */,
 				0EFDD96C276B7B0000323984 /* ServiceBasicAPIs.swift */,
 				0E6666BC2771882A00786E57 /* MessageStoreProxy.swift */,
 				0EDA95792775A08300646051 /* ConversationStoreProxy.swift */,
@@ -215,6 +220,7 @@
 			children = (
 				0E124254277EF82B0054D069 /* ChatbarViewController.swift */,
 				0E124255277EF82B0054D069 /* MessageCell.swift */,
+				0EDC669927BA651600A2792E /* MessageCellInteractor.swift */,
 				0E94D0EB27991A26003485AF /* DownloadBtnView.swift */,
 			);
 			path = views;
@@ -317,6 +323,18 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
+		0EDC669627BA056F00A2792E /* App */ = {
+			isa = PBXGroup;
+			children = (
+				0EFDD946276B72C400323984 /* AppDelegate.swift */,
+				0EFDD948276B72C400323984 /* SceneDelegate.swift */,
+				0E15EC3127742B790082FA1B /* SQLiteManager.swift */,
+				0E98F91127B0FA1800F7564E /* AppRouter.swift */,
+				0EDC669727BA07F900A2792E /* MemoManager.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
 		0EFDD93A276B72C400323984 = {
 			isa = PBXGroup;
 			children = (
@@ -336,12 +354,7 @@
 		0EFDD945276B72C400323984 /* ChatSqlite */ = {
 			isa = PBXGroup;
 			children = (
-				0EFDD946276B72C400323984 /* AppDelegate.swift */,
-				0EFDD948276B72C400323984 /* SceneDelegate.swift */,
-				0E15EC3127742B790082FA1B /* SQLiteManager.swift */,
-				0E98F91127B0FA1800F7564E /* AppRouter.swift */,
-				0E393FBD27B37C020011CB68 /* WorkerManager.swift */,
-				0E66A9A9277A139400525C3B /* SQLIteStores */,
+				0EDC669627BA056F00A2792E /* App */,
 				0EDA95782774628700646051 /* Services */,
 				0EFDD95F276B79C300323984 /* Models */,
 				0EFDD95E276B79BD00323984 /* Scenes */,
@@ -390,6 +403,7 @@
 		0EFDD97B276C2E9600323984 /* Friends */ = {
 			isa = PBXGroup;
 			children = (
+				0EDC669B27BA698A00A2792E /* FriendRouter.swift */,
 				0E12424D277EDABD0054D069 /* SearchContactCell.swift */,
 				0EFDD970276B86AD00323984 /* FriendListViewController.swift */,
 				0E124236277EB6E20054D069 /* FriendDataSource.swift */,
@@ -493,6 +507,7 @@
 				0E2395BD2770835A006B2DE2 /* MessageDomain.swift in Sources */,
 				0E9DC4F427B35C1F00BF21B0 /* SceneBusinessLogic.swift in Sources */,
 				0E124257277EF82B0054D069 /* ChatbarViewController.swift in Sources */,
+				0EDC669C27BA698A00A2792E /* FriendRouter.swift in Sources */,
 				0E393FC227B3C1A40011CB68 /* ConversationListViewController.swift in Sources */,
 				0EFDD97E276C357E00323984 /* MessagesSQLiteStore.swift in Sources */,
 				0EFDD969276B7A4A00323984 /* Conversation.swift in Sources */,
@@ -525,6 +540,7 @@
 				0E2395B927708340006B2DE2 /* FriendDomain.swift in Sources */,
 				0E15EC3227742B790082FA1B /* SQLiteManager.swift in Sources */,
 				0E124253277EF4590054D069 /* ConvConfigController.swift in Sources */,
+				0EDC669A27BA651600A2792E /* MessageCellInteractor.swift in Sources */,
 				0E7008DA278806E400998BBB /* FriendDetailDataSource.swift in Sources */,
 				0E94D0EC27991A26003485AF /* DownloadBtnView.swift in Sources */,
 				0E124237277EB6E20054D069 /* FriendDataSource.swift in Sources */,
@@ -533,6 +549,7 @@
 				0E12424C277EDA020054D069 /* Theme.swift in Sources */,
 				0E7008DC278806E400998BBB /* FriendAvatarEditCell.swift in Sources */,
 				0E12424A277EDA020054D069 /* BackgroundFactory.swift in Sources */,
+				0EDC669827BA07F900A2792E /* MemoManager.swift in Sources */,
 				0E124249277EDA020054D069 /* ImageStore.swift in Sources */,
 				0E124241277ED9E00054D069 /* UIColor+Chat.swift in Sources */,
 				0E7008D8278806E400998BBB /* FriendDeleteCell.swift in Sources */,
@@ -541,7 +558,6 @@
 				0EFDD96B276B7A5400323984 /* Message.swift in Sources */,
 				0EF89B62278ECEEF005C3BE1 /* AlamoAvatarView.swift in Sources */,
 				0E12424B277EDA020054D069 /* PhotoRequest.swift in Sources */,
-				0E393FBE27B37C020011CB68 /* WorkerManager.swift in Sources */,
 				0E837C1127B5077F00317E0B /* ChatModule.swift in Sources */,
 				0E7008D9278806E400998BBB /* FriendTextEditCell.swift in Sources */,
 				0E124251277EF3A10054D069 /* ConversationCell.swift in Sources */,

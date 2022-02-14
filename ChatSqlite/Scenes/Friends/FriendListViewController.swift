@@ -14,6 +14,7 @@ protocol FriendDBMediator {
 
 class FriendListViewController: UIViewController {
 
+    var router : FriendRouter?
     var mediator : FriendDBMediator?
     var dataSource  = FriendDataSource()
     
@@ -34,7 +35,8 @@ class FriendListViewController: UIViewController {
         super.viewDidLoad()
 
         view.backgroundColor = .zaloBlue
-        setup()
+        setupInteractor()
+        setupRouter()
         setupSearchField()
         setupTableView()
         
@@ -59,12 +61,18 @@ class FriendListViewController: UIViewController {
     }
     
     
-    func setup() {
+    func setupInteractor() {
         let inter = FriendMediator()
         inter.presenter = self
         mediator = inter
         
     }
+    func setupRouter() {
+        let router = FriendRouter()
+        router.viewController = self
+        self.router = router
+    }
+    
     func setupTableView() {
         view.addSubview(tableView)
         tableView.dataSource = dataSource
@@ -89,6 +97,9 @@ class FriendListViewController: UIViewController {
         mediator?.fetchData()
     }
     
+    func newContactCallback(item: FriendDomain) {
+        self.mediator?.addItem(item)
+    }
 
 }
 
@@ -100,26 +111,10 @@ extension FriendListViewController : UITableViewDelegate {
         
         // Click Friend
         if let friend = option as? FriendDomain {
-            let chatController = ChatViewController()
-            chatController.configure(friend: friend)
-            let presentingVC = self.presentingViewController as? UINavigationController
-            presentingVC?.pushViewController(chatController, animated: true)
-            self.dismiss(animated: false, completion: nil)
+            router?.toChatView(for: friend)
         } else {
             // Click on option
-            if true {
-                print("Navigate to Add Contact view")
-                let addView = FriendDetailViewController()
-                addView.configure(with: FriendDomain(), isNew: true, changeAction: { friend in
-                    
-                    print("Controller: save to DB - \(friend)")
-                    self.mediator?.addItem(friend)
-                    
-                })
-                let presentingVC = self.presentingViewController as? UINavigationController
-                presentingVC?.pushViewController(addView, animated: true)
-                self.dismiss(animated: false, completion: nil)
-            }
+            router?.toNewContactView(callback: newContactCallback)
             
         }
     }

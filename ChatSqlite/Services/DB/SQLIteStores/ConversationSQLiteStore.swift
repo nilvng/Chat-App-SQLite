@@ -125,7 +125,18 @@ extension ConversationSQLiteStore : ConversationDBLogic{
     }
     
     func getWithId(_ id: String, completionHandler: @escaping (Conversation?, StoreError?) -> Void) {
-        fatalError()
+        let query = table.filter(self.id == id)
+        
+        
+        do {
+            let result : [ConversationSQLite] = try db!.prepare(query).map { row in
+                parseData(row)
+            }
+            completionHandler(result.first, nil)
+        } catch let e {
+            print(e.localizedDescription)
+            completionHandler(nil, .cantFetch("Can't fetch row with id \(id)"))
+        }
     }
     
     func add(newItem: Conversation, completionHandler: @escaping (Conversation?, StoreError?) -> Void) {

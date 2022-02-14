@@ -16,11 +16,12 @@ protocol ServiceBasicAPIs {
 }
 
 
-enum StoreError : Error{
+enum StoreError : Error, Equatable{
     case cantFetch(String)
     case cantCreate(String)
     case cantUpdate(String)
     case cantDelete(String)
+    case doneFetching(String)
 }
 
 protocol ConversationService{

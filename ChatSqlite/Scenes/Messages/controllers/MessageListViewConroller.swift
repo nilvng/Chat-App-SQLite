@@ -8,16 +8,23 @@
 import Foundation
 import UIKit
 import Alamofire
+import Combine
 
 protocol MessageListViewDelegate {
    func messageIsSent(content: String)
     func messageWillDisplay(tableView: UITableView)
+    func onConversationChanged(conversation: ConversationDomain)
 }
-
 
 class MessageListViewController : UITableViewController {
     var interactor : MessageListInteractor?
     var parentDelegate : MessageListViewDelegate?
+    var viewModel : MessageMemoStore! {
+        didSet {
+            viewModel.addObserver(self)
+        }
+    }
+    var supscription : AnyCancellable?
     
     var items : [MessageDomain] = []
     var conversation : ConversationDomain!
@@ -25,15 +32,18 @@ class MessageListViewController : UITableViewController {
     
     var lastUpdatedOffset : Int = 0
     static var CELL_ID = "messCell"
+
     
     func configure(friend: FriendDomain){
-        interactor?.fetchData(friend: friend)
+        //interactor?.fetchData(friend: friend)
         self.conversation = ConversationDomain.fromFriend(friend: friend)
+        viewModel = MessageMemoManager.shared.get(conversationID: self.conversation.id)
     }
     
     func configure(conversation : ConversationDomain){
         self.conversation = conversation
-        interactor?.fetchData(conversation: conversation)
+        //interactor?.fetchData(conversation: conversation)
+        viewModel = MessageMemoManager.shared.get(conversationID: self.conversation.id)
     }
     
     func setItems(_ items: [MessageDomain]){
@@ -77,6 +87,16 @@ class MessageListViewController : UITableViewController {
     
     override func viewDidLoad() {
         tableView = myTableView
+        
+        // subscribe to listen for changes in in-memo list of messages
+        supscription = viewModel.$messages
+            .receive(on: RunLoop.main)
+            .sink { [weak self] msgs in
+            if let res = self?.items.isEmpty, res {
+                self?.items = msgs
+                self?.tableView.reloadData()
+            }
+        }
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -218,9 +238,9 @@ extension MessageListViewController : MessagesPresenter {
 
     }
     
-    func loadConversation(_ c: ConversationDomain){
+    func onFoundConversation(_ c: ConversationDomain){
         
         self.conversation = c
-        
+        self.parentDelegate?.onConversationChanged(conversation: c)
     }
 }

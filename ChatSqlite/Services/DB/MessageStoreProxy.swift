@@ -121,10 +121,8 @@ extension MessageStoreProxy : MessageDBLogic {
             print("Proxy: \(startIndex) - \(endIndex) : \(messages.count) - done? \(isDoneFetching)")
 
             if self.isDoneFetching{
-                print("Proxy: Cached msgs.")
+                print("Proxy: Done Fetching.")
                 let end = endIndex < self.messages.count ? endIndex : messages.count - 1
-                print("Proxy start: \(startIndex) - end: \(end)")
-
                 if (startIndex <= end){
                     completionHandler(Array(messages[startIndex...end]), nil)
                 }
@@ -135,15 +133,15 @@ extension MessageStoreProxy : MessageDBLogic {
             // Fetch in db
             store.getAll(noRecords: noRecords, noPages: noPages, desc: desc, completionHandler: { res, err in
                 
-                if (res != nil){
-                    if (res!.isEmpty) {
+                guard let res = res else {
+                    completionHandler(nil, err)
+                    return
+                }
+
+                if res.isEmpty || res.count < noRecords {
                         self.isDoneFetching =  true
-                        completionHandler(res,err)
-                    } else {
-                        if res!.count < noRecords {
-                            self.isDoneFetching = true
-                        }
-                        self.messages += res!
+                    if !res.isEmpty{
+                        self.messages += res
                     }
                 }
                     completionHandler(res,err)

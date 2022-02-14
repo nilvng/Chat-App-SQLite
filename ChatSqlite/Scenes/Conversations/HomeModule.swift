@@ -26,7 +26,7 @@ class HomeModule {
         
         let childListView = ConversationListViewController()
         
-        let inter = WorkerManager.shared.getConversationWorker()
+        let inter = ConversationsInteractorImpl()
         let presenter : ConversationPresenter = childListView
         
         inter.presenter = presenter

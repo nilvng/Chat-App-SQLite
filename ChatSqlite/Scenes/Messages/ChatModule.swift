@@ -15,16 +15,18 @@ class ChatModule {
         let listView = MessageListViewController()
         let barView = ChatbarViewController()
         
-        let inter = WorkerManager.shared.getMessageWorker(cid: conv.id)
-        inter.presenter = listView
+        let inter = MessagesInteractorImpl()
 
         let router = ChatRouter()
         router.viewController = view
         
-        
         listView.interactor = inter
-        listView.parentDelegate = view
         listView.configure(conversation: conv)
+        let memoStore = MessageMemoManager.shared.get(conversationID: conv.id)
+        listView.viewModel = memoStore
+        inter.memoStore = memoStore
+        listView.parentDelegate = view
+
         
         barView.delegate = view
         
@@ -37,17 +39,31 @@ class ChatModule {
         return view
     }
     func build(for friend : FriendDomain) -> ChatViewController{
-        let view = buildRaw()
-       // view.configure(friend: friend)
-        
-        return view
-    }
-    
-    private func buildRaw() -> ChatViewController {
         let view = ChatViewController()
-        let interactor = WorkerManager.shared.getMessageWorker()
         
-        view.interactor = interactor
+        let listView = MessageListViewController()
+        let barView = ChatbarViewController()
+        
+        let inter = MessagesInteractorImpl()
+
+        let router = ChatRouter()
+        router.viewController = view
+        
+        listView.interactor = inter
+        listView.configure(friend: friend)
+        let memoStore = MessageMemoManager.shared.get(friendID: friend.id)
+        listView.viewModel = memoStore
+        inter.memoStore = memoStore
+        listView.parentDelegate = view
+
+        
+        barView.delegate = view
+        
+        view.messageListView = listView
+        view.chatBarView = barView
+        view.interactor = inter
+        view.router = router
+
         return view
     }
     

@@ -9,12 +9,11 @@ import UIKit
 import Alamofire
 
 protocol MessageListInteractor {
-    var presenter : MessagesPresenter? {get set}
     
     func fetchData(friend: FriendDomain)
     func fetchData(conversation: ConversationDomain)
     func loadMore(tableOffset: CGFloat)
-    func onSendMessage(content: String)
+    func onSendMessage(content: String, conversation: ConversationDomain)
 }
 
 
@@ -30,13 +29,21 @@ class ChatViewController: UIViewController {
     var conversation : ConversationDomain? {
         didSet{
             theme = conversation?.theme ?? .basic
-    }
+            DispatchQueue.main.async {
+                self.chatTitleLabel.text = self.conversation?.title ?? ""
+            }
+        }
     }
         
     // MARK: UI Properties
     var theme : Theme = .basic
     var mode : AccentColorMode = .light
-    var chatTitleLabel : UILabel!
+    lazy var chatTitleLabel : UILabel = {
+        let chatTitleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 400, height: 50))
+        chatTitleLabel.textColor  = mode == .light ? UIColor.darkGray : UIColor.white
+        chatTitleLabel.font = UIFont.systemFont(ofSize: 19)
+        return chatTitleLabel
+    }()
     
     var menuButton : UIButton = {
         let button = UIButton()
@@ -194,14 +201,6 @@ class ChatViewController: UIViewController {
 
     }
     
-    func setupTitleLabel(){
-        chatTitleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
-        chatTitleLabel.textColor  = mode == .light ? UIColor.darkGray : UIColor.white
-        chatTitleLabel.font = UIFont.systemFont(ofSize: 19)
-        chatTitleLabel.text = conversation?.title
-
-    }
-    
     func setupNavigationBar(){
         navigationItem.rightBarButtonItem = nil
         
@@ -218,7 +217,6 @@ class ChatViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupTitleLabel()
         setupNavigationBar()
         
         setupTableView()
@@ -324,12 +322,20 @@ extension ChatViewController : ChatbarDelegate {
     }
     
     func messageSubmitted(message: String) {
-        interactor?.onSendMessage(content: message)
+        guard let c = conversation else {
+            return
+        }
+        interactor?.onSendMessage(content: message, conversation: c)
         }
 }
 
 // MARK: MessageListDelegate
 extension ChatViewController : MessageListViewDelegate {
+    func onConversationChanged(conversation: ConversationDomain) {
+        self.conversation = conversation
+        //chatTitleLabel.text = conversation.title
+    }
+    
     func messageWillDisplay(tableView: UITableView) {
         let bbRect = tableView.convert(tableView.rectForRow(at: IndexPath(row: 0, section: 0)), to: self.view)
         animateBubble(toRect: bbRect)

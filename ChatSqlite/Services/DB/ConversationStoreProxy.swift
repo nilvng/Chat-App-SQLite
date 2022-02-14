@@ -192,7 +192,9 @@ extension ConversationStoreProxy : ConversationDBLogic {
     }
     
     func getWithId(_ id: String, completionHandler: @escaping (Conversation?, StoreError?) -> Void) {
-        fatalError()
+        self.utilityQueue.async {
+            self.store.getWithId(id, completionHandler: completionHandler)
+        }
     }
     
     func add(newItem: Conversation, completionHandler: @escaping (Conversation?, StoreError?) -> Void) {
