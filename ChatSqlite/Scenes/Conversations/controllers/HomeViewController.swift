@@ -18,18 +18,17 @@ protocol ConversationListInteractor {
 class HomeViewController: UIViewController {
     
     // MARK: properties
-    var interactor : ConversationListInteractor?
     var router : HomeRouter?
     
     // MARK: UI Properties
     var currentSearchText : String = ""
     
     
-    lazy var conversationListViewController : ConversationListViewController = {
-        let view =  ConversationListViewController()
-        view.delegate = self
-        return view
-    }()
+    var conversationListViewController : ConversationListViewController! {
+        didSet {
+            conversationListViewController.delegate = self
+        }
+    }
     
     var composeButton : UIButton = {
         let button = UIButton()
@@ -139,8 +138,6 @@ class HomeViewController: UIViewController {
         
     @objc func composeButtonPressed(){
         print("Compose message...")
-//        let cmc = FriendListViewController()
-//        self.present(cmc, animated: true, completion: nil)
         router?.showComposeView()
     }
 
@@ -159,12 +156,6 @@ class HomeViewController: UIViewController {
     // MARK: Navigation
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        // reload data
-        print("Conv will appear...")
-        interactor?.loadData()
-        
-        
         setupNavigationBarColor() // reset color, if it accidentally changed for other views
     }
 

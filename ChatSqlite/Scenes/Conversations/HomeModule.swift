@@ -14,11 +14,9 @@ class HomeModule {
         let childView = buildChildListView()
         let router = HomeRouter(viewController: view)
         
-        childView.delegate = view
-                
         childView.router = router
-        view.router = router
         
+        view.router = router
         view.conversationListViewController = childView
         
         return view

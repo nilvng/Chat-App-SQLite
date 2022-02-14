@@ -84,7 +84,7 @@ extension MessagesSQLStore{
         do {
             var queries = table.filter(cid == conversationID)
                 .limit(noRecords, offset: noRecords * noPages)
-            
+            //print("offset: \(noRecords * noPages) - pages: \(noPages)")
             queries = desc ? queries.order(timestamp.desc) : queries.order(timestamp.asc)
             let result : [MessageSQLite] = try db!.prepareRowIterator(queries).map { row in
                 var m = MessageSQLite()

@@ -100,7 +100,7 @@ extension FriendListViewController : UITableViewDelegate {
         
         // Click Friend
         if let friend = option as? FriendDomain {
-            let chatController = MessageListViewController()
+            let chatController = ChatViewController()
             chatController.configure(friend: friend)
             let presentingVC = self.presentingViewController as? UINavigationController
             presentingVC?.pushViewController(chatController, animated: true)

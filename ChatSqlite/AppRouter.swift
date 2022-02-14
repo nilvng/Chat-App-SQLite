@@ -41,21 +41,6 @@ class AppRouter : NSObject{
         }
         toHomepage()
     }
-    func toChatPage(ofConversation conv: ConversationDomain){
-        let detail = MessageListViewController()
-        let interactor = WorkerManager.shared.getMessageWorker(cid: conv.id)
-        detail.setup(interactor: interactor)
-        detail.configure(conversation: conv)
-        showViewController(detail)
-    }
-    func toChatPage(withFriend friend: FriendDomain){
-        let detail = MessageListViewController()
-        let interactor = WorkerManager.shared.getMessageWorker()
-
-        detail.setup(interactor: interactor)
-        detail.configure(friend: friend)
-        showViewController(detail)
-    }
     
     func toComposePage(){
         let page = FriendListViewController()

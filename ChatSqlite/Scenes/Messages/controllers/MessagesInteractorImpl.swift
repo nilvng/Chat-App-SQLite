@@ -9,9 +9,10 @@ import Foundation
 import UIKit
 
 protocol MessagesPresenter : AnyObject{
-    func showInitialItems(_ items: [MessageDomain]?)
+    func presentItems(_ items: [MessageDomain]?)
     func presentMoreItems(_ items : [MessageDomain]?)
-    func presentNewItem(_ item : MessageDomain)
+    func presentReceivedItem(_ item : MessageDomain)
+    func presentSentItem(_ item: MessageDomain)
     func loadConversation(_ c: ConversationDomain)
 
 }
@@ -29,7 +30,7 @@ class MessagesInteractorImpl : MessageListInteractor {
     
     var noRecords : Int = 20
     var offSet : CGFloat {
-        CGFloat(300)
+        CGFloat(400)
     }
     var currPage = 0
     
@@ -63,25 +64,26 @@ class MessagesInteractorImpl : MessageListInteractor {
     }
     
     func fetchData(conversation: ConversationDomain){
-
         // filter messenges belong to this conversation
+        
         self.conversation = conversation
         
         localStore.loadMessages(cid: conversation.id,noRecords: noRecords, noPages: 0, desc: true) { [weak self] msgs, err in
-            self?.presenter?.showInitialItems(msgs)
+            self?.presenter?.presentItems(msgs)
             
         }
     }
     
     func loadMore(tableOffset : CGFloat){
         //print(tableOffset)
+        
         let pages = Int(tableOffset / offSet)
         guard pages - currPage >= 1 else {
             return
         }
         currPage = pages
 
-        localStore.loadMessages(cid: conversation.id, noRecords: noRecords, noPages: currPage, desc: false) { [weak self] msgs, err in
+        localStore.loadMessages(cid: conversation.id, noRecords: noRecords, noPages: currPage, desc: true) { [weak self] msgs, err in
             // empty result -> no need to present
             if msgs == nil || msgs!.isEmpty || err != nil {
                 print("empty fetch!: \(String(describing: self?.currPage))")
@@ -100,13 +102,15 @@ class MessagesInteractorImpl : MessageListInteractor {
                               content: content, type: .text,
                               timestamp: Date(), sender: "1")
         
-        self.presenter?.presentNewItem(m)
+        self.presenter?.presentSentItem(m)
 
         // update db
         localStore.saveNewMessage(msg: m, conversation: conversation, friend: newFriend)
         newFriend = nil
 
         // publish changes to server....
+        
+        // register to workerManager
         self.registerSelf()
         
     }

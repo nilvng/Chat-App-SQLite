@@ -19,11 +19,7 @@ class HomeRouter {
     
     
     func showChats(for conv: ConversationDomain) {
-        let view = MessageListViewController()
-        let interactor = WorkerManager.shared.getMessageWorker()
-
-        view.setup(interactor: interactor)
-        view.configure(conversation: conv)
+        let view = ChatModule().build(for: conv)
         
         viewController?.show(view, sender: nil)
     }
