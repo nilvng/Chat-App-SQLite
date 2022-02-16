@@ -153,7 +153,7 @@ extension ConversationListViewController : ConversationPresenter{
     }
     
     func presentAllItems(_ items: [ConversationDomain]?) {
-        if items != nil && self.items == items! {
+        if items == nil{
             return
         }
         self.setItems(items!)

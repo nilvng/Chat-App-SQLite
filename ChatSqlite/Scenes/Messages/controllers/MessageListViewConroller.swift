@@ -196,9 +196,9 @@ extension MessageListViewController {
     func isLastContinuousMess(index: Int, message: MessageDomain) -> Bool{
         var isLastContinuous = index == 0
         
-        if index - 1 >= 0 {
-            let laterMessage = items[index - 1]
-            isLastContinuous = laterMessage.sender != message.sender
+        if index + 1 < items.count {
+            let laterMessage = items[index + 1]
+            isLastContinuous = laterMessage.sender == message.sender
         }
         return isLastContinuous
     }

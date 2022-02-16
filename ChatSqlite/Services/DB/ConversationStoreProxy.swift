@@ -134,55 +134,67 @@ extension ConversationStoreProxy : ConversationDBLogic {
         }
     }
     
+    func getAllInCache( noRecords : Int, noPages: Int,  completionHandler: @escaping ([Conversation]?, StoreError?) ->  Void) -> Bool {
+        let startIndex = noPages * noRecords
+        let endIndex = startIndex + noRecords
+        
+        if startIndex > self.items.count && isDoneFetching {
+            completionHandler(nil,.cantFetch("Exceed amount of Conversation"))
+            return false
+        }
+        print("\(startIndex) - \(endIndex) : \(items.count)")
+
+        if endIndex < items.count || self.isDoneFetching{
+            print("Cached convs.")
+            let end = endIndex < self.items.count ? endIndex : items.count - 1
+            
+            if (startIndex <= end){
+            completionHandler(Array(items[startIndex...end]), nil)
+            }
+            return true
+        }
+        return false
+    }
     
     func getAll( noRecords : Int, noPages: Int, desc : Bool = true, completionHandler: @escaping ([Conversation]?, StoreError?) -> Void) {
         utilityQueue.async { [self] in
             
         // Find in cache
-            let startIndex = noPages * noRecords
-            let endIndex = startIndex + noRecords
+            guard !getAllInCache( noRecords : noRecords, noPages: noPages, completionHandler: completionHandler) else {
+            return
+        }
+        print("Fetch convs.")
+
+        // Fetch in db
+        store.getAll(noRecords: noRecords, noPages: noPages, desc: desc, completionHandler: { res, err in
             
-            if startIndex > self.items.count && isDoneFetching {
-                completionHandler(nil,.cantFetch("Exceed amount of Conversation"))
-                return
-            }
-            print("\(startIndex) - \(endIndex) : \(items.count)")
-
-            if endIndex < items.count || self.isDoneFetching{
-                print("Cached convs.")
-                let end = endIndex < self.items.count ? endIndex : items.count - 1
-                
-                if (startIndex <= end){
-                completionHandler(Array(items[startIndex...end]), nil)
-                }
-                return
-            }
-            print("Fetch convs.")
-
-            // Fetch in db
-            store.getAll(noRecords: noRecords, noPages: noPages, desc: desc, completionHandler: { res, err in
-                
-                if (res != nil){
-                    if (res!.isEmpty) {
+            if (res != nil){
+                self.items += res!
+                if (res!.isEmpty || res!.count < noRecords){
                     self.isDoneFetching =  true
-                    
-                    } else {
-                        if res!.count < noRecords {
-                            self.isDoneFetching = true
-                        }
-                        self.items += res!
-                    }
                 }
-                    completionHandler(res,err)
-                })
+            }
+                completionHandler(res,err)
+            })
         }
         
+    }
+    
+    func findWithFriendInCache(fid: String, completion: @escaping (Conversation?, StoreError? ) -> Void) -> Bool{
+        if let foundItem = items.first(where: {$0.members == fid }) {
+            completion(foundItem, nil)
+            return true
+        }
+        return false
     }
     
     func findWithFriend(id : String, completion: @escaping (Conversation?, StoreError?) -> Void ){
         
         self.utilityQueue.async {
-
+            // found in cache
+            guard !self.findWithFriendInCache(fid: id, completion: completion) else {
+                return
+            }
             self.store.findWithFriend(id: id){ res, err in
                     //print("Proxy: Found Conv of a friend: \(res)")
                     completion(res,err)
@@ -190,9 +202,18 @@ extension ConversationStoreProxy : ConversationDBLogic {
             }
         }
     }
-    
+    func findWithIdInCache(id: String, completion: @escaping (Conversation?, StoreError? ) -> Void) -> Bool{
+        if let foundItem = items.first(where: {$0.id == id }) {
+            completion(foundItem, nil)
+            return true
+        }
+        return false
+    }
     func getWithId(_ id: String, completionHandler: @escaping (Conversation?, StoreError?) -> Void) {
-        self.utilityQueue.async {
+        self.utilityQueue.async { [self] in
+            guard !findWithIdInCache(id: id, completion: completionHandler) else {
+                return
+            }
             self.store.getWithId(id, completionHandler: completionHandler)
         }
     }
@@ -224,8 +245,8 @@ extension ConversationStoreProxy : ConversationDBLogic {
             } else {
                 items.insert(newItem, at: 0)
             }
-            items.sort(by: {$0.timestamp > $1.timestamp})
             completionHandler(newItem,nil)
+            items.sort(by: {$0.timestamp > $1.timestamp})
             
             // Add to db
             store.upsert(newItem: newItem, completionHandler: { res, err in
