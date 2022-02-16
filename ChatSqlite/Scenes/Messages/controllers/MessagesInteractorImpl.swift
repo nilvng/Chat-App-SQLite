@@ -26,18 +26,20 @@ class MessagesInteractorImpl : MessageListInteractor {
         CGFloat(380)
     }
     var currPage = 0
+    var selectedFriend : FriendDomain?
     
         
-    func fetchData(friend : FriendDomain){
+    func setSelectedFriend(friend : FriendDomain){
         // find conversation with friend
-        memoStore?.requestGetAll(noRecords: noRecords, noPages: 0)
+        //memoStore?.requestGetAll(noRecords: noRecords, noPages: 0)
+        selectedFriend = friend
 
     }
     
     func fetchData(conversation: ConversationDomain){
         // filter messenges belong to this conversation
         
-        memoStore?.requestGetAll(noRecords: noRecords, noPages: 0)
+        //memoStore?.requestGetAll(noRecords: noRecords, noPages: 0)
     }
     
     func loadMore(tableOffset : CGFloat){
@@ -60,7 +62,8 @@ class MessagesInteractorImpl : MessageListInteractor {
                               timestamp: Date(), sender: "1")
         
         // update db
-        memoStore?.add(m)
+        memoStore?.add(m, conversation: conversation, withFriend: selectedFriend)
+        selectedFriend = nil // after 1 use
         
     }
 }

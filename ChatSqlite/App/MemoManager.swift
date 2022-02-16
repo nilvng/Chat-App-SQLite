@@ -96,10 +96,14 @@ class MessageMemoStore : ObservableObject {
         }
     }
     
-    func add(_ msg: MessageDomain) -> Bool{
+    func add(_ msg: MessageDomain, conversation: ConversationDomain, withFriend friend: FriendDomain?) -> Bool{
         messages.append(msg)
         observer?.presentSentItem(msg)
-        SQLiteManager.shared.saveNewMessage(msg: msg)
+        if let f = friend {
+           // SQLiteManager.shared.saveNewFriendIfNeeded(f)
+            SQLiteManager.shared.onNewFriend(friend: f)
+        }
+        SQLiteManager.shared.saveNewMessage(msg: msg, conversation: conversation)
 
         return true
     }

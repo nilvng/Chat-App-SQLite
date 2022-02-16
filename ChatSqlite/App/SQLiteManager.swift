@@ -9,7 +9,7 @@ import Foundation
 
 protocol ChatLocalLogic {
     func loadConversationWith(fid: String, completionHandler: @escaping (ConversationDomain?, StoreError?) -> Void)
-    func saveNewMessage(msg: MessageDomain)
+    func saveNewMessage(msg: MessageDomain,  conversation: ConversationDomain)
     func loadMessages(cid: String, noRecords: Int, noPages: Int, desc : Bool, completionHandler: @escaping ([MessageDomain]?, StoreError?) -> Void)
 
 }
@@ -65,7 +65,7 @@ extension SQLiteManager : ChatLocalLogic{
         fatalError("tbd")
     }
     
-    func saveNewMessage(msg: MessageDomain){
+    func saveNewMessage(msg: MessageDomain, conversation: ConversationDomain){
         
         // Add new msg to msgService
         let store = get(cid: msg.cid)
@@ -81,7 +81,7 @@ extension SQLiteManager : ChatLocalLogic{
         // Update last msg (and possibly add new conv) to ConvService
         
         findConversation(id: msg.cid) { c in
-            var copy = c
+            var copy  = c != nil ? c! : conversation
             copy.lastMsg = msg.content
             copy.timestamp = msg.timestamp
             
@@ -101,16 +101,33 @@ extension SQLiteManager : ChatLocalLogic{
         
     }
     
-    func findConversation(id: String, callback: @escaping(ConversationDomain) -> Void){
+    func saveNewFriendIfNeeded(_ friend: FriendDomain) {
+        friendService.fetchItemWithId(friend.id, completionHandler: { c, err in
+            if c != nil{
+                return
+            }
+            self.friendService.createItem(friend, completionHandler: {err in
+                print(err?.localizedDescription)
+            })
+        })
+    }
+    
+    // callback called for conv (if not exist callback used default Conv from Friend)
+    func findConversation(id: String, callback: @escaping(ConversationDomain?) -> Void){
         convService.fetchItemWithId(id, completionHandler: { c, err in
-            guard let c = c else {return}
+            guard let c = c else {
+                callback(nil)
+                return
+                
+            }
             callback(c)
         })
     }
+    // callback called if friend not found
     func findFriend(id: String, callback: @escaping(FriendDomain) -> Void){
         friendService.fetchItemWithId(id, completionHandler: { c, err in
-            guard let c = c else {return}
-            callback(c)
+            guard c != nil else {return}
+            //callback(c)
         })
     }
 

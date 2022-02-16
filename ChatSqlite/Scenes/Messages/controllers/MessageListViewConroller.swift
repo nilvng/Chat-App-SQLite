@@ -37,7 +37,8 @@ class MessageListViewController : UITableViewController {
     func configure(friend: FriendDomain){
         //interactor?.fetchData(friend: friend)
         self.conversation = ConversationDomain.fromFriend(friend: friend)
-        viewModel = MessageMemoManager.shared.get(conversationID: self.conversation.id)
+        self.parentDelegate?.onConversationChanged(conversation: self.conversation)
+        viewModel = MessageMemoManager.shared.get(friendID: friend.id)
     }
     
     func configure(conversation : ConversationDomain){

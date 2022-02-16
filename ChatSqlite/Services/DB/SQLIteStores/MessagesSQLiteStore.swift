@@ -33,7 +33,7 @@ class MessagesSQLStore : MessageDBLogic {
     
     init(){
         conversationID = "" // testing only
-        getInstance(path: "chat-message.sqlite")
+        getInstance(path: "chat-mess.sqlite")
         createTable()
         
     }

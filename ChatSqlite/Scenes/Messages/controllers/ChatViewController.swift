@@ -10,7 +10,7 @@ import Alamofire
 
 protocol MessageListInteractor {
     
-    func fetchData(friend: FriendDomain)
+    func setSelectedFriend(friend: FriendDomain)
     func fetchData(conversation: ConversationDomain)
     func loadMore(tableOffset: CGFloat)
     func onSendMessage(content: String, conversation: ConversationDomain)
@@ -89,7 +89,7 @@ class ChatViewController: UIViewController {
     }
     
     func configure(friend: FriendDomain) {
-        fatalError()
+        chatTitleLabel.text = friend.name
     }
     
     // MARK: Setups
@@ -322,7 +322,7 @@ extension ChatViewController : ChatbarDelegate {
     }
     
     func messageSubmitted(message: String) {
-        guard let c = conversation else {
+        guard let c = self.conversation else {
             return
         }
         interactor?.onSendMessage(content: message, conversation: c)

@@ -45,16 +45,21 @@ class ChatModule {
         let barView = ChatbarViewController()
         
         let inter = MessagesInteractorImpl()
+        inter.setSelectedFriend(friend: friend)
 
         let router = ChatRouter()
         router.viewController = view
         
-        listView.interactor = inter
-        listView.configure(friend: friend)
         let memoStore = MessageMemoManager.shared.get(friendID: friend.id)
+        listView.parentDelegate = view
         listView.viewModel = memoStore
         inter.memoStore = memoStore
-        listView.parentDelegate = view
+
+        listView.interactor = inter
+        
+        listView.configure(friend: friend)
+        
+        view.configure(friend: friend)
 
         
         barView.delegate = view
