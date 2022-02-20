@@ -43,7 +43,7 @@ protocol FriendService{
     func deleteItem(id: String ,completionHandler : @escaping (StoreError?) -> Void)
 }
 
-protocol MessageService{
+protocol MessageDBService{
     func fetchAllItems(noRecords: Int, noPages: Int, desc : Bool, completionHandler: @escaping ([MessageDomain]?, StoreError?) -> Void)
     func fetchItemWithId(_ id: String, completionHandler : @escaping (MessageDomain?, StoreError?) -> Void)
     func createItem(_ item: MessageDomain,completionHandler : @escaping (StoreError?) -> Void)

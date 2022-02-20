@@ -8,7 +8,6 @@
 import UIKit
 
 protocol ConversationListInteractor {
-    var presenter : ConversationPresenter? {get set}
     func loadData()
     func loadMoreData(tableOffset: CGFloat)
     func deleteConversation(item: ConversationDomain, indexPath: IndexPath)
@@ -64,7 +63,7 @@ class HomeViewController: UIViewController {
     
     func setup(interactor : ConversationListInteractor) {
         var inter = interactor
-        inter.presenter = conversationListViewController
+        //inter.presenter = conversationListViewController
         conversationListViewController.interactor = inter
     }
     

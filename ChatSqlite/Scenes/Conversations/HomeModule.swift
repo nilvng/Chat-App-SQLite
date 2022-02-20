@@ -26,11 +26,11 @@ class HomeModule {
         
         let childListView = ConversationListViewController()
         
-        let inter = ConversationsInteractorImpl()
-        let presenter : ConversationPresenter = childListView
+        let service = ConversationServiceDecorator()
+        let inter = ConversationsInteractorImpl(service: service)
         
-        inter.presenter = presenter
         childListView.interactor = inter
+        service.observer = childListView
         
         return childListView
     }

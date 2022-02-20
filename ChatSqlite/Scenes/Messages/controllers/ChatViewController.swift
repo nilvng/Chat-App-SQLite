@@ -11,7 +11,7 @@ import Alamofire
 protocol MessageListInteractor {
     
     func setSelectedFriend(friend: FriendDomain)
-    func fetchData(conversation: ConversationDomain)
+    func loadData()
     func loadMore(tableOffset: CGFloat)
     func onSendMessage(content: String, conversation: ConversationDomain)
 }
@@ -26,7 +26,7 @@ class ChatViewController: UIViewController {
     var interactor : MessageListInteractor?
     var router : ChatRouter?
     
-    var conversation : ConversationDomain? {
+    var conversation : ConversationDomain! {
         didSet{
             theme = conversation?.theme ?? .basic
             DispatchQueue.main.async {
@@ -322,10 +322,8 @@ extension ChatViewController : ChatbarDelegate {
     }
     
     func messageSubmitted(message: String) {
-        guard let c = self.conversation else {
-            return
-        }
-        interactor?.onSendMessage(content: message, conversation: c)
+
+        interactor?.onSendMessage(content: message, conversation: conversation)
         }
 }
 

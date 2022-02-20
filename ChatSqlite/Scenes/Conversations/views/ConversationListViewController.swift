@@ -134,6 +134,28 @@ extension ConversationListViewController {
 
 // MARK: Presenter
 extension ConversationListViewController : ConversationPresenter{
+    func insertNewRow(conv: ConversationDomain){
+        DispatchQueue.main.async {
+            self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+        }
+    }
+    func presentUpsertedItems(item: ConversationDomain) {
+        if let index = self.items.firstIndex(where: {$0.id == item.id}){
+            DispatchQueue.main.async {
+                self.tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+            }
+        } else {
+            self.items.append(item)
+        }
+        self.items.sort(by: {$0.timestamp > $1.timestamp})
+        self.insertNewRow(conv: item)
+    }
+    
+    func presentNewItem(_ item: ConversationDomain) {
+        self.items.append(item)
+        self.insertNewRow(conv: item)
+    }
+    
     
     func presentFilteredItems(_ items: [ConversationDomain]?) {
         // #warning: append to current result if it's different from given items
@@ -141,8 +163,11 @@ extension ConversationListViewController : ConversationPresenter{
         //presentAllItems(items)
     }
     
-    func presentNewItems(_ item: ConversationDomain) {
-        fatalError()
+    func presentMoreItems(_ items: [ConversationDomain]) {
+        self.items.append(contentsOf: items)
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
     
     func presentDeleteItem(_ item: ConversationDomain, at index: IndexPath) {

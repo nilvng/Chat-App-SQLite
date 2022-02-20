@@ -77,6 +77,8 @@ class ChatbarViewController: UIViewController {
 
     }
     
+    var padding : CGFloat = 3
+    
     func setupTextView(){
         view.addSubview(textView)
         textView.translatesAutoresizingMaskIntoConstraints = false
@@ -84,8 +86,8 @@ class ChatbarViewController: UIViewController {
         NSLayoutConstraint.activate([
             textView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             textView.topAnchor.constraint(equalTo: view.topAnchor),
-            textView.leadingAnchor.constraint(equalTo: emojiButton.trailingAnchor, constant: 5),
-            textView.trailingAnchor.constraint(equalTo: submitButton.leadingAnchor, constant:  -5),
+            textView.leadingAnchor.constraint(equalTo: emojiButton.trailingAnchor, constant: padding),
+            textView.trailingAnchor.constraint(equalTo: submitButton.leadingAnchor, constant:  -padding),
 
         ])
     }
@@ -96,7 +98,7 @@ class ChatbarViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             submitButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            submitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5),
+            submitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
             submitButton.widthAnchor.constraint(equalToConstant: 50),
             submitButton.heightAnchor.constraint(equalToConstant: 50)
         ])
@@ -108,7 +110,7 @@ class ChatbarViewController: UIViewController {
         
         NSLayoutConstraint.activate([
             emojiButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            emojiButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -5),
+            emojiButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -padding),
             emojiButton.widthAnchor.constraint(equalToConstant: 50),
             emojiButton.heightAnchor.constraint(equalToConstant: 50)
         ])
@@ -120,7 +122,7 @@ class ChatbarViewController: UIViewController {
         separatorLine.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            separatorLine.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
+            separatorLine.topAnchor.constraint(equalTo: view.topAnchor),
             separatorLine.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             separatorLine.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             separatorLine.heightAnchor.constraint(equalToConstant: 0.7)

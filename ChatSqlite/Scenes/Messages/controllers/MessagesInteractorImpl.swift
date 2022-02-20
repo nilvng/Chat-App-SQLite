@@ -9,8 +9,7 @@ import Foundation
 import UIKit
 
 protocol MessagesPresenter : AnyObject{
-    func presentItems(_ items: [MessageDomain]?)
-    func presentMoreItems(_ items : [MessageDomain]?)
+    func presentItems(_ items: [MessageDomain]?, offset: Int)
     func presentReceivedItem(_ item : MessageDomain)
     func presentSentItem(_ item: MessageDomain)
     func onFoundConversation(_ c: ConversationDomain)
@@ -18,8 +17,10 @@ protocol MessagesPresenter : AnyObject{
 }
 
 class MessagesInteractorImpl : MessageListInteractor {
+
             
-    var memoStore : MessageMemoStore?
+    var chatService : ChatService
+//    var friendStore
         
     var noRecords : Int = 20
     var offSet : CGFloat {
@@ -28,7 +29,13 @@ class MessagesInteractorImpl : MessageListInteractor {
     var currPage = 0
     var selectedFriend : FriendDomain?
     
-        
+    internal init(chatService: ChatService, noRecords: Int = 20, currPage: Int = 0, selectedFriend: FriendDomain? = nil) {
+        self.chatService = chatService
+        self.noRecords = noRecords
+        self.currPage = currPage
+        self.selectedFriend = selectedFriend
+    }
+
     func setSelectedFriend(friend : FriendDomain){
         // find conversation with friend
         //memoStore?.requestGetAll(noRecords: noRecords, noPages: 0)
@@ -36,11 +43,10 @@ class MessagesInteractorImpl : MessageListInteractor {
 
     }
     
-    func fetchData(conversation: ConversationDomain){
+    func loadData(){
         // filter messenges belong to this conversation
-        
-        //memoStore?.requestGetAll(noRecords: noRecords, noPages: 0)
-    }
+        chatService.loadMessages(noRecords: noRecords, noPages: 0)
+        }
     
     func loadMore(tableOffset : CGFloat){
         //print(tableOffset)
@@ -51,7 +57,7 @@ class MessagesInteractorImpl : MessageListInteractor {
         }
         currPage = pages
 
-        memoStore?.requestGetAll(noRecords: noRecords, noPages: pages)
+        chatService.loadMessages(noRecords: noRecords, noPages: pages)
     }
 
     func onSendMessage(content: String, conversation: ConversationDomain){
@@ -62,8 +68,9 @@ class MessagesInteractorImpl : MessageListInteractor {
                               timestamp: Date(), sender: "1")
         
         // update db
-        memoStore?.add(m, conversation: conversation, withFriend: selectedFriend)
-        selectedFriend = nil // after 1 use
+        chatService.addMessage(msg: m)
         
     }
+    
+    
 }

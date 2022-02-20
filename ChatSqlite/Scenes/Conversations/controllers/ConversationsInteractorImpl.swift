@@ -10,43 +10,31 @@ import UIKit
 
 protocol ConversationPresenter : AnyObject {
     func presentAllItems(_ items : [ConversationDomain]?)
-    func presentNewItems(_ item : ConversationDomain)
+    func presentMoreItems(_ items : [ConversationDomain])
     func presentDeleteItem(_ item: ConversationDomain, at: IndexPath)
     func presentFilteredItems(_ items: [ConversationDomain]?)
+    func presentNewItem(_ item: ConversationDomain)
+    func presentUpsertedItems(item: ConversationDomain)
 }
 
 class ConversationsInteractorImpl : ConversationListInteractor{
  
-    
-    weak var presenter : ConversationPresenter?
-    var localStore : ConversationLocalLogic
+    var localStore : ConversationServiceDecorator
     
     var noRecords : Int = 20
     var currPage = 0
     var offset : CGFloat = 300
     
-    init(){
-        self.localStore = SQLiteManager.shared
+    init(service : ConversationServiceDecorator){
+        self.localStore = service
     }
     
     func filterBy(key: String) {
-        localStore.filterConversation(by: key) { [weak self] items, err in
-            guard let items = items, items.count > 0 else {
-                print("filter return nothing")
-                return
-            }
-            self?.presenter?.presentFilteredItems(items)
-        }
+        localStore.filterConversation(by: key)
     }
     
     func loadData(){
-        localStore.loadConversations(noRecords: noRecords, noPages: 0, desc: true, completionHandler: { [weak self] res, err in
-            if let convs = res {
-                self?.presenter?.presentAllItems(convs)
-            } else {
-                print(err?.localizedDescription ?? "")
-            }
-        })
+        localStore.loadConversations(noRecords: noRecords, noPages: 0, desc: true)
     }
     
     func loadMoreData(tableOffset : CGFloat){
@@ -59,22 +47,14 @@ class ConversationsInteractorImpl : ConversationListInteractor{
         
         currPage = pages
         
-        localStore.loadConversations(noRecords: noRecords, noPages: pages, desc: true) { [weak self] res, err in
-            if res == nil || res!.isEmpty {
-                print("empty fetch!")
-                return}
-            
-            self?.presenter?.presentAllItems(res!)
-            
-        }
+        localStore.loadConversations(noRecords: noRecords, noPages: pages, desc: true)
     }
     
     
     func deleteConversation(item: ConversationDomain, indexPath: IndexPath){
         
-        localStore.onDeleteConversation(id: item.id)
+        localStore.deleteConversation(id: item.id)
         
-        self.presenter?.presentDeleteItem(item, at: indexPath)
     }
 
 

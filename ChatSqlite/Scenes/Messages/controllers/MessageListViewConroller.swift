@@ -19,12 +19,6 @@ protocol MessageListViewDelegate {
 class MessageListViewController : UITableViewController {
     var interactor : MessageListInteractor?
     var parentDelegate : MessageListViewDelegate?
-    var viewModel : MessageMemoStore! {
-        didSet {
-            viewModel.addObserver(self)
-        }
-    }
-    var supscription : AnyCancellable?
     
     var items : [MessageDomain] = []
     var conversation : ConversationDomain!
@@ -35,20 +29,17 @@ class MessageListViewController : UITableViewController {
 
     
     func configure(friend: FriendDomain){
-        //interactor?.fetchData(friend: friend)
         self.conversation = ConversationDomain.fromFriend(friend: friend)
         self.parentDelegate?.onConversationChanged(conversation: self.conversation)
-        viewModel = MessageMemoManager.shared.get(friendID: friend.id)
     }
     
     func configure(conversation : ConversationDomain){
         self.conversation = conversation
-        //interactor?.fetchData(conversation: conversation)
-        viewModel = MessageMemoManager.shared.get(conversationID: self.conversation.id)
     }
     
     func setItems(_ items: [MessageDomain]){
         self.items = items
+        self.items.sort(by: { $0.timestamp > $1.timestamp})
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
@@ -56,6 +47,7 @@ class MessageListViewController : UITableViewController {
     
     func appendItems(_ items: [MessageDomain]){
         self.items += items
+        self.items.sort(by: { $0.timestamp > $1.timestamp})
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
@@ -88,20 +80,15 @@ class MessageListViewController : UITableViewController {
     
     override func viewDidLoad() {
         tableView = myTableView
-        
-        // subscribe to listen for changes in in-memo list of messages
-        supscription = viewModel.$messages
-            .receive(on: RunLoop.main)
-            .sink { [weak self] msgs in
-            if let res = self?.items.isEmpty, res {
-                self?.items = msgs
-                self?.tableView.reloadData()
-            }
-        }
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         scrollToLastMessage()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        interactor?.loadData()
     }
     func scrollToLastMessage(animated: Bool = true){
 
@@ -208,22 +195,13 @@ extension MessageListViewController {
 
 // MARK: Presenter
 extension MessageListViewController : MessagesPresenter {
-    func presentItems(_ items: [MessageDomain]?) {
-        if items == nil {
+    func presentItems(_ items: [MessageDomain]?, offset: Int) {
+        guard let validItems = items, offset >= self.items.count else {
             return
         }
-        
-        self.setItems(items!)
+        self.appendItems(validItems)
     }
-    
-    
-    func presentMoreItems(_ items: [MessageDomain]?) {
-        if items == nil {
-            return
-        }
-        
-        self.appendItems(items!)
-    }
+
     
     func presentReceivedItem(_ item: MessageDomain) {
         

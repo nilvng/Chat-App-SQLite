@@ -40,7 +40,7 @@ class MessageStoreProxy{
 
 }
 // MARK: MessageService
-extension MessageStoreProxy : MessageService {
+extension MessageStoreProxy : MessageDBService {
     func fetchAllItems(noRecords: Int, noPages: Int, desc: Bool, completionHandler: @escaping ([MessageDomain]?, StoreError?) -> Void) {
         self.getAll(noRecords: noRecords, noPages: noPages, desc: desc, completionHandler: { res, err in
             if let resItems = res {

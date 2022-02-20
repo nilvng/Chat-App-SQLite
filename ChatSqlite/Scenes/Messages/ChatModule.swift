@@ -11,22 +11,19 @@ import UIKit
 class ChatModule {
     func build(for conv : ConversationDomain) -> ChatViewController{
         let view = ChatViewController()
-        
         let listView = MessageListViewController()
         let barView = ChatbarViewController()
         
-        let inter = MessagesInteractorImpl()
-
+        let service = ChatServiceManager.shared.getChatService(for: conv)
+        let inter = MessagesInteractorImpl(chatService: service)
+        
         let router = ChatRouter()
         router.viewController = view
         
         listView.interactor = inter
         listView.configure(conversation: conv)
-        let memoStore = MessageMemoManager.shared.get(conversationID: conv.id)
-        listView.viewModel = memoStore
-        inter.memoStore = memoStore
         listView.parentDelegate = view
-
+        service.observeMessageList(observer: listView)
         
         barView.delegate = view
         
@@ -44,23 +41,17 @@ class ChatModule {
         let listView = MessageListViewController()
         let barView = ChatbarViewController()
         
-        let inter = MessagesInteractorImpl()
-        inter.setSelectedFriend(friend: friend)
+        let service = ChatServiceManager.shared.getChatService(for: friend)
+        service.observeMessageList(observer: listView)
 
+        let inter = MessagesInteractorImpl(chatService: service)
+        
         let router = ChatRouter()
         router.viewController = view
         
-        let memoStore = MessageMemoManager.shared.get(friendID: friend.id)
-        listView.parentDelegate = view
-        listView.viewModel = memoStore
-        inter.memoStore = memoStore
-
         listView.interactor = inter
-        
-        listView.configure(friend: friend)
-        
-        view.configure(friend: friend)
-
+//        listView.configure(friend: friend)
+        listView.parentDelegate = view
         
         barView.delegate = view
         
@@ -68,7 +59,8 @@ class ChatModule {
         view.chatBarView = barView
         view.interactor = inter
         view.router = router
-
+        view.configure(friend: friend)
+        
         return view
     }
     
