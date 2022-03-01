@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import AlamofireImage
 protocol ConversationListInteractor {
     func loadData()
     func loadMoreData(tableOffset: CGFloat)
@@ -35,7 +35,10 @@ class HomeViewController: UIViewController {
         button.setImage(UIImage.navigation_button_plus_selected, for: .selected)
         button.sizeToFit()
 
-        button.backgroundColor = UIColor.complementZaloBlue
+        //button.backgroundColor = UIColor.complementZaloBlue
+//        let image = UIImage(named: "gradient-pink-image")?.af.imageRounded(withCornerRadius: 200)
+        let image = UIImage(named: "gradient-pink-image")?.af.imageRoundedIntoCircle()
+        button.setBackgroundImage(image, for: .normal)
         return button
     }()
     
@@ -76,7 +79,8 @@ class HomeViewController: UIViewController {
     func setupNavigationBarColor() {
         
         let appearance = UINavigationBarAppearance()
-        appearance.backgroundColor = .zaloBlue
+        //appearance.backgroundColor = .zaloBlue
+        appearance.backgroundImage = UIImage(named: "gradient-pink-image")
         appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
         
         navigationItem.backButtonDisplayMode = .minimal

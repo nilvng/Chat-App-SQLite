@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E062B0527CDC70E002DAF95 /* NIOPosix in Frameworks */ = {isa = PBXBuildFile; productRef = 0E062B0427CDC70E002DAF95 /* NIOPosix */; };
+		0E062B0727CDC762002DAF95 /* ChannelHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E062B0627CDC762002DAF95 /* ChannelHandlers.swift */; };
+		0E062B0927CDCB14002DAF95 /* RawSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E062B0827CDCB14002DAF95 /* RawSocketClient.swift */; };
+		0E062B0B27CDCBF2002DAF95 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E062B0A27CDCBF2002DAF95 /* Utils.swift */; };
+		0E062B0D27CDD0DC002DAF95 /* FramingCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E062B0C27CDD0DC002DAF95 /* FramingCodec.swift */; };
+		0E062B0F27CDD421002DAF95 /* JSONCodableCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E062B0E27CDD421002DAF95 /* JSONCodableCodec.swift */; };
+		0E062B1127CDD546002DAF95 /* NIOFoundationCompat in Frameworks */ = {isa = PBXBuildFile; productRef = 0E062B1027CDD546002DAF95 /* NIOFoundationCompat */; };
+		0E062B1327CDD5BF002DAF95 /* ModelCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E062B1227CDD5BF002DAF95 /* ModelCodec.swift */; };
+		0E062B1527CDFCF7002DAF95 /* SocketModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E062B1427CDFCF7002DAF95 /* SocketModel.swift */; };
 		0E124234277EA53D0054D069 /* MessageListViewConroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124233277EA53D0054D069 /* MessageListViewConroller.swift */; };
 		0E124237277EB6E20054D069 /* FriendDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124236277EB6E20054D069 /* FriendDataSource.swift */; };
 		0E12423B277ED9560054D069 /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E12423A277ED9560054D069 /* AvatarView.swift */; };
@@ -24,6 +33,10 @@
 		0E124257277EF82B0054D069 /* ChatbarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124254277EF82B0054D069 /* ChatbarViewController.swift */; };
 		0E124258277EF82B0054D069 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124255277EF82B0054D069 /* MessageCell.swift */; };
 		0E124259277EF82B0054D069 /* BubbleConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124256277EF82B0054D069 /* BubbleConstant.swift */; };
+		0E14DC8127CBC67300D00151 /* RawSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E14DC8027CBC67300D00151 /* RawSocket.swift */; };
+		0E14DC8427CBD0D800D00151 /* NIO in Frameworks */ = {isa = PBXBuildFile; productRef = 0E14DC8327CBD0D800D00151 /* NIO */; };
+		0E14DC8627CBD0D800D00151 /* NIOCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0E14DC8527CBD0D800D00151 /* NIOCore */; };
+		0E14DC8827CBD0D800D00151 /* NIOTLS in Frameworks */ = {isa = PBXBuildFile; productRef = 0E14DC8727CBD0D800D00151 /* NIOTLS */; };
 		0E15EC3227742B790082FA1B /* SQLiteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15EC3127742B790082FA1B /* SQLiteManager.swift */; };
 		0E2395B927708340006B2DE2 /* FriendDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2395B827708340006B2DE2 /* FriendDomain.swift */; };
 		0E2395BB2770834C006B2DE2 /* ConversationDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2395BA2770834C006B2DE2 /* ConversationDomain.swift */; };
@@ -49,11 +62,13 @@
 		0E700911278EBDE100998BBB /* AlamofireImage in Frameworks */ = {isa = PBXBuildFile; productRef = 0E700910278EBDE100998BBB /* AlamofireImage */; };
 		0E727F50278571AA002EA7E3 /* NativeContactStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E727F4F278571AA002EA7E3 /* NativeContactStore.swift */; };
 		0E727F5227857416002EA7E3 /* NativeContactStoreAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E727F5127857416002EA7E3 /* NativeContactStoreAdapter.swift */; };
+		0E79FB9627C67CCA0039E8E6 /* SocketDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79FB9527C67CCA0039E8E6 /* SocketDelegate.swift */; };
 		0E837C0B27B4F47C00317E0B /* HomeModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E837C0A27B4F47C00317E0B /* HomeModule.swift */; };
 		0E837C0D27B4F8B000317E0B /* HomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E837C0C27B4F8B000317E0B /* HomeRouter.swift */; };
 		0E837C1127B5077F00317E0B /* ChatModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E837C1027B5077F00317E0B /* ChatModule.swift */; };
 		0E837C1327B508EE00317E0B /* ChatRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E837C1227B508EE00317E0B /* ChatRouter.swift */; };
 		0E94D0EC27991A26003485AF /* DownloadBtnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E94D0EB27991A26003485AF /* DownloadBtnView.swift */; };
+		0EA8F34C27C88D5A00B060B2 /* SocketService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA8F34B27C88D5A00B060B2 /* SocketService.swift */; };
 		0EDA957A2775A08300646051 /* ConversationStoreProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDA95792775A08300646051 /* ConversationStoreProxy.swift */; };
 		0EDC669A27BA651600A2792E /* MessageCellInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDC669927BA651600A2792E /* MessageCellInteractor.swift */; };
 		0EDC669C27BA698A00A2792E /* FriendRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDC669B27BA698A00A2792E /* FriendRouter.swift */; };
@@ -79,6 +94,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0E062B0627CDC762002DAF95 /* ChannelHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelHandlers.swift; sourceTree = "<group>"; };
+		0E062B0827CDCB14002DAF95 /* RawSocketClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawSocketClient.swift; sourceTree = "<group>"; };
+		0E062B0A27CDCBF2002DAF95 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		0E062B0C27CDD0DC002DAF95 /* FramingCodec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FramingCodec.swift; sourceTree = "<group>"; };
+		0E062B0E27CDD421002DAF95 /* JSONCodableCodec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONCodableCodec.swift; sourceTree = "<group>"; };
+		0E062B1227CDD5BF002DAF95 /* ModelCodec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelCodec.swift; sourceTree = "<group>"; };
+		0E062B1427CDFCF7002DAF95 /* SocketModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketModel.swift; sourceTree = "<group>"; };
 		0E124233277EA53D0054D069 /* MessageListViewConroller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageListViewConroller.swift; sourceTree = "<group>"; };
 		0E124236277EB6E20054D069 /* FriendDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendDataSource.swift; sourceTree = "<group>"; };
 		0E12423A277ED9560054D069 /* AvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarView.swift; sourceTree = "<group>"; };
@@ -96,6 +118,7 @@
 		0E124254277EF82B0054D069 /* ChatbarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatbarViewController.swift; sourceTree = "<group>"; };
 		0E124255277EF82B0054D069 /* MessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		0E124256277EF82B0054D069 /* BubbleConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleConstant.swift; sourceTree = "<group>"; };
+		0E14DC8027CBC67300D00151 /* RawSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawSocket.swift; sourceTree = "<group>"; };
 		0E15EC3127742B790082FA1B /* SQLiteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLiteManager.swift; sourceTree = "<group>"; };
 		0E2395B827708340006B2DE2 /* FriendDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendDomain.swift; sourceTree = "<group>"; };
 		0E2395BA2770834C006B2DE2 /* ConversationDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDomain.swift; sourceTree = "<group>"; };
@@ -120,11 +143,13 @@
 		0E70090A278EB76100998BBB /* FileDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDownloader.swift; sourceTree = "<group>"; };
 		0E727F4F278571AA002EA7E3 /* NativeContactStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeContactStore.swift; sourceTree = "<group>"; };
 		0E727F5127857416002EA7E3 /* NativeContactStoreAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeContactStoreAdapter.swift; sourceTree = "<group>"; };
+		0E79FB9527C67CCA0039E8E6 /* SocketDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketDelegate.swift; sourceTree = "<group>"; };
 		0E837C0A27B4F47C00317E0B /* HomeModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeModule.swift; sourceTree = "<group>"; };
 		0E837C0C27B4F8B000317E0B /* HomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeRouter.swift; sourceTree = "<group>"; };
 		0E837C1027B5077F00317E0B /* ChatModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModule.swift; sourceTree = "<group>"; };
 		0E837C1227B508EE00317E0B /* ChatRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRouter.swift; sourceTree = "<group>"; };
 		0E94D0EB27991A26003485AF /* DownloadBtnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadBtnView.swift; sourceTree = "<group>"; };
+		0EA8F34B27C88D5A00B060B2 /* SocketService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketService.swift; sourceTree = "<group>"; };
 		0EDA95792775A08300646051 /* ConversationStoreProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationStoreProxy.swift; sourceTree = "<group>"; };
 		0EDC669927BA651600A2792E /* MessageCellInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCellInteractor.swift; sourceTree = "<group>"; };
 		0EDC669B27BA698A00A2792E /* FriendRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRouter.swift; sourceTree = "<group>"; };
@@ -156,13 +181,25 @@
 			buildActionMask = 2147483647;
 			files = (
 				0EFDD95C276B798D00323984 /* SQLite in Frameworks */,
+				0E062B0527CDC70E002DAF95 /* NIOPosix in Frameworks */,
+				0E14DC8427CBD0D800D00151 /* NIO in Frameworks */,
 				0E700911278EBDE100998BBB /* AlamofireImage in Frameworks */,
+				0E062B1127CDD546002DAF95 /* NIOFoundationCompat in Frameworks */,
+				0E14DC8627CBD0D800D00151 /* NIOCore in Frameworks */,
+				0E14DC8827CBD0D800D00151 /* NIOTLS in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0E062B0327CDC70E002DAF95 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		0E124231277E9B7C0054D069 /* DB */ = {
 			isa = PBXGroup;
 			children = (
@@ -297,6 +334,23 @@
 			path = controllers;
 			sourceTree = "<group>";
 		};
+		0E79FB9427C67CBC0039E8E6 /* Socket */ = {
+			isa = PBXGroup;
+			children = (
+				0E79FB9527C67CCA0039E8E6 /* SocketDelegate.swift */,
+				0EA8F34B27C88D5A00B060B2 /* SocketService.swift */,
+				0E14DC8027CBC67300D00151 /* RawSocket.swift */,
+				0E062B0627CDC762002DAF95 /* ChannelHandlers.swift */,
+				0E062B0827CDCB14002DAF95 /* RawSocketClient.swift */,
+				0E062B0A27CDCBF2002DAF95 /* Utils.swift */,
+				0E062B0C27CDD0DC002DAF95 /* FramingCodec.swift */,
+				0E062B0E27CDD421002DAF95 /* JSONCodableCodec.swift */,
+				0E062B1227CDD5BF002DAF95 /* ModelCodec.swift */,
+				0E062B1427CDFCF7002DAF95 /* SocketModel.swift */,
+			);
+			path = Socket;
+			sourceTree = "<group>";
+		};
 		0E98F90F27B0F95100F7564E /* InMemo */ = {
 			isa = PBXGroup;
 			children = (
@@ -336,8 +390,8 @@
 				0E560B1727BF48660019B38C /* ConversationWorker.swift */,
 				0E560B1927BF4AE20019B38C /* MessageListWorker.swift */,
 				0E560B1B27BF53070019B38C /* ChatService.swift */,
-				0E560B1D27BF5DEF0019B38C /* ConversationServiceDecorator.swift */,
 				0E560B1F27BF60030019B38C /* ChatServiceManager.swift */,
+				0E560B1D27BF5DEF0019B38C /* ConversationServiceDecorator.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -347,6 +401,7 @@
 			children = (
 				0EFDD945276B72C400323984 /* ChatSqlite */,
 				0EFDD944276B72C400323984 /* Products */,
+				0E062B0327CDC70E002DAF95 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -361,6 +416,7 @@
 		0EFDD945276B72C400323984 /* ChatSqlite */ = {
 			isa = PBXGroup;
 			children = (
+				0E79FB9427C67CBC0039E8E6 /* Socket */,
 				0EDC669627BA056F00A2792E /* App */,
 				0EDA95782774628700646051 /* LowServices */,
 				0EFDD95F276B79C300323984 /* Models */,
@@ -449,6 +505,11 @@
 			packageProductDependencies = (
 				0EFDD95B276B798D00323984 /* SQLite */,
 				0E700910278EBDE100998BBB /* AlamofireImage */,
+				0E14DC8327CBD0D800D00151 /* NIO */,
+				0E14DC8527CBD0D800D00151 /* NIOCore */,
+				0E14DC8727CBD0D800D00151 /* NIOTLS */,
+				0E062B0427CDC70E002DAF95 /* NIOPosix */,
+				0E062B1027CDD546002DAF95 /* NIOFoundationCompat */,
 			);
 			productName = ChatSqlite;
 			productReference = 0EFDD943276B72C400323984 /* ChatSqlite.app */;
@@ -481,6 +542,7 @@
 			packageReferences = (
 				0EFDD95A276B798D00323984 /* XCRemoteSwiftPackageReference "SQLite.swift" */,
 				0E70090F278EBDE100998BBB /* XCRemoteSwiftPackageReference "AlamofireImage" */,
+				0E14DC8227CBD0D800D00151 /* XCRemoteSwiftPackageReference "swift-nio" */,
 			);
 			productRefGroup = 0EFDD944276B72C400323984 /* Products */;
 			projectDirPath = "";
@@ -543,12 +605,16 @@
 				0E7008DD278806E400998BBB /* FriendDetailController.swift in Sources */,
 				0EFDD949276B72C400323984 /* SceneDelegate.swift in Sources */,
 				0E124234277EA53D0054D069 /* MessageListViewConroller.swift in Sources */,
+				0E79FB9627C67CCA0039E8E6 /* SocketDelegate.swift in Sources */,
 				0E2395BB2770834C006B2DE2 /* ConversationDomain.swift in Sources */,
 				0E2395B927708340006B2DE2 /* FriendDomain.swift in Sources */,
 				0E560B2027BF60030019B38C /* ChatServiceManager.swift in Sources */,
 				0E15EC3227742B790082FA1B /* SQLiteManager.swift in Sources */,
 				0E124253277EF4590054D069 /* ConvConfigController.swift in Sources */,
+				0E14DC8127CBC67300D00151 /* RawSocket.swift in Sources */,
 				0EDC669A27BA651600A2792E /* MessageCellInteractor.swift in Sources */,
+				0E062B1327CDD5BF002DAF95 /* ModelCodec.swift in Sources */,
+				0E062B0F27CDD421002DAF95 /* JSONCodableCodec.swift in Sources */,
 				0E7008DA278806E400998BBB /* FriendDetailDataSource.swift in Sources */,
 				0E94D0EC27991A26003485AF /* DownloadBtnView.swift in Sources */,
 				0E124237277EB6E20054D069 /* FriendDataSource.swift in Sources */,
@@ -562,10 +628,16 @@
 				0E124241277ED9E00054D069 /* UIColor+Chat.swift in Sources */,
 				0E7008D8278806E400998BBB /* FriendDeleteCell.swift in Sources */,
 				0E3C0D1A2783F9EF00B23E21 /* ChatMenuController.swift in Sources */,
+				0E062B1527CDFCF7002DAF95 /* SocketModel.swift in Sources */,
+				0E062B0927CDCB14002DAF95 /* RawSocketClient.swift in Sources */,
 				0E837C0D27B4F8B000317E0B /* HomeRouter.swift in Sources */,
+				0E062B0D27CDD0DC002DAF95 /* FramingCodec.swift in Sources */,
 				0EFDD96B276B7A5400323984 /* Message.swift in Sources */,
 				0EF89B62278ECEEF005C3BE1 /* AlamoAvatarView.swift in Sources */,
 				0E12424B277EDA020054D069 /* PhotoRequest.swift in Sources */,
+				0E062B0B27CDCBF2002DAF95 /* Utils.swift in Sources */,
+				0EA8F34C27C88D5A00B060B2 /* SocketService.swift in Sources */,
+				0E062B0727CDC762002DAF95 /* ChannelHandlers.swift in Sources */,
 				0E837C1127B5077F00317E0B /* ChatModule.swift in Sources */,
 				0E7008D9278806E400998BBB /* FriendTextEditCell.swift in Sources */,
 				0E124251277EF3A10054D069 /* ConversationCell.swift in Sources */,
@@ -788,6 +860,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		0E14DC8227CBD0D800D00151 /* XCRemoteSwiftPackageReference "swift-nio" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-nio.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 		0E70090F278EBDE100998BBB /* XCRemoteSwiftPackageReference "AlamofireImage" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/AlamofireImage.git";
@@ -807,6 +887,31 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		0E062B0427CDC70E002DAF95 /* NIOPosix */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E14DC8227CBD0D800D00151 /* XCRemoteSwiftPackageReference "swift-nio" */;
+			productName = NIOPosix;
+		};
+		0E062B1027CDD546002DAF95 /* NIOFoundationCompat */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E14DC8227CBD0D800D00151 /* XCRemoteSwiftPackageReference "swift-nio" */;
+			productName = NIOFoundationCompat;
+		};
+		0E14DC8327CBD0D800D00151 /* NIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E14DC8227CBD0D800D00151 /* XCRemoteSwiftPackageReference "swift-nio" */;
+			productName = NIO;
+		};
+		0E14DC8527CBD0D800D00151 /* NIOCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E14DC8227CBD0D800D00151 /* XCRemoteSwiftPackageReference "swift-nio" */;
+			productName = NIOCore;
+		};
+		0E14DC8727CBD0D800D00151 /* NIOTLS */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0E14DC8227CBD0D800D00151 /* XCRemoteSwiftPackageReference "swift-nio" */;
+			productName = NIOTLS;
+		};
 		0E700910278EBDE100998BBB /* AlamofireImage */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 0E70090F278EBDE100998BBB /* XCRemoteSwiftPackageReference "AlamofireImage" */;

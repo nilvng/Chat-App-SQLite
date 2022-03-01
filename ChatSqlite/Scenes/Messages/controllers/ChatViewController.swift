@@ -31,6 +31,8 @@ class ChatViewController: UIViewController {
             theme = conversation?.theme ?? .basic
             DispatchQueue.main.async {
                 self.chatTitleLabel.text = self.conversation?.title ?? ""
+                self.messageListView.setBubbleTheme(theme: self.theme)
+                self.view.layoutIfNeeded()
             }
         }
     }
@@ -335,12 +337,13 @@ extension ChatViewController : MessageListViewDelegate {
     }
     
     func messageWillDisplay(tableView: UITableView) {
-        let bbRect = tableView.convert(tableView.rectForRow(at: IndexPath(row: 0, section: 0)), to: self.view)
-        animateBubble(toRect: bbRect)
+
     }
     
-    func messageIsSent(content: String) {
+    func messageIsSent(content: String, inTable tableView: UITableView) {
         configureFloatBubble(content: content)
+        let bbRect = tableView.convert(tableView.rectForRow(at: IndexPath(row: 0, section: 0)), to: self.view)
+        animateBubble(toRect: bbRect)
     }
     
     fileprivate func configureFloatBubble(content: String){

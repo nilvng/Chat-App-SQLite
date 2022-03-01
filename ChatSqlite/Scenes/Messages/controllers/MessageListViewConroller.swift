@@ -11,7 +11,7 @@ import Alamofire
 import Combine
 
 protocol MessageListViewDelegate {
-   func messageIsSent(content: String)
+    func messageIsSent(content: String, inTable tableView: UITableView)
     func messageWillDisplay(tableView: UITableView)
     func onConversationChanged(conversation: ConversationDomain)
 }
@@ -53,10 +53,14 @@ class MessageListViewController : UITableViewController {
         }
     }
     
+    func setBubbleTheme(theme: Theme){
+        self.theme = theme
+    }
+    
     
     func appendNewItem(_ item: MessageDomain){
-        self.items.insert(item, at: 0)
         DispatchQueue.main.async {
+            self.items.insert(item, at: 0)
             self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .top)
             //self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .top)
             self.scrollToLastMessage()
@@ -116,7 +120,7 @@ extension MessageListViewController {
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         
         // update gradient color of visible bubbles
-       makeBubbleGradient(givenIndices: [indexPath], tableView: tableView)
+       makeBubbleGradient(tableView: tableView)
     }
 }
 
@@ -210,11 +214,15 @@ extension MessageListViewController : MessagesPresenter {
     }
     func presentSentItem(_ item: MessageDomain) {
         
-        parentDelegate?.messageIsSent(content: item.content)
-        parentDelegate?.messageWillDisplay(tableView: tableView)
-        self.appendNewItem(item)
-        
+        guard item.sender == "1" else {
+            presentReceivedItem(item)
+            return
+        }
 
+//        DispatchQueue.main.async {
+            self.appendNewItem(item)
+            self.parentDelegate?.messageIsSent(content: item.content, inTable: self.tableView)
+//        }
     }
     
     func onFoundConversation(_ c: ConversationDomain){

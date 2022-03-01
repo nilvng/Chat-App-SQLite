@@ -26,7 +26,7 @@ class ConversationSQLiteStore {
 
     
     init(){
-        getInstance(path: "chat-conv.sqlite")
+        getInstance(path: "chat-conversation.sqlite")
         createTable()
         
     }

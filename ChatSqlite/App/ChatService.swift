@@ -19,10 +19,8 @@ class ChatService {
                                       autoreleaseFrequency: .workItem,
                                       target: nil)
     
-    init(friendID: String){
-        fatalError()
-    }
-        
+    var socketService : SocketService = SocketService.shared
+    
     init(conversation: ConversationDomain, callback: RegisterAction? = nil) {
         self.messageWorker = MessageListWorker(cid: conversation.id)
         self.conversatioNWorker = ConversationWorker(model: conversation)
@@ -43,17 +41,29 @@ class ChatService {
         }
     }
     
-    func addMessage(msg : MessageDomain){
-        utilityQueue.async { [self] in
+    func sendMessage(_ msg: MessageDomain){
+        self.addMessage(msg: msg)
+        socketService.sendMessage(msg)
+
+    }
+    
+    func receiveMessage(_ msg: MessageDomain){
+        self.addMessage(msg: msg)
+    }
+    
+    private func addMessage(msg : MessageDomain){
+//        utilityQueue.async { [self] in
             
             conversatioNWorker.updateLastMessage(msg: msg)
+            
             let _ = messageWorker.add(msg)
+            
             if registerAction != nil {
                 self.registerAction?(msg.cid, self)
                 self.registerAction = nil
             }
             
-        }
+//        }
     }
     
     func observeMessageList(observer: MessagesPresenter){

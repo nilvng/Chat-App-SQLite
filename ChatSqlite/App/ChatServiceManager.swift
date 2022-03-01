@@ -41,3 +41,44 @@ class ChatServiceManager {
 
     }
 }
+
+extension ChatServiceManager : SocketDelegate {
+    func connected() {
+        print("Delegate: connected")
+    }
+    
+    func disconnected() {
+        print("Delegate: disconnected")
+
+    }
+    
+    func onRetryFailed() {
+        print("Delegate: retry failed")
+
+    }
+    
+    func onMessageSent() {
+        print("Delegate: message sent")
+
+    }
+    
+    func onMessageReceived(msg: MessageDomain) {
+        print("Delegate: message received")
+        let cid = msg.cid
+        
+        // find in caches
+        guard let service = cachedService[cid] else {
+            // create service and saved to db
+            return
+        }
+        
+        service.receiveMessage(msg)
+    }
+    
+    func onMessageStatusUpdated(mid: String, status: MessageStatus) {
+        print("Delegate: message updated")
+
+    }
+    
+    
+}

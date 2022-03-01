@@ -17,7 +17,7 @@ class FriendSQLiteStore {
     let avatar = Expression<String?>("avatar")
     
     init(){
-        getInstance(path: "chat-frie.sqlite")
+        getInstance(path: "chat-friend.sqlite")
     }
     
     func createTable(){

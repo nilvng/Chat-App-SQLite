@@ -69,3 +69,9 @@ extension MessageDomain {
     }
 
 }
+
+extension MessageDomain {
+    func encodeSocketFormat() -> String{
+        return "\(cid)\(mid)\(content)"
+    }
+}

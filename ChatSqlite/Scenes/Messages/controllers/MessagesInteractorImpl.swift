@@ -68,7 +68,7 @@ class MessagesInteractorImpl : MessageListInteractor {
                               timestamp: Date(), sender: "1")
         
         // update db
-        chatService.addMessage(msg: m)
+        chatService.sendMessage(m)
         
     }
     
