@@ -36,11 +36,11 @@ internal extension ChannelPipeline {
 }
 
 internal extension ChannelPipeline {
-    func addFramingHandlers(framing: Framing) -> EventLoopFuture<Void> {
-        let eventParser = FramingCodec()
-        return self.addHandlers([ByteToMessageHandler(eventParser),
-                                             MessageToByteHandler(eventParser)])
-    }
+//    func addFramingHandlers(framing: Framing) -> EventLoopFuture<Void> {
+//        let eventParser = FramingCodec()
+//        return self.addHandlers([ByteToMessageHandler(eventParser),
+//                                             MessageToByteHandler(eventParser)])
+//    }
 }
 
 

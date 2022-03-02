@@ -13,7 +13,7 @@ protocol SocketParserDelegate : AnyObject{
     func onMessageStatusUpdated(mid: String, status: MessageStatus)
 }
 
-final class ModelCodec<In, Out>: ChannelInboundHandler, ChannelOutboundHandler where In: SocketModel, Out: SocketModel {
+final class ModelCodecHandler<In, Out>: ChannelInboundHandler, ChannelOutboundHandler where In: SocketModel, Out: SocketModel {
     public typealias InboundIn = ByteBuffer
     public typealias InboundOut = In
     public typealias OutboundIn = Out
@@ -49,7 +49,7 @@ final class ModelCodec<In, Out>: ChannelInboundHandler, ChannelOutboundHandler w
         var buf = context.channel.allocator.buffer(capacity: 7)
         let model = unwrapOutboundIn(data)
 
-        buf.writeInteger(1 as Int8)
+        buf.writeInteger(model.getEvent() as Int8)
         buf.writeString(model.getBody())
         context.writeAndFlush(wrapOutboundOut(buf), promise: promise)
     }

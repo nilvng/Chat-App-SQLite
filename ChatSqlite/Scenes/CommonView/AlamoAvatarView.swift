@@ -26,7 +26,7 @@ class AlamoAvatarView : AvatarView {
         
         if let urlString = url, let urlObj = URL(string: urlString){
             
-            print("fetch image of url: \(urlString)")
+            //print("fetch image of url: \(urlString)")
 
             self.af.setImage(withURL: urlObj,
                              placeholderImage: placeholder,
