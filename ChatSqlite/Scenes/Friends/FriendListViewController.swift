@@ -101,6 +101,19 @@ class FriendListViewController: UIViewController {
         self.mediator?.addItem(item)
     }
 
+    
+    func promptForAnswer(){
+        let ac = UIAlertController(title: "Your Friend ID", message: "please?", preferredStyle: .alert)
+        ac.addTextField(configurationHandler: nil)
+        let submitAction = UIAlertAction(title: "Submit", style: .default, handler: { [unowned ac] _ in
+            guard let answer = ac.textFields![0].text, answer != "" else {
+                return
+            }
+            UserSettings.shared.setUserID(uid: answer)
+        })
+        ac.addAction(submitAction)
+        present(ac,animated: true)
+    }
 }
 
 // MARK: TableDelegate
@@ -114,7 +127,11 @@ extension FriendListViewController : UITableViewDelegate {
             router?.toChatView(for: friend)
         } else {
             // Click on option
+            if let other = option as? OtherOptions, other.title == .newContact{
             router?.toNewContactView(callback: newContactCallback)
+            } else {
+                promptForAnswer()
+            }
             
         }
     }

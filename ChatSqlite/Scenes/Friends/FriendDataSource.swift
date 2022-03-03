@@ -17,12 +17,17 @@ protocol Searchable {
     func getKeyword() -> String
 }
 
+enum OtherOptionsTitle : String {
+    case newContact = "New Contact"
+    case newFriend = "New Friend (enter ID)"
+}
+
 struct OtherOptions : Searchable {
     func getKeyword() -> String{
-        return title
+        return title.rawValue
     }
     
-    var title : String
+    var title : OtherOptionsTitle
     var image : UIImage?
 }
 
@@ -47,8 +52,8 @@ class FriendDataSource : NSObject {
     private func setupOtherOption(){
         // options like New contact, Create group chat etc
         var options = [OtherOptions]()
-        options.append(OtherOptions(title: "New contact", image: UIImage.new_contact))
-        options.append(OtherOptions(title: "New group chat", image: UIImage.new_group_chat))
+        options.append(OtherOptions(title: .newContact, image: UIImage.new_contact))
+        options.append(OtherOptions(title: .newFriend, image: UIImage.new_group_chat))
         sections.append(Section(letter: nil, items: options, type: .options))
     }
     

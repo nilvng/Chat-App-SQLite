@@ -128,7 +128,7 @@ class MessageCell: UITableViewCell {
     
     func isReceived(sender: String) -> Bool{
         //print("sender: \(sender)")
-        return sender != "1"
+        return sender != UserSettings.shared.getUserID()
     }
     
     // MARK: Style bubble
@@ -137,7 +137,7 @@ class MessageCell: UITableViewCell {
         // show download button next to content message
         let size : CGFloat = 16
         messageBodyLabel.font = isIt ? UIFont.boldSystemFont(ofSize: size) : UIFont.systemFont(ofSize: size)
-        messageBodyLabel.text = "boom.txt"
+        messageBodyLabel.text = content
         
         let showDownload = isIt && isReceived
         
@@ -199,7 +199,7 @@ class MessageCell: UITableViewCell {
     
     func updateGradient(currentFrame: CGRect, theme: Theme){
         
-        guard message?.sender == "1" else {
+        guard isReceived(sender: message.sender) else {
             return
         }
         let normalizedY = currentFrame.maxY

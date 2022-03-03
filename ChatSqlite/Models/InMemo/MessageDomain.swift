@@ -37,6 +37,15 @@ class MessageDomain {
         self.sender = sender
         self.downloaded = downloaded
     }
+    init(cid: String, content: String, type: MessageType,downloaded: Bool = false) {
+        self.mid = UUID().uuidString
+        self.cid = cid
+        self.content = content
+        self.type = type
+        self.timestamp = Date()
+        self.sender = UserSettings.shared.getUserID()
+        self.downloaded = downloaded
+    }
 }
 
 extension MessageDomain {
@@ -72,6 +81,6 @@ extension MessageDomain {
 
 extension MessageDomain {
     func encodeSocketFormat() -> String{
-        return "\(cid)\(mid)\(content)"
+        return "\(cid)\(sender)\(mid)\(content)"
     }
 }

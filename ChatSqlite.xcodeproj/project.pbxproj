@@ -60,6 +60,7 @@
 		0E727F50278571AA002EA7E3 /* NativeContactStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E727F4F278571AA002EA7E3 /* NativeContactStore.swift */; };
 		0E727F5227857416002EA7E3 /* NativeContactStoreAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E727F5127857416002EA7E3 /* NativeContactStoreAdapter.swift */; };
 		0E79FB9627C67CCA0039E8E6 /* SocketDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79FB9527C67CCA0039E8E6 /* SocketDelegate.swift */; };
+		0E7E931427D05E2C00936B35 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7E931327D05E2C00936B35 /* UserSettings.swift */; };
 		0E837C0B27B4F47C00317E0B /* HomeModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E837C0A27B4F47C00317E0B /* HomeModule.swift */; };
 		0E837C0D27B4F8B000317E0B /* HomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E837C0C27B4F8B000317E0B /* HomeRouter.swift */; };
 		0E837C1127B5077F00317E0B /* ChatModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E837C1027B5077F00317E0B /* ChatModule.swift */; };
@@ -139,6 +140,7 @@
 		0E727F4F278571AA002EA7E3 /* NativeContactStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeContactStore.swift; sourceTree = "<group>"; };
 		0E727F5127857416002EA7E3 /* NativeContactStoreAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeContactStoreAdapter.swift; sourceTree = "<group>"; };
 		0E79FB9527C67CCA0039E8E6 /* SocketDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketDelegate.swift; sourceTree = "<group>"; };
+		0E7E931327D05E2C00936B35 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 		0E837C0A27B4F47C00317E0B /* HomeModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeModule.swift; sourceTree = "<group>"; };
 		0E837C0C27B4F8B000317E0B /* HomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeRouter.swift; sourceTree = "<group>"; };
 		0E837C1027B5077F00317E0B /* ChatModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModule.swift; sourceTree = "<group>"; };
@@ -341,6 +343,7 @@
 				0E062B0A27CDCBF2002DAF95 /* Utils.swift */,
 				0E062B0E27CDD421002DAF95 /* JSONCodableCodec.swift */,
 				0ED966D027CF5F2200393E35 /* ReachabilityService.swift */,
+				0E7E931327D05E2C00936B35 /* UserSettings.swift */,
 			);
 			path = Socket;
 			sourceTree = "<group>";
@@ -569,6 +572,7 @@
 				0E2395BD2770835A006B2DE2 /* MessageDomain.swift in Sources */,
 				0E124257277EF82B0054D069 /* ChatbarViewController.swift in Sources */,
 				0EDC669C27BA698A00A2792E /* FriendRouter.swift in Sources */,
+				0E7E931427D05E2C00936B35 /* UserSettings.swift in Sources */,
 				0E393FC227B3C1A40011CB68 /* ConversationListViewController.swift in Sources */,
 				0EFDD97E276C357E00323984 /* MessagesSQLiteStore.swift in Sources */,
 				0EFDD969276B7A4A00323984 /* Conversation.swift in Sources */,

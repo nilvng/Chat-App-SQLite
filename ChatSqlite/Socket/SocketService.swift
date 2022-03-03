@@ -22,6 +22,7 @@ class SocketService {
     
     func connect(){
         let _ = socketClient.connect(host: host, port: port)
+        
     }
     
     func sendMessage(_ msg: MessageDomain){

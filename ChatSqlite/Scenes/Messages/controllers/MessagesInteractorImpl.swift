@@ -62,10 +62,7 @@ class MessagesInteractorImpl : MessageListInteractor {
 
     func onSendMessage(content: String, conversation: ConversationDomain){
         // display message
-        let m = MessageDomain(mid: UUID().uuidString,
-                              cid: conversation.id,
-                              content: content, type: .text,
-                              timestamp: Date(), sender: "1")
+        let m = MessageDomain(cid: conversation.id, content: content, type: .text)
         
         // update db
         chatService.sendMessage(m)

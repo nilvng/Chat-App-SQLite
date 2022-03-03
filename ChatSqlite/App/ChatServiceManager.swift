@@ -33,6 +33,7 @@ class ChatServiceManager {
         }
         
         let one = ChatService(conversation: conversation, callback: caching)
+        cachedService[conversation.id] = one
         return one
     }
     
@@ -63,11 +64,12 @@ extension ChatServiceManager : SocketDelegate {
     }
     
     func onMessageReceived(msg: MessageDomain) {
-        print("Delegate: message received")
+        print("Delegate: message received from \(msg.cid)")
         let cid = msg.cid
         
         // find in caches
         guard let service = cachedService[cid] else {
+            print("cannot find conv \(msg.cid)")
             // create service and saved to db
             return
         }

@@ -214,7 +214,7 @@ extension MessageListViewController : MessagesPresenter {
     }
     func presentSentItem(_ item: MessageDomain) {
         
-        guard item.sender == "1" else {
+        guard item.sender == UserSettings.shared.getUserID() else {
             presentReceivedItem(item)
             return
         }

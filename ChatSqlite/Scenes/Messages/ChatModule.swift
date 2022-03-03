@@ -15,6 +15,7 @@ class ChatModule {
         let barView = ChatbarViewController()
         
         let service = ChatServiceManager.shared.getChatService(for: conv)
+        print("show: \(conv.id)")
         let inter = MessagesInteractorImpl(chatService: service)
         
         let router = ChatRouter()

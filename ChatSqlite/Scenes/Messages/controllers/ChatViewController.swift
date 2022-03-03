@@ -44,6 +44,7 @@ class ChatViewController: UIViewController {
         let chatTitleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 400, height: 50))
         chatTitleLabel.textColor  = mode == .light ? UIColor.darkGray : UIColor.white
         chatTitleLabel.font = UIFont.systemFont(ofSize: 19)
+        chatTitleLabel.text = "New Friend"
         return chatTitleLabel
     }()
     

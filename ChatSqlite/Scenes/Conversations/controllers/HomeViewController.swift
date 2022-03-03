@@ -62,6 +62,11 @@ class HomeViewController: UIViewController {
         setupNavigationBarColor()
         setupTableView()
         setupComposeButton()
+        printUID()
+    }
+    
+    func printUID(){
+        print(UserSettings.shared.getUserID() ?? "No ID")
     }
     
     func setup(interactor : ConversationListInteractor) {

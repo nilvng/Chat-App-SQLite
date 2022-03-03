@@ -40,7 +40,7 @@ class SearchContactCell : UITableViewCell {
         avatarView.update(url: friend.avatar, text: friend.name)
     }
     func configure (option : OtherOptions ){
-        titleLabel.text = option.title
+        titleLabel.text = option.getKeyword()
         avatarView.backgroundColor = .babyBlue
         avatarView.image = option.image
     }

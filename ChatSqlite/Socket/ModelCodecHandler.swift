@@ -25,6 +25,12 @@ final class ModelCodecHandler<In, Out>: ChannelInboundHandler, ChannelOutboundHa
         self.delegate = delegate
     }
     
+    func channelActive(context: ChannelHandlerContext) {
+        let uid = UserSettings.shared.getUserID()
+        let buff = context.channel.allocator.buffer(string: uid)
+        context.writeAndFlush(wrapOutboundOut(buff), promise: nil)
+    }
+    
     func channelRead(context: ChannelHandlerContext, data: NIOAny) {
         var buffer = self.unwrapInboundIn(data)
         guard let eventType : UInt8 = buffer.readInteger() else {
@@ -33,15 +39,19 @@ final class ModelCodecHandler<In, Out>: ChannelInboundHandler, ChannelOutboundHa
         }
         print("Event: \(eventType)")
         
-        guard let cID = buffer.readString(length: 36),
+        guard var cID = buffer.readString(length: 9),
+              let sender = buffer.readString(length: 9),
               let mid = buffer.readString(length: 36),
               let content = buffer.readString(length: buffer.readableBytes) else {
-                  print("Failed parse message (1,36,36,content)")
+                  print("Failed parse message (1,9,9,36,content)")
                   return
               }
-        
-        let msg = MessageDomain(mid: mid + "r", cid: cID, content: content,
-                                type: .text, timestamp: Date(), sender: cID)
+        if cID == UserSettings.shared.getUserID() {
+            cID = sender
+        }
+        let msg = MessageDomain(mid: mid, cid: cID, content: content,
+                                type: .text, timestamp: Date(), sender: sender)
+        print("RECEIVED:\(msg.content)")
         delegate?.onMessageReceived(msg: msg)
     }
     
