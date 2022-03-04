@@ -12,7 +12,7 @@
 		0E062B0B27CDCBF2002DAF95 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E062B0A27CDCBF2002DAF95 /* Utils.swift */; };
 		0E062B0F27CDD421002DAF95 /* JSONCodableCodec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E062B0E27CDD421002DAF95 /* JSONCodableCodec.swift */; };
 		0E062B1127CDD546002DAF95 /* NIOFoundationCompat in Frameworks */ = {isa = PBXBuildFile; productRef = 0E062B1027CDD546002DAF95 /* NIOFoundationCompat */; };
-		0E062B1327CDD5BF002DAF95 /* ModelCodecHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E062B1227CDD5BF002DAF95 /* ModelCodecHandler.swift */; };
+		0E062B1327CDD5BF002DAF95 /* ModelCodecHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E062B1227CDD5BF002DAF95 /* ModelCodecHandlers.swift */; };
 		0E062B1527CDFCF7002DAF95 /* SocketModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E062B1427CDFCF7002DAF95 /* SocketModel.swift */; };
 		0E124234277EA53D0054D069 /* MessageListViewConroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124233277EA53D0054D069 /* MessageListViewConroller.swift */; };
 		0E124237277EB6E20054D069 /* FriendDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E124236277EB6E20054D069 /* FriendDataSource.swift */; };
@@ -60,6 +60,7 @@
 		0E727F50278571AA002EA7E3 /* NativeContactStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E727F4F278571AA002EA7E3 /* NativeContactStore.swift */; };
 		0E727F5227857416002EA7E3 /* NativeContactStoreAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E727F5127857416002EA7E3 /* NativeContactStoreAdapter.swift */; };
 		0E79FB9627C67CCA0039E8E6 /* SocketDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79FB9527C67CCA0039E8E6 /* SocketDelegate.swift */; };
+		0E7E897D27D10C64004375F7 /* DelegateHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7E897C27D10C64004375F7 /* DelegateHandlers.swift */; };
 		0E7E931427D05E2C00936B35 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7E931327D05E2C00936B35 /* UserSettings.swift */; };
 		0E837C0B27B4F47C00317E0B /* HomeModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E837C0A27B4F47C00317E0B /* HomeModule.swift */; };
 		0E837C0D27B4F8B000317E0B /* HomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E837C0C27B4F8B000317E0B /* HomeRouter.swift */; };
@@ -96,7 +97,7 @@
 		0E062B0827CDCB14002DAF95 /* RawSocketClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawSocketClient.swift; sourceTree = "<group>"; };
 		0E062B0A27CDCBF2002DAF95 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		0E062B0E27CDD421002DAF95 /* JSONCodableCodec.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONCodableCodec.swift; sourceTree = "<group>"; };
-		0E062B1227CDD5BF002DAF95 /* ModelCodecHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelCodecHandler.swift; sourceTree = "<group>"; };
+		0E062B1227CDD5BF002DAF95 /* ModelCodecHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelCodecHandlers.swift; sourceTree = "<group>"; };
 		0E062B1427CDFCF7002DAF95 /* SocketModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketModel.swift; sourceTree = "<group>"; };
 		0E124233277EA53D0054D069 /* MessageListViewConroller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageListViewConroller.swift; sourceTree = "<group>"; };
 		0E124236277EB6E20054D069 /* FriendDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendDataSource.swift; sourceTree = "<group>"; };
@@ -140,6 +141,7 @@
 		0E727F4F278571AA002EA7E3 /* NativeContactStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeContactStore.swift; sourceTree = "<group>"; };
 		0E727F5127857416002EA7E3 /* NativeContactStoreAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeContactStoreAdapter.swift; sourceTree = "<group>"; };
 		0E79FB9527C67CCA0039E8E6 /* SocketDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketDelegate.swift; sourceTree = "<group>"; };
+		0E7E897C27D10C64004375F7 /* DelegateHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DelegateHandlers.swift; sourceTree = "<group>"; };
 		0E7E931327D05E2C00936B35 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 		0E837C0A27B4F47C00317E0B /* HomeModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeModule.swift; sourceTree = "<group>"; };
 		0E837C0C27B4F8B000317E0B /* HomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeRouter.swift; sourceTree = "<group>"; };
@@ -338,7 +340,8 @@
 				0E79FB9527C67CCA0039E8E6 /* SocketDelegate.swift */,
 				0EA8F34B27C88D5A00B060B2 /* SocketService.swift */,
 				0E062B0827CDCB14002DAF95 /* RawSocketClient.swift */,
-				0E062B1227CDD5BF002DAF95 /* ModelCodecHandler.swift */,
+				0E062B1227CDD5BF002DAF95 /* ModelCodecHandlers.swift */,
+				0E7E897C27D10C64004375F7 /* DelegateHandlers.swift */,
 				0E062B1427CDFCF7002DAF95 /* SocketModel.swift */,
 				0E062B0A27CDCBF2002DAF95 /* Utils.swift */,
 				0E062B0E27CDD421002DAF95 /* JSONCodableCodec.swift */,
@@ -610,7 +613,8 @@
 				0E15EC3227742B790082FA1B /* SQLiteManager.swift in Sources */,
 				0E124253277EF4590054D069 /* ConvConfigController.swift in Sources */,
 				0EDC669A27BA651600A2792E /* MessageCellInteractor.swift in Sources */,
-				0E062B1327CDD5BF002DAF95 /* ModelCodecHandler.swift in Sources */,
+				0E062B1327CDD5BF002DAF95 /* ModelCodecHandlers.swift in Sources */,
+				0E7E897D27D10C64004375F7 /* DelegateHandlers.swift in Sources */,
 				0E062B0F27CDD421002DAF95 /* JSONCodableCodec.swift in Sources */,
 				0E7008DA278806E400998BBB /* FriendDetailDataSource.swift in Sources */,
 				0E94D0EC27991A26003485AF /* DownloadBtnView.swift in Sources */,

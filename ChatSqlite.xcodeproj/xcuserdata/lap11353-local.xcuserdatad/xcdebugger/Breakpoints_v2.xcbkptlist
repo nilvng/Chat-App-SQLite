@@ -248,7 +248,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "0BAC62B2-6336-4472-AE2C-C8C90A40B40D"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ChatSqlite/Scenes/Conversations/views/ConversationListViewController.swift"
@@ -376,7 +376,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "B07223DC-6817-46F0-B015-BD59092EAA88"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ChatSqlite/Scenes/Friends/FriendListViewController.swift"
@@ -385,6 +385,22 @@
             startingLineNumber = "100"
             endingLineNumber = "100"
             landmarkName = "newContactCallback(item:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "71B66011-16C9-4436-BB9D-84EE9566319E"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ChatSqlite/Socket/SocketModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "150"
+            endingLineNumber = "150"
+            landmarkName = "decode(bytes:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

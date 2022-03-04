@@ -13,17 +13,13 @@ protocol SocketParserDelegate : AnyObject{
     func onMessageStatusUpdated(mid: String, status: MessageStatus)
 }
 
-final class ModelCodecHandler<In, Out>: ChannelInboundHandler, ChannelOutboundHandler where In: SocketModel, Out: SocketModel {
+final class ModelCodecHandlers<In, Out>: ChannelInboundHandler, ChannelOutboundHandler where In: SocketModel, Out: SocketModel {
     public typealias InboundIn = ByteBuffer
-    public typealias InboundOut = In
+    public typealias InboundOut = SocketModel
     public typealias OutboundIn = Out
     public typealias OutboundOut = ByteBuffer
 
-    weak var delegate : SocketParserDelegate?
-    
-    init(delegate: SocketParserDelegate? = nil){
-        self.delegate = delegate
-    }
+
     
     func channelActive(context: ChannelHandlerContext) {
         let uid = UserSettings.shared.getUserID()
@@ -39,28 +35,24 @@ final class ModelCodecHandler<In, Out>: ChannelInboundHandler, ChannelOutboundHa
         }
         print("Event: \(eventType)")
         
-        guard var cID = buffer.readString(length: 9),
-              let sender = buffer.readString(length: 9),
-              let mid = buffer.readString(length: 36),
-              let content = buffer.readString(length: buffer.readableBytes) else {
-                  print("Failed parse message (1,9,9,36,content)")
-                  return
-              }
-        if cID == UserSettings.shared.getUserID() {
-            cID = sender
+        if eventType == 0 {
+            guard let model = MessageSocketModel.decode(bytes: buffer) else {
+                print("Failed to decode Received Message")
+                return
+            }
+            context.fireChannelRead(wrapInboundOut(model))
+
+
+        } else {
+            print("HANDLER: unknown event")
         }
-        let msg = MessageDomain(mid: mid, cid: cID, content: content,
-                                type: .text, timestamp: Date(), sender: sender)
-        print("RECEIVED:\(msg.content)")
-        delegate?.onMessageReceived(msg: msg)
+
     }
     
     func write(context: ChannelHandlerContext, data: NIOAny, promise: EventLoopPromise<Void>?) {
         var buf = context.channel.allocator.buffer(capacity: 7)
         let model = unwrapOutboundIn(data)
-
-        buf.writeInteger(model.getEvent() as Int8)
-        buf.writeString(model.getBody())
+        buf = model.encode(bytes: buf)
         context.writeAndFlush(wrapOutboundOut(buf), promise: promise)
     }
 }

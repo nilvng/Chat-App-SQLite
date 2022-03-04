@@ -26,7 +26,7 @@ class SocketService {
     }
     
     func sendMessage(_ msg: MessageDomain){
-        let socketModel = MessageSocketModel(event: .messageSent, message: msg)
+        let socketModel = MessageSocketModel(message: msg)
         socketClient.send(model: socketModel)
     }
     

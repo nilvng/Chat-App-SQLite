@@ -38,8 +38,8 @@ public final class RawSocketClient {
 //                        channel.pipeline.addFramingHandlers(framing: self.config.framing)}
                     .flatMap {
                         channel.pipeline.addHandlers([
-                            ModelCodecHandler<MessageSocketModel, MessageSocketModel>(delegate: SocketService.shared),
-//                            Handler(),
+                            ModelCodecHandlers<MessageSocketModel, MessageSocketModel>(),
+                            DelegateHandlers(delegate: SocketService.shared),
                         ])
                     }
             }

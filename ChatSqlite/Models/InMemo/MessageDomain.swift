@@ -46,6 +46,7 @@ class MessageDomain {
         self.sender = UserSettings.shared.getUserID()
         self.downloaded = downloaded
     }
+    
 }
 
 extension MessageDomain {

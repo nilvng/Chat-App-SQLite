@@ -65,10 +65,11 @@ extension ChatServiceManager : SocketDelegate {
     
     func onMessageReceived(msg: MessageDomain) {
         print("Delegate: message received from \(msg.cid)")
-        let cid = msg.cid
-        
+        if msg.cid == UserSettings.shared.getUserID() {
+            msg.cid = msg.sender
+        }
         // find in caches
-        guard let service = cachedService[cid] else {
+        guard let service = cachedService[msg.cid] else {
             print("cannot find conv \(msg.cid)")
             // create service and saved to db
             return
