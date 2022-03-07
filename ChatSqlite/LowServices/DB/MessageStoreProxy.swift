@@ -140,10 +140,10 @@ extension MessageStoreProxy : MessageDBLogic {
 
                 if res.isEmpty || res.count < noRecords {
                         self.isDoneFetching =  true
+                }
                     if !res.isEmpty{
                         self.messages += res
                     }
-                }
                     completionHandler(res,err)
             })
         }

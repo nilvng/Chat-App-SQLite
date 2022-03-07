@@ -63,6 +63,7 @@ class HomeViewController: UIViewController {
         setupTableView()
         setupComposeButton()
         printUID()
+        observeNetworkChanges()
     }
     
     func printUID(){
@@ -235,3 +236,23 @@ extension HomeViewController : UITextFieldDelegate {
   }
 }
 
+extension HomeViewController {
+    func observeNetworkChanges(){
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.networkChanged),
+            name: .networkChanged,
+            object: nil)
+    }
+    
+    @objc func networkChanged(noti : NSNotification){
+        guard let data = noti.userInfo, let msg = data["msg"] as? String else{
+            print("Doesn't received any message when network changed?")
+            return
+        }
+        let ac = UIAlertController(title: "Connection Warning", message: msg as! String, preferredStyle: .alert)
+        let submitAction = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
+        ac.addAction(submitAction)
+        present(ac,animated: true)
+    }
+}

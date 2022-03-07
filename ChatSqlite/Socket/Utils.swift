@@ -8,6 +8,10 @@
 import Foundation
 import NIO
 
+extension Notification.Name {
+    static let  networkChanged = Notification.Name("NetworkChanged")
+}
+
 public enum ResultType<Value, Error> {
     case success(Value)
     case failure(Error)

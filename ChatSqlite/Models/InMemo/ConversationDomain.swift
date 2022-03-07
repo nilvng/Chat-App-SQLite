@@ -10,7 +10,7 @@ import Foundation
 struct ConversationDomain {
     static func fromFriend(friend: FriendDomain) -> ConversationDomain {
         return ConversationDomain(theme: .basic, thumbnail: nil,
-                                  title: friend.name, id: UUID().uuidString,
+                                  title: friend.name, id: friend.id,
                                   members: friend.id,
                                   lastMsg: "", timestamp: Date())
     }

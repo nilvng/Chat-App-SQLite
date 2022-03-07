@@ -68,11 +68,11 @@ public final class RawSocketClient {
     }
 
     func send(model: MessageSocketModel){
-        if .connected != self.state {
-            print("Server disconnected. Cant send...")
-            return
-            //return self.group.next().makeFailedFuture(ClientError.notReady)
-        }
+//        if .connected != self.state {
+//            print("Server disconnected. Cant send...")
+//            return
+//            //return self.group.next().makeFailedFuture(ClientError.notReady)
+//        }
         guard let channel = self.channel else {
             print("Server not exist. Cant send...")
             return

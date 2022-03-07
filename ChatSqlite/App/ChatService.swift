@@ -54,10 +54,15 @@ class ChatService {
     private func addMessage(msg : MessageDomain){
 //        utilityQueue.async { [self] in
             
+        // update last message & insert new conv if not created already
             conversatioNWorker.updateLastMessage(msg: msg)
             
+        // add to db
             let _ = messageWorker.add(msg)
+        
+        // insert friend if not created 
             
+        // register itself to Manager
             if registerAction != nil {
                 self.registerAction?(msg.cid, self)
                 self.registerAction = nil

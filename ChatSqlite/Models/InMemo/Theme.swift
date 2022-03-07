@@ -62,8 +62,8 @@ extension Theme : Equatable{
     static let earthy = Theme(colors: [CGColor(red: 253/255, green: 187/255, blue: 45/255, alpha: 1),
                                        CGColor(red: 34/255, green: 193/255, blue: 195/255, alpha: 1)], accent: UIColor.green,
                                  background: UIImage(named: "earthyBg"))
-    static let sunset = Theme(colors: [CGColor(red: 131/255, green: 58/255, blue: 180/255, alpha: 1),
-                                       CGColor(red: 252/255, green: 176/255, blue: 69/255, alpha: 1)], accent: .orange, background: UIImage(named: "sunsetBg"))
+    static let sunset = Theme(colors: [CGColor(red: 200/255, green: 45/255, blue: 219/255, alpha: 1),
+                                       CGColor(red: 253/255, green: 147/255, blue: 6/255, alpha: 1)], accent: .orange, background: UIImage(named: "sunsetBg"))
 }
 
 

@@ -13,7 +13,7 @@ class MessageCell: UITableViewCell {
     
     var interactor : MessageCellInteractor?
     
-    lazy var friendSerivce : FriendService = FriendStoreProxy.shared
+    lazy var friendSerivce : FriendService = NativeContactStoreAdapter.shared
     var message : MessageDomain!
     var downloadAction : MessageCellAction?
     
@@ -199,7 +199,7 @@ class MessageCell: UITableViewCell {
     
     func updateGradient(currentFrame: CGRect, theme: Theme){
         
-        guard isReceived(sender: message.sender) else {
+        guard !isReceived(sender: message.sender) else {
             return
         }
         let normalizedY = currentFrame.maxY
@@ -209,7 +209,7 @@ class MessageCell: UITableViewCell {
             return
         }
 
-        let color = theme.gradientImage.getPixelColor(pos: CGPoint(x:100 , y: normalizedY))
+        let color = theme.gradientImage.getPixelColor(pos: CGPoint(x:10 , y: normalizedY))
         self.bubbleImageView.tintColor = color
     }
     

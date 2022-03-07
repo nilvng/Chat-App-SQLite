@@ -27,6 +27,8 @@ class NativeContactStoreAdapter : FriendService{
         autoreleaseFrequency: .workItem,
         target: nil)
     
+    static let shared = NativeContactStoreAdapter()
+    
     func fetchAllItems(completionHandler: @escaping ([FriendDomain]?, StoreError?) -> Void) {
         friendsQueue.async {
             let friendContacts = self.adaptee.getAllContactsFromNative()
@@ -42,7 +44,13 @@ class NativeContactStoreAdapter : FriendService{
     }
     
     func fetchItemWithId(_ id: String, completionHandler: @escaping (FriendDomain?, StoreError?) -> Void) {
-
+        friendsQueue.async {
+            guard let friendContact = self.adaptee.getContactWithId(id) else {
+                completionHandler(nil, .cantFetch("Failed to get Contact"))
+                return
+            }
+            completionHandler(self.toDomain(native: friendContact),nil)
+        }
     }
     
     func createItem(_ item: FriendDomain, completionHandler: @escaping (StoreError?) -> Void) {

@@ -22,10 +22,16 @@ final class ModelCodecHandlers<In, Out>: ChannelInboundHandler, ChannelOutboundH
 
     
     func channelActive(context: ChannelHandlerContext) {
+        print("Channel: active")
         let uid = UserSettings.shared.getUserID()
         let buff = context.channel.allocator.buffer(string: uid)
         context.writeAndFlush(wrapOutboundOut(buff), promise: nil)
     }
+    
+    func channelInactive(context: ChannelHandlerContext) {
+        print("Channel: inactive")
+    }
+    
     
     func channelRead(context: ChannelHandlerContext, data: NIOAny) {
         var buffer = self.unwrapInboundIn(data)

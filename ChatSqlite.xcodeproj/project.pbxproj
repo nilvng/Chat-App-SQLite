@@ -67,6 +67,7 @@
 		0E837C1127B5077F00317E0B /* ChatModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E837C1027B5077F00317E0B /* ChatModule.swift */; };
 		0E837C1327B508EE00317E0B /* ChatRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E837C1227B508EE00317E0B /* ChatRouter.swift */; };
 		0E94D0EC27991A26003485AF /* DownloadBtnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E94D0EB27991A26003485AF /* DownloadBtnView.swift */; };
+		0EA597E827D1D3EB00F4B2AC /* Reconnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA597E727D1D3EB00F4B2AC /* Reconnector.swift */; };
 		0EA8F34C27C88D5A00B060B2 /* SocketService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA8F34B27C88D5A00B060B2 /* SocketService.swift */; };
 		0ED966D127CF5F2200393E35 /* ReachabilityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED966D027CF5F2200393E35 /* ReachabilityService.swift */; };
 		0EDA957A2775A08300646051 /* ConversationStoreProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDA95792775A08300646051 /* ConversationStoreProxy.swift */; };
@@ -148,6 +149,7 @@
 		0E837C1027B5077F00317E0B /* ChatModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModule.swift; sourceTree = "<group>"; };
 		0E837C1227B508EE00317E0B /* ChatRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRouter.swift; sourceTree = "<group>"; };
 		0E94D0EB27991A26003485AF /* DownloadBtnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadBtnView.swift; sourceTree = "<group>"; };
+		0EA597E727D1D3EB00F4B2AC /* Reconnector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reconnector.swift; sourceTree = "<group>"; };
 		0EA8F34B27C88D5A00B060B2 /* SocketService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketService.swift; sourceTree = "<group>"; };
 		0ED966D027CF5F2200393E35 /* ReachabilityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityService.swift; sourceTree = "<group>"; };
 		0EDA95792775A08300646051 /* ConversationStoreProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationStoreProxy.swift; sourceTree = "<group>"; };
@@ -345,8 +347,6 @@
 				0E062B1427CDFCF7002DAF95 /* SocketModel.swift */,
 				0E062B0A27CDCBF2002DAF95 /* Utils.swift */,
 				0E062B0E27CDD421002DAF95 /* JSONCodableCodec.swift */,
-				0ED966D027CF5F2200393E35 /* ReachabilityService.swift */,
-				0E7E931327D05E2C00936B35 /* UserSettings.swift */,
 			);
 			path = Socket;
 			sourceTree = "<group>";
@@ -370,6 +370,16 @@
 				0EFDD96A276B7A5400323984 /* Message.swift */,
 			);
 			path = External;
+			sourceTree = "<group>";
+		};
+		0EA597EB27D20FA900F4B2AC /* Connection */ = {
+			isa = PBXGroup;
+			children = (
+				0ED966D027CF5F2200393E35 /* ReachabilityService.swift */,
+				0EA597E727D1D3EB00F4B2AC /* Reconnector.swift */,
+				0E7E931327D05E2C00936B35 /* UserSettings.swift */,
+			);
+			path = Connection;
 			sourceTree = "<group>";
 		};
 		0EDA95782774628700646051 /* LowServices */ = {
@@ -416,6 +426,7 @@
 		0EFDD945276B72C400323984 /* ChatSqlite */ = {
 			isa = PBXGroup;
 			children = (
+				0EA597EB27D20FA900F4B2AC /* Connection */,
 				0E79FB9427C67CBC0039E8E6 /* Socket */,
 				0EDC669627BA056F00A2792E /* App */,
 				0EDA95782774628700646051 /* LowServices */,
@@ -580,6 +591,7 @@
 				0EFDD97E276C357E00323984 /* MessagesSQLiteStore.swift in Sources */,
 				0EFDD969276B7A4A00323984 /* Conversation.swift in Sources */,
 				0EFDD971276B86AD00323984 /* FriendListViewController.swift in Sources */,
+				0EA597E827D1D3EB00F4B2AC /* Reconnector.swift in Sources */,
 				0E837C0B27B4F47C00317E0B /* HomeModule.swift in Sources */,
 				0EFDD967276B7A3E00323984 /* Friend.swift in Sources */,
 				0EFDD977276C2C2A00323984 /* ChatViewController.swift in Sources */,

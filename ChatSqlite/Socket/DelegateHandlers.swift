@@ -16,6 +16,8 @@ final class DelegateHandlers :ChannelInboundHandler {
     init(delegate: SocketParserDelegate? = nil){
         self.delegate = delegate
     }
+
+    
     func channelRead(context: ChannelHandlerContext, data: NIOAny) {
         let unwrapData = unwrapInboundIn(data)
         if unwrapData.getEvent() == .messageSent, let model = unwrapData as? MessageSocketModel{

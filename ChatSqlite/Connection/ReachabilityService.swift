@@ -7,12 +7,11 @@
 
 import Foundation
 import Alamofire
-import Network
 
 class ReachabilityService {
-    let host = "www.google.com"
+    let host = "https://33cb-2405-4803-c63d-bf00-2da2-751d-24e-49fa.ngrok.io"
+//    let host = "www.google.com"
     var network : NetworkReachabilityManager?
-    var monitor = NWPathMonitor(requiredInterfaceType: .wifi)
     
     static let shared = ReachabilityService()
     
@@ -22,45 +21,33 @@ class ReachabilityService {
     
     func startNetworkObserver(){
         alamofireStart()
-
     }
-    func networkStart(){
-        monitor.pathUpdateHandler = { path in
-            switch path.status {
-            case .satisfied:
-                DispatchQueue.main.async {
-                    print("REACHABILITY: connected")
-                }
-            case .unsatisfied:
-                print("REACHABILITY: not reachable")
-
-            case .requiresConnection:
-                print("REACHABILITY: require connection")
-
-            @unknown default:
-                print("REACHABILITY: unknown")
-
-            }
-            print(path.isExpensive) // is cellular
-        }
-        let queue = DispatchQueue(label: "Monitor")
-        monitor.start(queue: queue)
+    
+    func notifyDisconnect(msg: String){
+        NotificationCenter.default.post(name: .networkChanged,
+                                        object: self,
+                                        userInfo: ["msg": msg])
     }
+
     func alamofireStart(){
         network?.startListening(onUpdatePerforming: { status in
                    switch status {
 
                        case .notReachable:
                            print("REACHABILITY: not reachable")
+                       self.notifyDisconnect(msg: "Waiting for network")
 
                        case .unknown :
                            print("REACHABILITY: It is unknown")
+                       self.notifyDisconnect(msg: "Waiting for network")
 
                        case .reachable(.ethernetOrWiFi):
                            print("REACHABILITY: WiFi connection")
+                       self.notifyDisconnect(msg: "Network is back")
 
                        case .reachable(.cellular):
                            print("REACHABILITY: Cellular connection")
+                       self.notifyDisconnect(msg: "Network is back")
 
                        }
                    })
