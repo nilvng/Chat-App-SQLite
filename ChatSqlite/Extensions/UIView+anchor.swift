@@ -6,6 +6,23 @@
 //
 
 import UIKit
+extension UIView{
+    func rotate(degree: Double, duration: Double = 0.1) {
+        let rotation : CABasicAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
+        rotation.toValue = NSNumber(value: degree)
+        rotation.duration = duration
+        self.layer.add(rotation, forKey: "rotationAnimation")
+    }
+    func flash(callback: @escaping () -> Void) {
+        self.alpha = 1.0
+        UIView.animate(withDuration: 0.1, delay: 0.08, options: [.curveEaseInOut, .autoreverse], animations: {self.alpha = 0.1}, completion: {_ in
+            callback()
+            self.alpha = 1.0
+        })
+    }
+}
+
+
 
 extension UIView {
     

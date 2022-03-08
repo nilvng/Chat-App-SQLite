@@ -67,6 +67,7 @@
 		0E837C1127B5077F00317E0B /* ChatModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E837C1027B5077F00317E0B /* ChatModule.swift */; };
 		0E837C1327B508EE00317E0B /* ChatRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E837C1227B508EE00317E0B /* ChatRouter.swift */; };
 		0E94D0EC27991A26003485AF /* DownloadBtnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E94D0EB27991A26003485AF /* DownloadBtnView.swift */; };
+		0EA0589D27D7A02900E7E708 /* PostButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA0589C27D7A02900E7E708 /* PostButton.swift */; };
 		0EA8F34C27C88D5A00B060B2 /* SocketService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA8F34B27C88D5A00B060B2 /* SocketService.swift */; };
 		0ED966D127CF5F2200393E35 /* ReachabilityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED966D027CF5F2200393E35 /* ReachabilityService.swift */; };
 		0EDA957A2775A08300646051 /* ConversationStoreProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDA95792775A08300646051 /* ConversationStoreProxy.swift */; };
@@ -148,6 +149,7 @@
 		0E837C1027B5077F00317E0B /* ChatModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModule.swift; sourceTree = "<group>"; };
 		0E837C1227B508EE00317E0B /* ChatRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatRouter.swift; sourceTree = "<group>"; };
 		0E94D0EB27991A26003485AF /* DownloadBtnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadBtnView.swift; sourceTree = "<group>"; };
+		0EA0589C27D7A02900E7E708 /* PostButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostButton.swift; sourceTree = "<group>"; };
 		0EA8F34B27C88D5A00B060B2 /* SocketService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketService.swift; sourceTree = "<group>"; };
 		0ED966D027CF5F2200393E35 /* ReachabilityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityService.swift; sourceTree = "<group>"; };
 		0EDA95792775A08300646051 /* ConversationStoreProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationStoreProxy.swift; sourceTree = "<group>"; };
@@ -300,6 +302,7 @@
 				0E124250277EF3A10054D069 /* ConversationCell.swift */,
 				0E393FC127B3C1A40011CB68 /* ConversationListViewController.swift */,
 				0E124252277EF4590054D069 /* ConvConfigController.swift */,
+				0EA0589C27D7A02900E7E708 /* PostButton.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -587,6 +590,7 @@
 				0E393FC227B3C1A40011CB68 /* ConversationListViewController.swift in Sources */,
 				0EFDD97E276C357E00323984 /* MessagesSQLiteStore.swift in Sources */,
 				0EFDD969276B7A4A00323984 /* Conversation.swift in Sources */,
+				0EA0589D27D7A02900E7E708 /* PostButton.swift in Sources */,
 				0EFDD971276B86AD00323984 /* FriendListViewController.swift in Sources */,
 				0E837C0B27B4F47C00317E0B /* HomeModule.swift in Sources */,
 				0EFDD967276B7A3E00323984 /* Friend.swift in Sources */,

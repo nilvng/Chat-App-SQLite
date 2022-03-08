@@ -8,6 +8,7 @@
 import UIKit
 
 extension UIImage {
+    static let bg_yellow_gradient = UIImage(named: "bg-yellow-gradient")
     static let btn_send_forboy = UIImage(named: "btn_send_forboy")?.withRenderingMode(.alwaysTemplate)
     static let btn_send_forboy_disabled = UIImage(named: "btn_send_forboy_disable")?.withRenderingMode(.alwaysTemplate)
     static let chat_menu = UIImage(named: "icHeaderList")

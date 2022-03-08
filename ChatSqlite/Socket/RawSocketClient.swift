@@ -54,10 +54,10 @@ public final class RawSocketClient {
         
         self.state = .connecting("\(host):\(port)")
         
-        connect_prev(bootstrap: bootstrap, host: host, port: port)
+        self._connect(host: host, port: port)
     }
     
-    public func connect_prev(bootstrap: ClientBootstrap, host: String, port: Int) {
+    private func _connect(host: String, port: Int) {
         bootstrap.connect(host: host, port: port).whenComplete { res in
             let _ = res.map { channel in
                 self.channel = channel
@@ -80,7 +80,7 @@ public final class RawSocketClient {
         let delay = delayCount * backoffBase
         DispatchQueue.global().asyncAfter(deadline: DispatchTime.now() + DispatchTimeInterval.seconds(delay), execute: {
             self.state = .reconnecting
-            self.connect_prev(bootstrap: self.bootstrap, host: host, port: port)
+            self._connect(host: host, port: port)
         })
         delayCount += 1
     }

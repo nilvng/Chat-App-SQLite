@@ -30,16 +30,19 @@ class HomeViewController: UIViewController {
     }
     
     var composeButton : UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage.navigation_button_plus, for: .normal)
-        button.setImage(UIImage.navigation_button_plus_selected, for: .selected)
-        button.sizeToFit()
-
-        //button.backgroundColor = UIColor.complementZaloBlue
-//        let image = UIImage(named: "gradient-pink-image")?.af.imageRounded(withCornerRadius: 200)
-        let image = UIImage(named: "gradient-pink-image")?.af.imageRoundedIntoCircle()
-        button.setBackgroundImage(image, for: .normal)
-        return button
+        let btn = PostButton()
+        btn.setImage(UIImage.navigation_button_plus, for: .normal)
+        btn.setImage(UIImage.navigation_button_plus_selected, for: .selected)
+        btn.setBackgroundImage(UIImage.bg_yellow_gradient, for: .normal)
+        return btn
+    }()
+    
+    var postButton : UIButton = {
+        let btn = PostButton()
+        btn.setImage(UIImage.navigation_search, for: .normal)
+        btn.setImage(UIImage.navigation_search_selected, for: .selected)
+        btn.setBackgroundImage(UIImage.bg_yellow_gradient, for: .normal)
+        return btn
     }()
     
     var searchField : UITextField = {
@@ -64,6 +67,10 @@ class HomeViewController: UIViewController {
         setupComposeButton()
         printUID()
         observeNetworkChanges()
+        
+        setupPostButton()
+        postButton.isHidden = true
+
     }
     
     func printUID(){
@@ -140,23 +147,57 @@ class HomeViewController: UIViewController {
             composeButton.heightAnchor.constraint(equalToConstant: 66),
             composeButton.widthAnchor.constraint(equalToConstant: 66),
         ])
-        composeButton.layer.cornerRadius = 33
         composeButton.addTarget(self, action: #selector(composeButtonPressed), for: .touchUpInside)
 
     }
-        
-    @objc func composeButtonPressed(){
-        print("Compose message...")
-        router?.showComposeView()
+    
+    func setupPostButton(){
+
+        view.addSubview(postButton)
+
+        postButton.translatesAutoresizingMaskIntoConstraints = false
+        let margins = view.layoutMarginsGuide
+        NSLayoutConstraint.activate([
+            postButton.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -10),
+            postButton.bottomAnchor.constraint(equalTo: composeButton.topAnchor, constant: -10),
+            postButton.heightAnchor.constraint(equalToConstant: 66),
+            postButton.widthAnchor.constraint(equalToConstant: 66),
+        ])
+        composeButton.addTarget(self, action: #selector(postButtonPressed), for: .touchUpInside)
     }
+
 
     // MARK: Actions
 
+    var composeStateNormal : Bool = true
     
     @objc func cancelSearchPressed(){
         print("cancel")
         clearSearchField()
     }
+    
+    @objc func composeButtonPressed(){
+        print("Compose message...")
+        if composeStateNormal {
+            postButton.isHidden = false
+            composeButton.rotate(degree: Double.pi / 2, duration: 0.1)
+            composeButton.flash { [weak self] in
+                self?.composeButton.setImage(UIImage.back_button, for: .normal)
+            }
+        } else {
+            postButton.isHidden = true
+            composeButton.rotate(degree: Double.pi / 2, duration: 0.1)
+            composeButton.flash { [weak self] in
+                self?.composeButton.setImage(UIImage.navigation_button_plus, for: .normal)
+            }
+        }
+        composeStateNormal = !composeStateNormal
+        //router?.showComposeView()
+    }
+    @objc func postButtonPressed(){
+        print("Post new group...")
+    }
+    
     @objc func searchButtonPressed(){
 //        let searchvc = SearchViewController()
 //        navigationController?.pushViewController(searchvc, animated: true)
@@ -250,7 +291,7 @@ extension HomeViewController {
             print("Doesn't received any message when network changed?")
             return
         }
-        let ac = UIAlertController(title: "Connection Warning", message: msg as! String, preferredStyle: .alert)
+        let ac = UIAlertController(title: "Connection Warning", message: msg, preferredStyle: .alert)
         let submitAction = UIAlertAction(title: "Ok", style: .cancel, handler: nil)
         ac.addAction(submitAction)
         present(ac,animated: true)

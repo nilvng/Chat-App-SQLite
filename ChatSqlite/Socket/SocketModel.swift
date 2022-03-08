@@ -17,8 +17,10 @@ import NIO
     s: status enum
  */
 
-enum ByteType {
-    case stringType, enumType
+enum ByteType : Int{
+    case enumType = 1
+    case idType = 36
+    case userIDType = 9
 }
 
 enum ParsePattern : Character{
@@ -45,26 +47,27 @@ enum ParsePattern : Character{
     func getSize() -> Int {
         switch self {
         case .c:
-            return 9
+            return ByteType.userIDType.rawValue
         case  .m:
-            return 36
+            return ByteType.idType.rawValue
         case .u:
-            return 9
+            return ByteType.userIDType.rawValue
         case .s:
-            return 1
+            return ByteType.enumType.rawValue
         case .S:
+            // unlimit
             return 30
         }
     }
     
-    func getType() -> ByteType {
-        switch self {
-        case .c, .u, .m, .S:
-            return .stringType
-        case .s:
-            return .enumType
-        }
-    }
+//    func getType() -> ByteType {
+//        switch self {
+//        case .c, .u, .m, .S:
+//            return .stringType
+//        case .s:
+//            return .enumType
+//        }
+//    }
     
 }
 
