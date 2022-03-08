@@ -8,6 +8,7 @@
 import Foundation
 import Alamofire
 
+
 class ReachabilityService {
 //    let host = "https://33cb-2405-4803-c63d-bf00-2da2-751d-24e-49fa.ngrok.io"
     let host = "www.google.com"
@@ -19,8 +20,8 @@ class ReachabilityService {
         network = NetworkReachabilityManager(host: host)
     }
     
-    func startNetworkObserver(){
-        alamofireStart()
+    func startNetworkObserver(callback: @escaping(ReachabilityService.State) -> Void){
+        alamofireStart(callback: callback)
     }
     
     func notifyNetworkStatus(msg: String){
@@ -29,27 +30,36 @@ class ReachabilityService {
                                         userInfo: ["msg": msg])
     }
 
-    func alamofireStart(){
+    func alamofireStart(callback: @escaping(ReachabilityService.State) -> Void){
         network?.startListening(onUpdatePerforming: { status in
                    switch status {
 
                        case .notReachable:
-                           print("REACHABILITY: not reachable")
-                       self.notifyNetworkStatus(msg: "Waiting for network")
+                            callback(.notReachable)
+                            print("REACHABILITY: not reachable")
+                            self.notifyNetworkStatus(msg: "Waiting for network")
 
                        case .unknown :
-                           print("REACHABILITY: It is unknown")
-                       self.notifyNetworkStatus(msg: "Waiting for network")
+                            callback(.notReachable)
+                            print("REACHABILITY: It is unknown")
+                            self.notifyNetworkStatus(msg: "Waiting for network")
 
                        case .reachable(.ethernetOrWiFi):
-                           print("REACHABILITY: WiFi connection")
-                       self.notifyNetworkStatus(msg: "Network is back")
+                            callback(.wifiConnected)
+                            print("REACHABILITY: WiFi connection")
+                            self.notifyNetworkStatus(msg: "Network is back")
 
                        case .reachable(.cellular):
-                           print("REACHABILITY: Cellular connection")
-                       self.notifyNetworkStatus(msg: "Network is back")
+                            callback(.cellularConnected)
+                            print("REACHABILITY: Cellular connection")
+                            //self.notifyNetworkStatus(msg: "Network is back")
 
                        }
                    })
+    }
+    
+    enum State {
+        case wifiConnected, cellularConnected
+        case notReachable
     }
 }

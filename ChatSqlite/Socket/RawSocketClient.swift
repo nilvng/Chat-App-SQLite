@@ -85,6 +85,10 @@ public final class RawSocketClient {
         delayCount += 1
     }
     
+    public func onHold(){
+        print("\(self) on hold")
+    }
+    
 
     public func disconnect() -> EventLoopFuture<Void> {
         if .connected != self.state {

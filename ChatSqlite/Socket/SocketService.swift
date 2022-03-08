@@ -12,8 +12,10 @@ import Combine
 class SocketService {
     static var shared = SocketService()
     
+    var reachabilityService : ReachabilityService
+    
     var socketClient : RawSocketClient
-    weak var delegate : SocketDelegate?
+    weak var delegate : SocketDelegate? = ChatServiceManager.shared
     
     let host = "127.0.0.1"
     let port = 3000
@@ -21,12 +23,28 @@ class SocketService {
     private var subscription: AnyCancellable?
     
     init(){
+        reachabilityService = ReachabilityService()
         socketClient = RawSocketClient()
         subscription = socketClient.$_state
             .receive(on: RunLoop.main, options: nil)
             .sink { val in
                 self.oserveSocketState(state: val)
             }
+        reachabilityService.startNetworkObserver { state in
+            self.observeNetworkState(state: state)
+        }
+    }
+    
+    func observeNetworkState(state: ReachabilityService.State){
+        switch state {
+        case .wifiConnected:
+            print("Wifi connected")
+            socketClient.connect(host: host, port: port)
+        case .notReachable:
+            socketClient.onHold()
+        default:
+            return
+        }
     }
     
     func oserveSocketState(state: RawSocketClient.State){
