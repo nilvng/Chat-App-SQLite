@@ -28,11 +28,6 @@ final class ModelCodecHandlers<In, Out>: ChannelInboundHandler, ChannelOutboundH
         context.writeAndFlush(wrapOutboundOut(buff), promise: nil)
     }
     
-    func channelInactive(context: ChannelHandlerContext) {
-        print("Channel: inactive")
-    }
-    
-    
     func channelRead(context: ChannelHandlerContext, data: NIOAny) {
         var buffer = self.unwrapInboundIn(data)
         guard let eventType : UInt8 = buffer.readInteger() else {
@@ -60,5 +55,17 @@ final class ModelCodecHandlers<In, Out>: ChannelInboundHandler, ChannelOutboundH
         let model = unwrapOutboundIn(data)
         buf = model.encode(bytes: buf)
         context.writeAndFlush(wrapOutboundOut(buf), promise: promise)
+    }
+    func errorCaught(ctx: ChannelHandlerContext, error: Error) {
+            print("Channel Error: \(error.localizedDescription)")
+            ctx.close(promise: nil)
+        }
+    
+    func userInboundEventTriggered(context: ChannelHandlerContext, event: Any) {
+        if (event as? IdleStateHandler.IdleStateEvent) == .read {
+            //self.errorCaught(context: context, error: ClientError.timeout)
+        } else {
+            context.fireUserInboundEventTriggered(event)
+        }
     }
 }

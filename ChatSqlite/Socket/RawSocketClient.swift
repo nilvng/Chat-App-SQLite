@@ -7,15 +7,23 @@
 
 import Foundation
 import NIO
+import Alamofire
+import SQLite
+import Combine
 
 public final class RawSocketClient {
     public let group: MultiThreadedEventLoopGroup
     public let config: Config
     private var channel: Channel?
+    private var bootstrap : ClientBootstrap!
 
+    var delayCount : Int = 1
+    var backoffBase : Int = 2
+//    var task : Scheduled<EventLoopFuture<Bool>? = nil
+    
     public init(
-        group: MultiThreadedEventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount),
-                config: Config = Config()) {
+        group: MultiThreadedEventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount), config: Config = Config()
+        ) {
         self.group = group
         self.config = config
         self.channel = nil
@@ -27,10 +35,10 @@ public final class RawSocketClient {
 //        try channel?.eventLoop.shutdownGracefully()
     }
 
-    public func connect(host: String, port: Int) -> EventLoopFuture<RawSocketClient> {
+    public func connect(host: String, port: Int){
         assert(.initializing == self.state)
 
-        let bootstrap = ClientBootstrap(group: self.group)
+        self.bootstrap = ClientBootstrap(group: self.group)
             .channelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
             .channelInitializer { channel in
                 return channel.pipeline.addTimeoutHandlers(self.config.timeout)
@@ -39,18 +47,44 @@ public final class RawSocketClient {
                     .flatMap {
                         channel.pipeline.addHandlers([
                             ModelCodecHandlers<MessageSocketModel, MessageSocketModel>(),
-                            DelegateHandlers(delegate: SocketService.shared),
+                            DelegateHandlers(delegate: SocketService.shared, channelDelegate: self),
                         ])
                     }
             }
-
+        
         self.state = .connecting("\(host):\(port)")
-        return bootstrap.connect(host: host, port: port).flatMap { channel in
-            self.channel = channel
-            self.state = .connected
-            return channel.eventLoop.makeSucceededFuture(self)
-        }
+        
+        connect_prev(bootstrap: bootstrap, host: host, port: port)
     }
+    
+    public func connect_prev(bootstrap: ClientBootstrap, host: String, port: Int) {
+        bootstrap.connect(host: host, port: port).whenComplete { res in
+            let _ = res.map { channel in
+                self.channel = channel
+                self.state = .connected
+            }
+            if self.state != .connected {
+                print("Connection failed")
+                self.reconnect(host: host, port: port)
+            }
+        }
+        
+    }
+    
+    public func reconnect(host: String, port: Int) {
+        guard delayCount < 5 else {
+            return
+        }
+        print("Reconnecting...\(delayCount)")
+        
+        let delay = delayCount * backoffBase
+        DispatchQueue.global().asyncAfter(deadline: DispatchTime.now() + DispatchTimeInterval.seconds(delay), execute: {
+            self.state = .reconnecting
+            self.connect_prev(bootstrap: self.bootstrap, host: host, port: port)
+        })
+        delayCount += 1
+    }
+    
 
     public func disconnect() -> EventLoopFuture<Void> {
         if .connected != self.state {
@@ -68,11 +102,11 @@ public final class RawSocketClient {
     }
 
     func send(model: MessageSocketModel){
-//        if .connected != self.state {
-//            print("Server disconnected. Cant send...")
-//            return
-//            //return self.group.next().makeFailedFuture(ClientError.notReady)
-//        }
+        if .connected != self.state {
+            print("Server disconnected. Cant send...")
+            return
+            //return self.group.next().makeFailedFuture(ClientError.notReady)
+        }
         guard let channel = self.channel else {
             print("Server not exist. Cant send...")
             return
@@ -82,9 +116,10 @@ public final class RawSocketClient {
         
     }
 
-    private var _state = State.initializing
+    @Published var _state = State.initializing
     private let lock = NSLock()
-    private var state: State {
+    
+     var state: State {
         get {
             return self.lock.withLock {
                 _state
@@ -96,14 +131,16 @@ public final class RawSocketClient {
                 print("\(self) \(_state)")
             }
         }
+        
     }
 
-    private enum State: Equatable {
+    enum State: Equatable {
         case initializing
         case connecting(String)
         case connected
         case disconnecting
         case disconnected
+        case reconnecting
     }
 
 
@@ -116,60 +153,11 @@ public final class RawSocketClient {
             self.framing = framing
         }
     }
-}
-
-private class Handler: ChannelInboundHandler, ChannelOutboundHandler {
-    typealias InboundIn = ByteBuffer
     
-    public typealias OutboundIn = ByteBuffer
-
-    // outbound
-    public func write(context: ChannelHandlerContext, data: NIOAny, promise: EventLoopPromise<Void>?) {
-        let requestWrapper = self.unwrapOutboundIn(data)
-        //context.write(wrapOutboundOut(requestWrapper.request), promise: promise)
-    }
-
-
-    func userInboundEventTriggered(context: ChannelHandlerContext, event: Any) {
-        if (event as? IdleStateHandler.IdleStateEvent) == .read {
-            //self.errorCaught(context: context, error: ClientError.timeout)
-        } else {
-            context.fireUserInboundEventTriggered(event)
-        }
-    }
-    public func channelActive(context: ChannelHandlerContext) {
-        if let remoteAddress = context.remoteAddress {
-            print("server", remoteAddress, "connected")
-        }
-    }
-
-    public func channelInactive(context: ChannelHandlerContext) {
-        if let remoteAddress = context.remoteAddress {
-            print("server ", remoteAddress, "disconnected")
-        }
-        //if !self.queue.isEmpty { // currently running
-            //self.errorCaught(context: context, error: ClientError.connectionResetByPeer)
-        //}
-    }
-    public func errorCaught(context: ChannelHandlerContext, error: Error) {
-        if let remoteAddress = context.remoteAddress {
-            print("server", remoteAddress, "error", error)
-        }
-//        if self.queue.isEmpty {
-//            return context.fireErrorCaught(error) // already complete
-//        }
-//        let item = queue.removeFirst()
-//        let requestId = item.0
-//        let promise = item.1
-        switch error {
-        case CodecError.requestTooLarge, CodecError.badFraming, CodecError.badJSON:
-            break
-            //promise.succeed(JSONResponse(id: requestId, errorCode: .parseError, error: error))
-        default:
-//            promise.fail(error)
-            // close the connection
-            context.close(promise: nil)
-        }
+}
+extension RawSocketClient : ChannelHandlerDelegate {
+    func channelInactive() {
+        self.state = .disconnected
     }
 }
 internal enum ClientError: Error {

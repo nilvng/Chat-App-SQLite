@@ -41,14 +41,7 @@ enum ParsePattern : Character{
         }
         return nil
     }
-    
-//    func parse(model : ConversationDomain, val) -> ConversationDomain{
-//        switch self {
-//        case .c:
-//            model.id =
-//        }
-//    }
-    
+ 
     func getSize() -> Int {
         switch self {
         case .c:
@@ -91,19 +84,6 @@ enum SocketEvent : Int{
         }
     }
 }
-
-//struct SocketModelFactory {
-//    static func getModel(event: SocketEvent) -> SocketModel{
-//        switch event {
-//        case .messageSent:
-//            <#code#>
-//        case .messageReceived:
-//            <#code#>
-//        case .messageStatusUpdated:
-//            <#code#>
-//        }
-//    }
-//}
 
 protocol SocketModel {
     func getEvent() -> SocketEvent

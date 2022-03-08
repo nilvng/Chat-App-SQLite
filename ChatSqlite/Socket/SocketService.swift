@@ -7,6 +7,7 @@
 
 import Foundation
 import NIO
+import Combine
 
 class SocketService {
     static var shared = SocketService()
@@ -16,8 +17,29 @@ class SocketService {
     
     let host = "127.0.0.1"
     let port = 3000
+    
+    private var subscription: AnyCancellable?
+    
     init(){
         socketClient = RawSocketClient()
+        subscription = socketClient.$_state
+            .receive(on: RunLoop.main, options: nil)
+            .sink { val in
+                self.oserveSocketState(state: val)
+            }
+    }
+    
+    func oserveSocketState(state: RawSocketClient.State){
+        switch state {
+        case .connected:
+            print("Great! Socket is connected")
+        case .disconnected:
+            print("Bleh, Socket is disconnected")
+        case .reconnecting:
+            print("Wait a minute, reconnecting...")
+        default:
+            return
+        }
     }
     
     func connect(){

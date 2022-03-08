@@ -382,8 +382,8 @@
             filePath = "ChatSqlite/Socket/SocketModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "150"
-            endingLineNumber = "150"
+            startingLineNumber = "130"
+            endingLineNumber = "130"
             landmarkName = "decode(bytes:)"
             landmarkType = "7">
          </BreakpointContent>

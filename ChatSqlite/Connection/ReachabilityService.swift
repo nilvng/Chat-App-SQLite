@@ -9,8 +9,8 @@ import Foundation
 import Alamofire
 
 class ReachabilityService {
-    let host = "https://33cb-2405-4803-c63d-bf00-2da2-751d-24e-49fa.ngrok.io"
-//    let host = "www.google.com"
+//    let host = "https://33cb-2405-4803-c63d-bf00-2da2-751d-24e-49fa.ngrok.io"
+    let host = "www.google.com"
     var network : NetworkReachabilityManager?
     
     static let shared = ReachabilityService()
@@ -23,7 +23,7 @@ class ReachabilityService {
         alamofireStart()
     }
     
-    func notifyDisconnect(msg: String){
+    func notifyNetworkStatus(msg: String){
         NotificationCenter.default.post(name: .networkChanged,
                                         object: self,
                                         userInfo: ["msg": msg])
@@ -35,19 +35,19 @@ class ReachabilityService {
 
                        case .notReachable:
                            print("REACHABILITY: not reachable")
-                       self.notifyDisconnect(msg: "Waiting for network")
+                       self.notifyNetworkStatus(msg: "Waiting for network")
 
                        case .unknown :
                            print("REACHABILITY: It is unknown")
-                       self.notifyDisconnect(msg: "Waiting for network")
+                       self.notifyNetworkStatus(msg: "Waiting for network")
 
                        case .reachable(.ethernetOrWiFi):
                            print("REACHABILITY: WiFi connection")
-                       self.notifyDisconnect(msg: "Network is back")
+                       self.notifyNetworkStatus(msg: "Network is back")
 
                        case .reachable(.cellular):
                            print("REACHABILITY: Cellular connection")
-                       self.notifyDisconnect(msg: "Network is back")
+                       self.notifyNetworkStatus(msg: "Network is back")
 
                        }
                    })
