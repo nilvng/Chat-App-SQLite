@@ -15,8 +15,8 @@ class PostButton : UIButton {
         super.init(frame: .zero)
         self.sizeToFit()
         self.layer.shadowColor = UIColor.gray.cgColor
-        self.layer.shadowOffset = CGSize(width: 3, height: 4)
-        self.layer.shadowOpacity = 0.5
+        self.layer.shadowOffset = CGSize(width: 4, height: 3)
+        self.layer.shadowOpacity = 0.1
         self.layer.shadowRadius = 0.0
     }
     

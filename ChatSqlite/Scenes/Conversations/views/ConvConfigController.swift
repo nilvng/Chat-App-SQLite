@@ -149,7 +149,7 @@ class HalfSizePresentationController: UIPresentationController {
         self.blurEffectView.alpha = 0
         self.containerView?.addSubview(blurEffectView)
         self.presentedViewController.transitionCoordinator?.animate(alongsideTransition: { _ in
-            self.blurEffectView.alpha = 0.4
+            self.blurEffectView.alpha = 0.3
         }, completion:  nil)
     }
     override func containerViewWillLayoutSubviews() {

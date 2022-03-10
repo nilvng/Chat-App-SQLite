@@ -64,6 +64,7 @@ class HomeViewController: UIViewController {
         setupNavigationBar()
         setupNavigationBarColor()
         setupTableView()
+        setupBlurEffectView()
         setupComposeButton()
         printUID()
         observeNetworkChanges()
@@ -134,6 +135,24 @@ class HomeViewController: UIViewController {
         tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
     
     }
+    let blurEffectView: UIVisualEffectView = {
+        let effect = UIBlurEffect(style: .dark)
+        let effectView = UIVisualEffectView(effect: effect)
+        effectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        effectView.alpha = 0.3
+        return effectView
+    }()
+    
+    func setupBlurEffectView(){
+        view.addSubview(blurEffectView)
+        blurEffectView.isHidden = true
+    }
+    
+    func setupTapDismissGesture(){
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismiss))
+        self.blurEffectView.isUserInteractionEnabled = true
+        self.blurEffectView.addGestureRecognizer(tapGesture)
+    }
     
     func setupComposeButton(){
 
@@ -144,8 +163,8 @@ class HomeViewController: UIViewController {
         NSLayoutConstraint.activate([
             composeButton.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -10),
             composeButton.bottomAnchor.constraint(equalTo: margins.bottomAnchor, constant: -20),
-            composeButton.heightAnchor.constraint(equalToConstant: 66),
-            composeButton.widthAnchor.constraint(equalToConstant: 66),
+            composeButton.heightAnchor.constraint(equalToConstant: 60),
+            composeButton.widthAnchor.constraint(equalToConstant: 60),
         ])
         composeButton.addTarget(self, action: #selector(composeButtonPressed), for: .touchUpInside)
 
@@ -156,14 +175,18 @@ class HomeViewController: UIViewController {
         view.addSubview(postButton)
 
         postButton.translatesAutoresizingMaskIntoConstraints = false
-        let margins = view.layoutMarginsGuide
         NSLayoutConstraint.activate([
-            postButton.trailingAnchor.constraint(equalTo: margins.trailingAnchor, constant: -10),
-            postButton.bottomAnchor.constraint(equalTo: composeButton.topAnchor, constant: -10),
-            postButton.heightAnchor.constraint(equalToConstant: 66),
-            postButton.widthAnchor.constraint(equalToConstant: 66),
+            postButton.centerXAnchor.constraint(equalTo: composeButton.centerXAnchor),
+            postButton.bottomAnchor.constraint(equalTo: composeButton.topAnchor, constant: -5),
+            postButton.heightAnchor.constraint(equalToConstant: 50),
+            postButton.widthAnchor.constraint(equalToConstant: 50),
         ])
         composeButton.addTarget(self, action: #selector(postButtonPressed), for: .touchUpInside)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        blurEffectView.frame = view.bounds
     }
 
 
@@ -176,23 +199,42 @@ class HomeViewController: UIViewController {
         clearSearchField()
     }
     
+    fileprivate func toggleBlurEffect() {
+        let maxAlpha = 0.3
+        let duration = 0.05
+        let willShow = !blurEffectView.isHidden
+        let beforeAlpha = blurEffectView.isHidden ? 0 : maxAlpha
+        let afterAlpha = blurEffectView.isHidden ? maxAlpha : 0
+        
+        blurEffectView.isHidden = true
+        
+        blurEffectView.alpha = beforeAlpha
+        UIView.animate(withDuration: duration, animations: {
+            self.blurEffectView.alpha = afterAlpha
+        })
+        
+        blurEffectView.isHidden = willShow
+    }
+    
     @objc func composeButtonPressed(){
         print("Compose message...")
-        if composeStateNormal {
+        composeStateNormal = !composeStateNormal
+        if !composeStateNormal {
+            // show more options
+            toggleBlurEffect()
             postButton.isHidden = false
             composeButton.rotate(degree: Double.pi / 2, duration: 0.1)
             composeButton.flash { [weak self] in
                 self?.composeButton.setImage(UIImage.back_button, for: .normal)
             }
         } else {
+            toggleBlurEffect()
             postButton.isHidden = true
-            composeButton.rotate(degree: Double.pi / 2, duration: 0.1)
             composeButton.flash { [weak self] in
                 self?.composeButton.setImage(UIImage.navigation_button_plus, for: .normal)
             }
+            router?.showComposeView()
         }
-        composeStateNormal = !composeStateNormal
-        //router?.showComposeView()
     }
     @objc func postButtonPressed(){
         print("Post new group...")

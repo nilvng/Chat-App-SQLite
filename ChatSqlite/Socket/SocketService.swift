@@ -41,7 +41,13 @@ class SocketService {
             print("Wifi connected")
             socketClient.connect(host: host, port: port)
         case .notReachable:
+            let _ = socketClient.disconnect() // disconnect former socket if exists
+            
+            // queue unsent requests
             socketClient.onHold()
+            
+            // still try to reconnect
+            socketClient.reconnect(host: host, port: port)
         default:
             return
         }

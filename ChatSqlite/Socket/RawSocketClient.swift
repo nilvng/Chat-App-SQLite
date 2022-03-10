@@ -10,6 +10,7 @@ import NIO
 import Alamofire
 import SQLite
 import Combine
+import UIKit
 
 public final class RawSocketClient {
     public let group: MultiThreadedEventLoopGroup
@@ -17,31 +18,22 @@ public final class RawSocketClient {
     private var channel: Channel?
     private var bootstrap : ClientBootstrap!
 
-    var delayCount : Int = 1
-    var backoffBase : Int = 2
-//    var task : Scheduled<EventLoopFuture<Bool>? = nil
+    var reconnectCounter : Int = 0
+//    var host : String
+//    var port Int
     
     public init(
-        group: MultiThreadedEventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount), config: Config = Config()
+        group: MultiThreadedEventLoopGroup = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount),
+        config: Config = Config()
         ) {
         self.group = group
         self.config = config
         self.channel = nil
         self.state = .initializing
-    }
-
-    deinit {
-        assert(.disconnected == self.state)
-//        try channel?.eventLoop.shutdownGracefully()
-    }
-
-    public func connect(host: String, port: Int){
-        assert(.initializing == self.state)
-
         self.bootstrap = ClientBootstrap(group: self.group)
             .channelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
             .channelInitializer { channel in
-                return channel.pipeline.addTimeoutHandlers(self.config.timeout)
+                return channel.pipeline.addTimeoutHandlers(self.config.requestTimeout)
 //                    .flatMap {
 //                        channel.pipeline.addFramingHandlers(framing: self.config.framing)}
                     .flatMap {
@@ -52,19 +44,30 @@ public final class RawSocketClient {
                     }
             }
         
-        self.state = .connecting("\(host):\(port)")
+    }
+
+    deinit {
+        assert(.disconnected == self.state)
         
+    }
+
+    public func connect(host: String, port: Int){
+        assert(.initializing == self.state)
+        self.state = .connecting("\(host):\(port)")
         self._connect(host: host, port: port)
     }
     
     private func _connect(host: String, port: Int) {
         bootstrap.connect(host: host, port: port).whenComplete { res in
-            let _ = res.map { channel in
+            let _ = res.map( { channel in
                 self.channel = channel
                 self.state = .connected
-            }
+            })
+            
+            /// the above closure didn't run -> res = failure -> attempt to reconnect
             if self.state != .connected {
                 print("Connection failed")
+                self.state = .disconnected
                 self.reconnect(host: host, port: port)
             }
         }
@@ -72,20 +75,26 @@ public final class RawSocketClient {
     }
     
     public func reconnect(host: String, port: Int) {
-        guard delayCount < 5 else {
+        
+        guard state == .disconnected else {
             return
         }
-        print("Reconnecting...\(delayCount)")
         
-        let delay = delayCount * backoffBase
+        if reconnectCounter >= config.reconnectAttempt {
+            reconnectCounter = 0
+        }
+        reconnectCounter += 1
+        print("Reconnecting...\(reconnectCounter)")
+                
+        self.state = .reconnecting
+        let delay = reconnectCounter * config.connectTimeout
         DispatchQueue.global().asyncAfter(deadline: DispatchTime.now() + DispatchTimeInterval.seconds(delay), execute: {
-            self.state = .reconnecting
             self._connect(host: host, port: port)
         })
-        delayCount += 1
     }
     
     public func onHold(){
+        // Change wifi, reconnect to server
         print("\(self) on hold")
     }
     
@@ -149,12 +158,20 @@ public final class RawSocketClient {
 
 
     public struct Config {
-        public let timeout: TimeAmount
+        public let requestTimeout: TimeAmount
+        public let connectTimeout : Int
+        public let reconnectAttempt : Int
         public let framing: Framing
+        
 
-        public init(timeout: TimeAmount = TimeAmount.seconds(5), framing: Framing = .default) {
-            self.timeout = timeout
+        public init(timeout: TimeAmount = TimeAmount.seconds(5),
+                    framing: Framing = .default,
+                    connectTimeout: Int = 2,
+                    reconnectAttempt: Int = 5) {
+            self.requestTimeout = timeout
             self.framing = framing
+            self.connectTimeout = connectTimeout
+            self.reconnectAttempt = reconnectAttempt
         }
     }
     
