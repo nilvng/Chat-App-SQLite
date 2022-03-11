@@ -65,13 +65,13 @@ class HomeViewController: UIViewController {
         setupNavigationBarColor()
         setupTableView()
         setupBlurEffectView()
-        setupComposeButton()
         printUID()
         observeNetworkChanges()
-        
+        setupTapDismissGesture()
         setupPostButton()
+        setupComposeButton()
         postButton.isHidden = true
-
+        addLongPressGesture()
     }
     
     func printUID(){
@@ -149,7 +149,7 @@ class HomeViewController: UIViewController {
     }
     
     func setupTapDismissGesture(){
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.dismiss))
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissComposeOptions))
         self.blurEffectView.isUserInteractionEnabled = true
         self.blurEffectView.addGestureRecognizer(tapGesture)
     }
@@ -171,17 +171,17 @@ class HomeViewController: UIViewController {
     }
     
     func setupPostButton(){
-
+        view.addSubview(composeButton)
         view.addSubview(postButton)
 
         postButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             postButton.centerXAnchor.constraint(equalTo: composeButton.centerXAnchor),
-            postButton.bottomAnchor.constraint(equalTo: composeButton.topAnchor, constant: -5),
+            postButton.centerYAnchor.constraint(equalTo: composeButton.centerYAnchor),
             postButton.heightAnchor.constraint(equalToConstant: 50),
             postButton.widthAnchor.constraint(equalToConstant: 50),
         ])
-        composeButton.addTarget(self, action: #selector(postButtonPressed), for: .touchUpInside)
+        postButton.addTarget(self, action: #selector(postButtonPressed), for: .touchUpInside)
     }
     
     override func viewDidLayoutSubviews() {
@@ -192,13 +192,14 @@ class HomeViewController: UIViewController {
 
     // MARK: Actions
 
-    var composeStateNormal : Bool = true
+    var composeStateOne : Bool = true
     
     @objc func cancelSearchPressed(){
         print("cancel")
         clearSearchField()
     }
     
+    // MARK: Blur effect
     fileprivate func toggleBlurEffect() {
         let maxAlpha = 0.3
         let duration = 0.05
@@ -216,33 +217,67 @@ class HomeViewController: UIViewController {
         blurEffectView.isHidden = willShow
     }
     
+    @objc func dismissComposeOptions(){
+        toggleSlideOptions(forceAppeared: false)
+//        toggleBlurEffect()
+//        postButton.isHidden = true
+//        composeButton.flash { [weak self] in
+//            self?.composeButton.setImage(UIImage.navigation_button_plus, for: .normal)
+//        }
+    }
+    
     @objc func composeButtonPressed(){
         print("Compose message...")
-        composeStateNormal = !composeStateNormal
-        if !composeStateNormal {
-            // show more options
-            toggleBlurEffect()
-            postButton.isHidden = false
-            composeButton.rotate(degree: Double.pi / 2, duration: 0.1)
-            composeButton.flash { [weak self] in
-                self?.composeButton.setImage(UIImage.back_button, for: .normal)
-            }
-        } else {
-            toggleBlurEffect()
-            postButton.isHidden = true
-            composeButton.flash { [weak self] in
-                self?.composeButton.setImage(UIImage.navigation_button_plus, for: .normal)
-            }
-            router?.showComposeView()
-        }
+        composeStateOne = !composeStateOne
+
+        router?.showComposeView()
     }
+    
     @objc func postButtonPressed(){
         print("Post new group...")
+    }
+    
+    func addLongPressGesture(){
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPress))
+        longPress.minimumPressDuration = 0.5
+        self.composeButton.addGestureRecognizer(longPress)
+    }
+    func addSinglePressGesture(){
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPress))
+        longPress.minimumPressDuration = 0.75
+        self.composeButton.addGestureRecognizer(longPress)
+    }
+    @objc func longPress(gesture: UILongPressGestureRecognizer) {
+        if !postButton.isHidden {
+            return
+        }
+        if gesture.state == UIGestureRecognizer.State.began {
+            toggleSlideOptions(forceAppeared: true)
+        }
+    }
+    
+    func toggleSlideOptions(forceAppeared: Bool? = nil){
+        let willShow = forceAppeared ?? false ? forceAppeared! : postButton.isHidden
+        if willShow {
+            toggleBlurEffect()
+            postButton.appearToTop(withDuration: 0.5, offset: 60)
+        } else {
+            toggleBlurEffect()
+            postButton.disappearToBottom(withDuration: 0.5, offset: 60)
+        }
+    }
+    
+    func animateRotateCompose(){
+        composeButton.rotate(degree: Double.pi / 2, duration: 0.1)
+        composeButton.flash { [weak self] in
+            self?.composeButton.setImage(UIImage.back_button, for: .normal)
+        }
     }
     
     @objc func searchButtonPressed(){
         promptForAnswer()
     }
+    
     func promptForAnswer(){
         let ac = UIAlertController(title: "Setting User Name", message: "Enter name your friend can use to contact you", preferredStyle: .alert)
         ac.addTextField(configurationHandler: nil)

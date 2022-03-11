@@ -51,7 +51,7 @@ class ChatModule {
         router.viewController = view
         
         listView.interactor = inter
-//        listView.configure(friend: friend)
+        listView.configure(friend: friend)
         listView.parentDelegate = view
         
         barView.delegate = view

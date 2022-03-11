@@ -10,7 +10,7 @@ import AlamofireImage
 
 class AlamoAvatarView : AvatarView {
     override func update(url: String?, text: String){
-        let firstCharacter = String((text.first)!) as NSString
+        let firstCharacter = String((text.first)!).capitalized as NSString
         
         var placeholder = self.drawText(text: firstCharacter)
         let rad : CGFloat = 20

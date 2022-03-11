@@ -17,8 +17,8 @@ class SocketService {
     var socketClient : RawSocketClient
     weak var delegate : SocketDelegate? = ChatServiceManager.shared
     
-    let host = "0.tcp.ngrok.io"
-    let port = 16823
+    let host = "4.tcp.ngrok.io"
+    let port = 16813
     
     private var subscription: AnyCancellable?
     

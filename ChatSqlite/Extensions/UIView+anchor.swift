@@ -24,6 +24,28 @@ extension UIView {
     }
 }
 
+extension UIView {
+    open func disappearToBottom(withDelay delay: Double = 0.0, withDuration duration: Double = 0.5, offset: CGFloat = 10) {
+        self.isHidden = false
+        UIView.animate(withDuration: duration, delay: delay, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.9, options: .curveEaseOut, animations: {
+          // 4
+            self.frame.origin.y += offset
+        }, completion: { [weak self] _ in
+            self?.isHidden = true
+        })
+    }
+    
+    open func appearToTop(withDelay delay: Double = 0.0, withDuration duration: Double = 0.5, offset: CGFloat = 10) {
+
+        self.isHidden = false
+        UIView.animate(withDuration: duration, delay: delay, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.9, options: .curveEaseOut, animations: {
+          // 4
+            self.frame.origin.y -= offset
+        }, completion: nil)
+    }
+}
+
+
 extension UIView{
     func rotate(degree: Double, duration: Double = 0.1) {
         let rotation : CABasicAnimation = CABasicAnimation(keyPath: "transform.rotation.z")

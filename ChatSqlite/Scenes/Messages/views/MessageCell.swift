@@ -188,7 +188,7 @@ class MessageCell: UITableViewCell {
         })
     }
     func showAvatar(name: String){
-        let delay = 500
+        let delay = 200
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + DispatchTimeInterval.milliseconds(delay), execute: {
             self.avatarView.update(url: nil, text: name)
         })
