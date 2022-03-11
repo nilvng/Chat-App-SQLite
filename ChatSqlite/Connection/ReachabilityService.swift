@@ -47,7 +47,7 @@ class ReachabilityService {
                        case .reachable(.ethernetOrWiFi):
                             callback(.wifiConnected)
                             print("REACHABILITY: WiFi connection")
-                            self.notifyNetworkStatus(msg: "Network is back")
+                            //self.notifyNetworkStatus(msg: "Network is back")
 
                        case .reachable(.cellular):
                             callback(.cellularConnected)

@@ -241,8 +241,21 @@ class HomeViewController: UIViewController {
     }
     
     @objc func searchButtonPressed(){
-//        let searchvc = SearchViewController()
-//        navigationController?.pushViewController(searchvc, animated: true)
+        promptForAnswer()
+    }
+    func promptForAnswer(){
+        let ac = UIAlertController(title: "Setting User Name", message: "Enter name your friend can use to contact you", preferredStyle: .alert)
+        ac.addTextField(configurationHandler: nil)
+        let submitAction = UIAlertAction(title: "Submit", style: .cancel, handler: { [unowned ac] _ in
+            guard let answer = ac.textFields![0].text, answer != "" else {
+                return
+            }
+            UserSettings.shared.setUserID(uid: answer)
+        })
+        let closeAction = UIAlertAction(title: "Close", style: .default, handler: nil)
+        ac.addAction(closeAction)
+        ac.addAction(submitAction)
+        present(ac,animated: true)
     }
 
     // MARK: Navigation

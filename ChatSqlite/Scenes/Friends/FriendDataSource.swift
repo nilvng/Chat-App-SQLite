@@ -121,17 +121,17 @@ extension FriendDataSource : UITableViewDataSource{
         return sections.count
     }
     func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-        
+
         let indexedList = sections.filter{$0.letter != nil}
-        
+
         return indexedList.map{ $0.letter! }
     }
-    
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return self.sections[section].letter
-    }
-    
+//
+//
+//    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+//        return self.sections[section].letter
+//    }
+//
     func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
         return sections.firstIndex(where: {$0.letter == title } )!
     }

@@ -179,7 +179,7 @@ extension MessageListViewController {
         let isLastContinuous = isLastContinuousMess(index: reverseIndex, message: message)
                 
         cell.configure(with: message, lastContinuousMess: isLastContinuous)
-        
+        if isLastContinuous { cell.showAvatar(name: conversation.title)} // show placeholder is the name of conversation
         cell.transform = CGAffineTransform(scaleX: 1, y: -1)
         
         return cell

@@ -20,6 +20,7 @@ class ChatServiceManager {
         let service = ChatService(conversation: conv, callback: caching)
         convService?.findItemWithFriend(id: friend.id, completion: {item, err in
             guard let found = item else {
+                print("\(self) Cant find friend \(friend.id)")
                 return
             }
             service.reset(conversation: found)

@@ -13,7 +13,6 @@ class MessageCell: UITableViewCell {
     
     var interactor : MessageCellInteractor?
     
-    lazy var friendSerivce : FriendService = NativeContactStoreAdapter.shared
     var message : MessageDomain!
     var downloadAction : MessageCellAction?
     
@@ -179,19 +178,22 @@ class MessageCell: UITableViewCell {
     }
     
     func showAvatar(fid: String){
-        friendSerivce.fetchItemWithId(fid, completionHandler: { res, err in
+        interactor?.findFriend(fid: fid, callback: { res, err in
             if let friend = res {
                 let url = friend.avatar
                 DispatchQueue.main.async {
                     self.avatarView.update(url: url, text: friend.name)
                 }
-            } else {
-                print("Error fetching friend: \(fid)")
-            }
+            } 
         })
-
-
     }
+    func showAvatar(name: String){
+        let delay = 500
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + DispatchTimeInterval.milliseconds(delay), execute: {
+            self.avatarView.update(url: nil, text: name)
+        })
+    }
+    
     var bubbleVPadding : CGFloat = BubbleConstant.vPadding
     var bubbleHPadding : CGFloat = BubbleConstant.hPadding
 

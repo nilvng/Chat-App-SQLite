@@ -53,8 +53,8 @@ class SearchContactCell : UITableViewCell {
     func setupThumbnail() {
         avatarView.translatesAutoresizingMaskIntoConstraints = false
         
-        let width : CGFloat = 55
-        let height : CGFloat = 55
+        let width : CGFloat = 50
+        let height : CGFloat = 50
         
         let constraints : [NSLayoutConstraint] = [
             avatarView.centerYAnchor.constraint(equalTo: centerYAnchor),

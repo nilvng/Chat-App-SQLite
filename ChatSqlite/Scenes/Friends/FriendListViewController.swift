@@ -26,7 +26,7 @@ class FriendListViewController: UIViewController {
     }()
     lazy var tableView : UITableView = {
         let tv = UITableView()
-        tv.rowHeight = 75
+        tv.rowHeight = 58
         tv.separatorStyle = .none
         return tv
     }()
@@ -109,7 +109,7 @@ class FriendListViewController: UIViewController {
             guard let answer = ac.textFields![0].text, answer != "" else {
                 return
             }
-            UserSettings.shared.setUserID(uid: answer)
+            self.router?.toChatView(for: FriendDomain(id: answer, phoneNumber: "xxx", name: answer, avatar: nil))
         })
         ac.addAction(submitAction)
         present(ac,animated: true)
@@ -134,6 +134,45 @@ extension FriendListViewController : UITableViewDelegate {
             }
             
         }
+    }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let wrapper = UIView()
+        let label = UILabel()
+        label.textColor = .white
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
+        label.sizeToFit()
+        label.text = dataSource.sections[section].letter
+
+        let backgroundImageView = UIImageView()
+        backgroundImageView.image = BackgroundFactory.shared.getBackground(config: BackgroundConfig(radius: 0))
+        backgroundImageView.tintColor = .rgb(red: 125, green: 158, blue: 91)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        wrapper.addSubview(backgroundImageView)
+        wrapper.addSubview(label)
+        let constraints = [
+            label.topAnchor.constraint(equalTo: wrapper.topAnchor, constant: 10),
+            label.leadingAnchor.constraint(equalTo: wrapper.leadingAnchor, constant: 16),
+            label.bottomAnchor.constraint(equalTo:  wrapper.bottomAnchor, constant: -10),
+            label.widthAnchor.constraint(lessThanOrEqualToConstant: 40),
+        ]
+        NSLayoutConstraint.activate(constraints)
+
+        label.setContentHuggingPriority(.defaultHigh, for: .vertical)
+
+
+        backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            backgroundImageView.topAnchor.constraint(equalTo: label.topAnchor, constant: -5),
+            backgroundImageView.leadingAnchor.constraint(equalTo: label.leadingAnchor, constant: -8),
+            backgroundImageView.bottomAnchor.constraint(equalTo:  label.bottomAnchor, constant: 5),
+            backgroundImageView.trailingAnchor.constraint(equalTo: wrapper.trailingAnchor, constant: -8),
+        ])
+        return wrapper
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 35
     }
 }
 

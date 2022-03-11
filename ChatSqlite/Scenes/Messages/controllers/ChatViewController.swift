@@ -93,6 +93,7 @@ class ChatViewController: UIViewController {
     
     func configure(friend: FriendDomain) {
         chatTitleLabel.text = friend.name
+        conversation = ConversationDomain.fromFriend(friend: friend)
     }
     
     // MARK: Setups

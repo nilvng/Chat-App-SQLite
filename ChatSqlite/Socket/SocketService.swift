@@ -17,8 +17,8 @@ class SocketService {
     var socketClient : RawSocketClient
     weak var delegate : SocketDelegate? = ChatServiceManager.shared
     
-    let host = "127.0.0.1"
-    let port = 3000
+    let host = "0.tcp.ngrok.io"
+    let port = 16823
     
     private var subscription: AnyCancellable?
     
@@ -44,7 +44,7 @@ class SocketService {
             let _ = socketClient.disconnect() // disconnect former socket if exists
             
             // queue unsent requests
-            socketClient.onHold()
+//            socketClient.onHold()
             
             // still try to reconnect
             socketClient.reconnect(host: host, port: port)
@@ -55,12 +55,14 @@ class SocketService {
     
     func oserveSocketState(state: RawSocketClient.State){
         switch state {
-        case .connected:
-            print("Great! Socket is connected")
+        case .connected: break
+            //print("\(self) Great!")
         case .disconnected:
-            print("Bleh, Socket is disconnected")
-        case .reconnecting:
-            print("Wait a minute, reconnecting...")
+            //print("\(self) Bleh")
+            let _ = socketClient.disconnect()
+            socketClient.reconnect(host: host, port: port)
+        case .reconnecting: break
+            //print("\(self) Wait a minute")
         default:
             return
         }

@@ -6,6 +6,24 @@
 //
 
 import UIKit
+
+extension UIView {
+    func addBackground() {
+        let backgroundImageView = UIImageView()
+        backgroundImageView.image = UIImage.bg_yellow_gradient
+        self.addSubview(backgroundImageView)
+        backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            backgroundImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor),
+            backgroundImageView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            backgroundImageView.widthAnchor.constraint(equalToConstant: self.frame.width + 10),
+            backgroundImageView.heightAnchor.constraint(equalToConstant: self.frame.height + 10)
+        ])
+//        self.sendSubviewToBack(backgroundImageView)
+
+    }
+}
+
 extension UIView{
     func rotate(degree: Double, duration: Double = 0.1) {
         let rotation : CABasicAnimation = CABasicAnimation(keyPath: "transform.rotation.z")

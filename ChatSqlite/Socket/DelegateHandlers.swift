@@ -30,7 +30,7 @@ final class DelegateHandlers :ChannelInboundHandler {
     
     func channelRead(context: ChannelHandlerContext, data: NIOAny) {
         let unwrapData = unwrapInboundIn(data)
-        if unwrapData.getEvent() == .messageReceived, let model = unwrapData as? MessageSocketModel{
+        if unwrapData.getEvent() == .messageSent, let model = unwrapData as? MessageSocketModel{
             
             delegate?.onMessageReceived(msg: model.message)
         }

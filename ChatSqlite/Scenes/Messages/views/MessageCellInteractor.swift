@@ -13,9 +13,15 @@ protocol MessageCellPresenter : AnyObject, MessageSubscriber {
 
 class MessageCellInteractor {
     weak var presenter : MessageCellPresenter?
-    
+    lazy var friendSerivce : FriendService = NativeContactStoreAdapter.shared
+
     func downloadMessage(_ msg: MessageDomain){
         
         msg.download(sub: presenter)
+    }
+    
+    func findFriend(fid: String, callback: @escaping (FriendDomain?, StoreError?) -> Void){
+        friendSerivce.fetchItemWithId(fid, completionHandler: callback)
+
     }
 }

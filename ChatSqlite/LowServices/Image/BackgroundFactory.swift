@@ -17,10 +17,15 @@ import Foundation
 import UIKit
 
 class BackgroundConfig: NSObject{
-    var color : UIColor? = .systemBackground
+    var color : UIColor? = .none
     var corner : UIRectCorner = [.allCorners]
     var radius : CGFloat = 13.0
     
+    init(color: UIColor? = .none, corner: UIRectCorner = [.allCorners], radius: CGFloat = 13.0){
+        self.color = color
+        self.corner = corner
+        self.radius = radius
+    }
     
     override func isEqual(_ object: Any?) -> Bool {
            guard let other = object as? BackgroundConfig else {
@@ -56,7 +61,7 @@ class BackgroundFactory {
         return created
     }
     
-    func drawBubble(config: BackgroundConfig) -> UIImage{
+    private func drawBubble(config: BackgroundConfig) -> UIImage{
         let edge = 40
         let size = CGSize(width: edge, height: edge)
         let rad = config.radius

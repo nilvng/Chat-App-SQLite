@@ -22,7 +22,6 @@ class AlamoAvatarView : AvatarView {
             radius: rad
         )
         //print("Default avatar...")
-        self.image = placeholder
         
         if let urlString = url, let urlObj = URL(string: urlString){
             
@@ -31,6 +30,8 @@ class AlamoAvatarView : AvatarView {
             self.af.setImage(withURL: urlObj,
                              placeholderImage: placeholder,
                              filter: filter)
+        } else {
+            self.image = placeholder
         }
     }
 }
