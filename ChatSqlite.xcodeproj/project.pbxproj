@@ -41,6 +41,7 @@
 		0E393FC227B3C1A40011CB68 /* ConversationListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E393FC127B3C1A40011CB68 /* ConversationListViewController.swift */; };
 		0E393FC427B3CE410011CB68 /* UIViewController+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E393FC327B3CE410011CB68 /* UIViewController+extension.swift */; };
 		0E3C0D1A2783F9EF00B23E21 /* ChatMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E3C0D192783F9EF00B23E21 /* ChatMenuController.swift */; };
+		0E51D2D227E04B2100748987 /* FriendHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E51D2D127E04B2100748987 /* FriendHeaderView.swift */; };
 		0E560B1827BF48660019B38C /* ConversationWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E560B1727BF48660019B38C /* ConversationWorker.swift */; };
 		0E560B1A27BF4AE20019B38C /* MessageListWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E560B1927BF4AE20019B38C /* MessageListWorker.swift */; };
 		0E560B1C27BF53070019B38C /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E560B1B27BF53070019B38C /* ChatService.swift */; };
@@ -124,6 +125,7 @@
 		0E393FC127B3C1A40011CB68 /* ConversationListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationListViewController.swift; sourceTree = "<group>"; };
 		0E393FC327B3CE410011CB68 /* UIViewController+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+extension.swift"; sourceTree = "<group>"; };
 		0E3C0D192783F9EF00B23E21 /* ChatMenuController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMenuController.swift; sourceTree = "<group>"; };
+		0E51D2D127E04B2100748987 /* FriendHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendHeaderView.swift; sourceTree = "<group>"; };
 		0E560B1727BF48660019B38C /* ConversationWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationWorker.swift; sourceTree = "<group>"; };
 		0E560B1927BF4AE20019B38C /* MessageListWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageListWorker.swift; sourceTree = "<group>"; };
 		0E560B1B27BF53070019B38C /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
@@ -481,6 +483,7 @@
 				0EFDD970276B86AD00323984 /* FriendListViewController.swift */,
 				0E124236277EB6E20054D069 /* FriendDataSource.swift */,
 				0EFDD974276B8BB100323984 /* FriendMediator.swift */,
+				0E51D2D127E04B2100748987 /* FriendHeaderView.swift */,
 			);
 			path = Friends;
 			sourceTree = "<group>";
@@ -621,6 +624,7 @@
 				0E79FB9627C67CCA0039E8E6 /* SocketDelegate.swift in Sources */,
 				0E2395BB2770834C006B2DE2 /* ConversationDomain.swift in Sources */,
 				0E2395B927708340006B2DE2 /* FriendDomain.swift in Sources */,
+				0E51D2D227E04B2100748987 /* FriendHeaderView.swift in Sources */,
 				0E560B2027BF60030019B38C /* ChatServiceManager.swift in Sources */,
 				0E15EC3227742B790082FA1B /* SQLiteManager.swift in Sources */,
 				0E124253277EF4590054D069 /* ConvConfigController.swift in Sources */,

@@ -17,8 +17,8 @@ class SocketService {
     var socketClient : RawSocketClient
     weak var delegate : SocketDelegate? = ChatServiceManager.shared
     
-    let host = "4.tcp.ngrok.io"
-    let port = 16813
+    let host = "0.tcp.ngrok.io"
+    let port = 13649
     
     private var subscription: AnyCancellable?
     
@@ -48,8 +48,9 @@ class SocketService {
             
             // still try to reconnect
             socketClient.reconnect(host: host, port: port)
-        default:
-            return
+        case .cellularConnected:
+            socketClient.connect(host: host, port: port)
+
         }
     }
     

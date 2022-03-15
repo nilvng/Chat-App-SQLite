@@ -52,23 +52,29 @@ public final class RawSocketClient {
     }
 
     public func connect(host: String, port: Int){
-        assert(.initializing == self.state)
-        self.state = .connecting("\(host):\(port)")
-        self._connect(host: host, port: port)
-    }
-    
-    private func _connect(host: String, port: Int) {
+        let st_connect = "\(host) : \(port)"
+        
+        // already connect to the same host and port
+        assert(self.state != .connecting(st_connect) && self.state != .connected)
+        
+        self.state = .connecting(st_connect)
+        
         bootstrap.connect(host: host, port: port).whenComplete { res in
+
+            guard self.state == .connecting(st_connect) else {
+                print("\(self) Warning: completed connection but already connected? Leaving..")
+                return
+            }
+   
             let _ = res.map( { channel in
                 self.channel = channel
                 self.state = .connected
             })
             
-            /// the above closure didn't run -> res = failure -> attempt to reconnect
-            if self.state != .connected {
-                print("Connection failed")
+            /// the above closure didn't run -> res = failure 
+            if self.state != .connected { //
+                print("\(self) Error: Connection failed")
                 self.state = .disconnected
-                self.reconnect(host: host, port: port)
             }
         }
         
@@ -88,9 +94,11 @@ public final class RawSocketClient {
                 
         self.state = .reconnecting
         let delay = reconnectCounter * config.connectTimeout
+        
         DispatchQueue.global().asyncAfter(deadline: DispatchTime.now() + DispatchTimeInterval.seconds(delay), execute: {
-            self._connect(host: host, port: port)
+            self.connect(host: host, port: port)
         })
+        
     }
     
     public func onHold(){
@@ -107,10 +115,20 @@ public final class RawSocketClient {
             return self.group.next().makeFailedFuture(ClientError.notReady)
         }
         self.state = .disconnecting
+        
+        // design callback for closing channel
         channel.closeFuture.whenComplete { _ in
+            
+            guard self.state == .disconnecting else {
+                print("\(self) Warning: going to disconnect but not in state of disconnecting?")
+                return
+            }
+            
             self.state = .disconnected
         }
-        channel.close(promise: nil)
+        
+        channel.close(promise: nil) // actually close channel
+        
         return channel.closeFuture
     }
 
@@ -178,7 +196,8 @@ public final class RawSocketClient {
 }
 extension RawSocketClient : ChannelHandlerDelegate {
     func channelInactive() {
-        self.state = .disconnected
+        // due to down server, wifi disconnected
+        let _ = self.disconnect()
     }
 }
 internal enum ClientError: Error {

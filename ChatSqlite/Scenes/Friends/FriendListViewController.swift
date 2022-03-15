@@ -28,6 +28,8 @@ class FriendListViewController: UIViewController {
         let tv = UITableView()
         tv.rowHeight = 58
         tv.separatorStyle = .none
+//        tv.sectionIndexMinimumDisplayRowCount = 100
+        tv.sectionFooterHeight = 0
         return tv
     }()
     
@@ -78,7 +80,7 @@ class FriendListViewController: UIViewController {
         tableView.dataSource = dataSource
         tableView.delegate = self
         tableView.register(SearchContactCell.self, forCellReuseIdentifier: SearchContactCell.identifier)
-        
+        tableView.register(FriendHeaderView.self, forHeaderFooterViewReuseIdentifier: FriendHeaderView.identifier)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         
         let margin = view.safeAreaLayoutGuide
@@ -136,44 +138,18 @@ extension FriendListViewController : UITableViewDelegate {
         }
     }
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let wrapper = UIView()
-        let label = UILabel()
-        label.textColor = .white
-        label.numberOfLines = 0
-        label.lineBreakMode = .byWordWrapping
-        label.sizeToFit()
-        label.text = dataSource.sections[section].letter
-
-        let backgroundImageView = UIImageView()
-        backgroundImageView.image = BackgroundFactory.shared.getBackground(config: BackgroundConfig(radius: 0))
-        backgroundImageView.tintColor = .rgb(red: 125, green: 158, blue: 91)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        wrapper.addSubview(backgroundImageView)
-        wrapper.addSubview(label)
-        let constraints = [
-            label.topAnchor.constraint(equalTo: wrapper.topAnchor, constant: 10),
-            label.leadingAnchor.constraint(equalTo: wrapper.leadingAnchor, constant: 16),
-            label.bottomAnchor.constraint(equalTo:  wrapper.bottomAnchor, constant: -10),
-            label.widthAnchor.constraint(lessThanOrEqualToConstant: 40),
-        ]
-        NSLayoutConstraint.activate(constraints)
-
-        label.setContentHuggingPriority(.defaultHigh, for: .vertical)
-
-
-        backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            backgroundImageView.topAnchor.constraint(equalTo: label.topAnchor, constant: -5),
-            backgroundImageView.leadingAnchor.constraint(equalTo: label.leadingAnchor, constant: -8),
-            backgroundImageView.bottomAnchor.constraint(equalTo:  label.bottomAnchor, constant: 5),
-            backgroundImageView.trailingAnchor.constraint(equalTo: wrapper.trailingAnchor, constant: -8),
-        ])
-        return wrapper
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: FriendHeaderView.identifier) as! FriendHeaderView
+        header.setTitle(s: dataSource.sections[section].letter ?? "Others")
+        return header
     }
+//    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+//        return .leastNormalMagnitude
+//    }
     
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 35
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return nil
     }
+
 }
 
 // MARK: Presenter

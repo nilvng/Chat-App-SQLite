@@ -121,7 +121,7 @@ class MessageCell: UITableViewCell {
             alignReceivedBubble(lastContinuousMess, model)
         }
         // Continuous message would be closer to each other
-        continuousConstraint.constant = lastContinuousMess ? bubbleVPadding - 4 : bubbleVPadding
+        continuousConstraint.constant = lastContinuousMess ? -bubbleVPadding : -bubbleVPadding + 4
 
     }
     
@@ -221,10 +221,10 @@ class MessageCell: UITableViewCell {
         messageBodyLabel.translatesAutoresizingMaskIntoConstraints = false
         self.outboundConstraint =  messageBodyLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -bubbleHPadding)
         self.inboundConstraint = messageBodyLabel.leadingAnchor.constraint(equalTo: avatarView.trailingAnchor, constant: bubbleHPadding)
-        self.continuousConstraint = messageBodyLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: bubbleVPadding)
+        self.continuousConstraint = messageBodyLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -bubbleVPadding)
 
         let constraints : [NSLayoutConstraint] = [
-            messageBodyLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -bubbleVPadding),
+            messageBodyLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: bubbleVPadding),
             continuousConstraint,
             outboundConstraint,
             inboundConstraint,
