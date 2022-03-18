@@ -104,6 +104,14 @@ class MessageListViewController : UITableViewController {
             self.tableView.scrollToRow(at: lastindex, at: .bottom, animated: animated)
         }
     }
+    
+    func sortByDate(){
+        let sections = Dictionary(grouping: items, by: { (item) -> String in
+            let date = item.timestamp.toSimpleDate()
+            return date
+        })
+        print(sections)
+    }
 }
 // MARK: - TableView Delegate
 extension MessageListViewController {
@@ -186,12 +194,19 @@ extension MessageListViewController {
     }
     
     func isLastContinuousMess(index: Int, message: MessageDomain) -> Bool{
-        var isLastContinuous = index == 0
-        
-        if index - 1 >= 0 {
-            let laterMessage = items[index - 1]
-            isLastContinuous = laterMessage.sender != message.sender
+        var isLastContinuous = true
+        var laterMessage : MessageDomain
+        if index + 1 < items.count {
+            laterMessage = items[index + 1]
+        } else {
+            if index - 1 > -1 {
+            laterMessage = items[index - 1]
+            } else {
+                return true
+            }
         }
+        isLastContinuous = laterMessage.sender != message.sender
+
         return isLastContinuous
     }
     
@@ -212,6 +227,7 @@ extension MessageListViewController : MessagesPresenter {
             return
         }
         self.appendItems(validItems)
+        sortByDate()
     }
 
     
