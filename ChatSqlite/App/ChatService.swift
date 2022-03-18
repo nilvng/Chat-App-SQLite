@@ -14,11 +14,6 @@ class ChatService {
     var messageWorker : MessageListWorker
     var registerAction : RegisterAction?
     
-    var utilityQueue  = DispatchQueue(label: "zalo.chatApp.ChatService",
-                                      qos: .utility,
-                                      autoreleaseFrequency: .workItem,
-                                      target: nil)
-    
     var socketService : SocketService = SocketService.shared
     
     init(conversation: ConversationDomain, callback: RegisterAction? = nil) {
@@ -32,14 +27,12 @@ class ChatService {
     }
     
     func reset(conversation: ConversationDomain){
-        utilityQueue.async { [self] in
         let observer = messageWorker.observer
         self.messageWorker = MessageListWorker(cid: conversation.id)
         self.messageWorker.observer = observer
         self.conversatioNWorker = ConversationWorker(model: conversation)
         self.messageWorker.observer?.onFoundConversation(conversation)
         }
-    }
     
     func sendMessage(_ msg: MessageDomain){
         self.addMessage(msg: msg)
@@ -49,38 +42,46 @@ class ChatService {
     
     func receiveMessage(_ msg: MessageDomain){
         self.addMessage(msg: msg)
-    }
-    
-    private func addMessage(msg : MessageDomain){
-//        utilityQueue.async { [self] in
-            
-        // update last message & insert new conv if not created already
-            conversatioNWorker.updateLastMessage(msg: msg)
-            
-        // add to db
-            let _ = messageWorker.add(msg)
+        // send ack
+        socketService.sendMessageState(msg: msg, status: .arrived)
         
-        // insert friend if not created 
-            
+    }
+    func updateMessageStatus(mid: String?, status: MessageStatus){
+        // update at conv level
+        conversatioNWorker.updateMessageStatus(status)
+        // update at msg level
+        if mid != nil {
+            // update 1 msg
+            messageWorker.updateState(id: mid!, status: status)
+        } else {
+            // update all msg status to seen
+            print("\(self) tbd: present seen animation...")
+        }
+    }
+    private func addMessage(msg : MessageDomain){
+ 
+        // update last message & insert new conv if not created already
+        conversatioNWorker.updateLastMessage(msg: msg)
+        
+        // add to db
+        let _ = messageWorker.add(msg)
+        
+        // insert friend if not created
+        
         // register itself to Manager
-            if registerAction != nil {
-                self.registerAction?(msg.cid, self)
-                self.registerAction = nil
-            }
-            
-//        }
+        if registerAction != nil {
+            self.registerAction?(msg.cid, self)
+            self.registerAction = nil
+        }
+        
     }
     
     func observeMessageList(observer: MessagesPresenter){
-        utilityQueue.async { [self] in
         messageWorker.observer = observer
-        }
     }
     
     func loadMessages(noRecords: Int, noPages: Int){
-        utilityQueue.async { [self] in
             messageWorker.requestGetAll(noRecords: noRecords, noPages: noPages)
-        }
     }
     
 }

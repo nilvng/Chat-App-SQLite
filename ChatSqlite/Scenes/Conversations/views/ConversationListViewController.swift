@@ -116,8 +116,8 @@ extension ConversationListViewController {
 // MARK: - Table view  delegate
 extension ConversationListViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         let c = self.getItem(at: indexPath)
+        interactor?.selectConversation(c)
         router?.showChats(for: c)
 
     }
@@ -134,6 +134,22 @@ extension ConversationListViewController {
 
 // MARK: Presenter
 extension ConversationListViewController : ConversationPresenter{
+    
+    func presentUpdatedItem(_ item: ConversationDomain) {
+        
+        if let index = self.items.firstIndex(where: {$0.id == item.id}){
+            
+            items[index] = item
+            
+            DispatchQueue.main.async {
+                self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+            }
+            
+        }else {
+            print("\(self) Update row of Conv that not exist")
+        }
+    }
+    
     func insertNewRow(conv: ConversationDomain){
         DispatchQueue.main.async {
             self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)

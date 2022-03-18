@@ -23,6 +23,8 @@ class ConversationSQLiteStore {
     var thumbnail = Expression<String?>("thumbnail")
     var lastMsg = Expression<String>("lastMsg")
     var timestamp = Expression<Date>("timestamp")
+    var status = Expression<Int?>("status")
+
 
     
     init(){
@@ -60,6 +62,7 @@ class ConversationSQLiteStore {
             t.column(thumbnail)
             t.column(lastMsg)
             t.column(timestamp)
+            t.column(status)
         })
         } catch let e {
             print(e.localizedDescription)
@@ -88,7 +91,11 @@ extension ConversationSQLiteStore : ConversationDBLogic{
         m.timestamp = row[timestamp]
         m.lastMsg = row[lastMsg]
         m.thumbnail = row[thumbnail]
-        //print("Store read theme: \(row[theme])")
+        
+        if let t = row[status] {
+            m.status = MessageStatus(rawValue: t) ?? .seen
+        }
+        
         if let t = row[theme] {
         m.theme = ThemeOptions(rawValue: t)
         }

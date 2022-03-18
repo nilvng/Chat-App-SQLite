@@ -9,10 +9,10 @@ import Foundation
 
 class ConversationWorker {
     
-    var model : ConversationDomain
-    var dbStore : ConversationService
+    var model : ConversationDomain!
+    var dbStore : ConversationServiceDecorator
     
-    init(model: ConversationDomain, dbStore: ConversationService = ConversationStoreProxy.shared) {
+    init(model: ConversationDomain, dbStore: ConversationServiceDecorator = ConversationServiceDecorator.shared) {
         self.model = model
         self.dbStore = dbStore
     }
@@ -24,18 +24,25 @@ class ConversationWorker {
     func updateLastMessage(msg: MessageDomain){
         model.lastMsg = msg.content
         model.timestamp = msg.timestamp
-        dbStore.upsertItem(model, completionHandler: handleError)
+        model.status = msg.status
+        dbStore.upsertConversation(model)
+        
+    }
+    
+    func updateMessageStatus(_ status: MessageStatus){
+        model.status = status
+        dbStore.updateConversation(model)
     }
     func update(){
-        dbStore.updateItem(model, completionHandler: handleError)
+        dbStore.upsertConversation(model)
     }
     
     func save(){
-        dbStore.createItem(model, completionHandler: handleError)
+//        dbStore.add(model, completionHandler: handleError)
     }
     
     func delete(){
-        dbStore.deleteItem(id: model.id, completionHandler: handleError)
+        dbStore.deleteConversation(id: model.id)
     }
     
     fileprivate func handleError(err : StoreError?){

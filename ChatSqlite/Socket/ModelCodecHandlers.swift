@@ -8,15 +8,11 @@
 import Foundation
 import NIO
 
-protocol SocketParserDelegate : AnyObject{
-    func onMessageReceived(msg: MessageDomain)
-    func onMessageStatusUpdated(mid: String, status: MessageStatus)
-}
 
-final class ModelCodecHandlers<In, Out>: ChannelInboundHandler, ChannelOutboundHandler where In: SocketModel, Out: SocketModel {
+final class ModelCodecHandlers: ChannelInboundHandler, ChannelOutboundHandler {
     public typealias InboundIn = ByteBuffer
     public typealias InboundOut = SocketModel
-    public typealias OutboundIn = Out
+    public typealias OutboundIn = SocketModel
     public typealias OutboundOut = ByteBuffer
 
 
@@ -30,24 +26,35 @@ final class ModelCodecHandlers<In, Out>: ChannelInboundHandler, ChannelOutboundH
     
     func channelRead(context: ChannelHandlerContext, data: NIOAny) {
         var buffer = self.unwrapInboundIn(data)
-        guard let eventType : UInt8 = buffer.readInteger() else {
+        guard let eventType : Int8 = buffer.readInteger() else {
             print("Incorrect format")
             return
         }
         print("Event: \(eventType)")
-        
-        if eventType == 0 {
+        guard let event = SocketEvent(rawValue: Int(eventType)) else {
+            print("Parse non-exist event: \(eventType)")
+            return
+        }
+        switch event{
+            
+        case .messageSent:
             guard let model = MessageSocketModel.decode(bytes: buffer) else {
                 print("Failed to decode Received Message")
                 return
             }
             context.fireChannelRead(wrapInboundOut(model))
-
-
-        } else {
-            print("HANDLER: unknown event")
+            
+            return
+        case .messageStatusUpdated:
+            guard let model = MsgStatusSocketModel.decode(bytes: buffer) else {
+                print("Failed to decode Msg status.")
+                return
+            }
+            context.fireChannelRead(wrapInboundOut(model))
+        default:
+            return
+            
         }
-
     }
     
     func write(context: ChannelHandlerContext, data: NIOAny, promise: EventLoopPromise<Void>?) {
@@ -63,7 +70,7 @@ final class ModelCodecHandlers<In, Out>: ChannelInboundHandler, ChannelOutboundH
     
     func userInboundEventTriggered(context: ChannelHandlerContext, event: Any) {
         if (event as? IdleStateHandler.IdleStateEvent) == .read {
-            //self.errorCaught(context: context, error: ClientError.timeout)
+            self.errorCaught(context: context, error: ClientError.timeout)
         } else {
             context.fireUserInboundEventTriggered(event)
         }

@@ -19,6 +19,7 @@ enum MessageType : Int, Codable {
 enum MessageStatus : Int, Codable{
     case sent
     case received
+    case arrived
     case seen
 }
 
@@ -45,7 +46,7 @@ protocol SQLiteModel : Codable{
 struct MessageSQLite : Message, Codable {
     
     func toUIModel() -> MessageDomain {
-        return MessageDomain(mid: mid, cid: cid, content: content, type: type, timestamp: timestamp, sender: sender,downloaded: downloaded)
+        return MessageDomain(mid: mid, cid: cid, content: content, type: type, timestamp: timestamp, sender: sender,downloaded: downloaded, status: status)
     }
     
     mutating func fromUIModel(c: MessageDomain) {
@@ -56,6 +57,7 @@ struct MessageSQLite : Message, Codable {
         self.timestamp = c.timestamp
         self.sender = c.sender
         self.downloaded = c.downloaded
+        self.status = c.status
     }
     
     var mid : String! = UUID().uuidString

@@ -66,6 +66,11 @@ class MessageListWorker {
         return true
     }
     
+    func updateState(id: String, status: MessageStatus){
+        dbStore?.updateStatus(id: id, status: status, completionHandler: handleError)
+        observer?.presentMessageStatus(id: id, status: status)
+    }
+    
     fileprivate func handleError(err : StoreError?){
         print(err?.localizedDescription ?? "Successfully update Conversation.")
     }

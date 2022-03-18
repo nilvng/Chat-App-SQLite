@@ -15,9 +15,20 @@ protocol ConversationPresenter : AnyObject {
     func presentFilteredItems(_ items: [ConversationDomain]?)
     func presentNewItem(_ item: ConversationDomain)
     func presentUpsertedItems(item: ConversationDomain)
+    func presentUpdatedItem(_ item: ConversationDomain)
 }
 
 class ConversationsInteractorImpl : ConversationListInteractor{
+    func selectConversation(_ c: ConversationDomain) {
+        // notify member of this conversation that we already seen all message
+        var conv = c
+        if conv.status == .received {
+            conv.status = .seen
+            localStore.upsertConversation(conv)
+        }
+        SocketService.shared.sendStateSeen(of: conv)
+    }
+    
  
     var localStore : ConversationServiceDecorator
     
@@ -34,7 +45,7 @@ class ConversationsInteractorImpl : ConversationListInteractor{
     }
     
     func loadData(){
-        localStore.loadConversations(noRecords: noRecords, noPages: 0, desc: true)
+        localStore.fetchAllItems(noRecords: noRecords, noPages: 0, desc: true)
     }
     
     func loadMoreData(tableOffset : CGFloat){
@@ -47,7 +58,7 @@ class ConversationsInteractorImpl : ConversationListInteractor{
         
         currPage = pages
         
-        localStore.loadConversations(noRecords: noRecords, noPages: pages, desc: true)
+        localStore.fetchAllItems(noRecords: noRecords, noPages: currPage, desc: true)
     }
     
     

@@ -6,8 +6,20 @@
 //
 
 import Foundation
+import Combine
 
-struct ConversationDomain {
+struct ConversationDomain{
+    internal init(theme: Theme? = nil, thumbnail: String? = nil, title: String, id: String, members: String, lastMsg: String, timestamp: Date, status: MessageStatus = .seen) {
+        self.theme = theme
+        self.thumbnail = thumbnail
+        self.title = title
+        self.id = id
+        self.members = members
+        self.lastMsg = lastMsg
+        self.timestamp = timestamp
+        self.status = status
+    }
+    
     static func fromFriend(friend: FriendDomain) -> ConversationDomain {
         return ConversationDomain(theme: .basic, thumbnail: nil,
                                   title: friend.name, id: friend.id,
@@ -29,6 +41,7 @@ struct ConversationDomain {
     
     var timestamp: Date
     
+    var status : MessageStatus = .seen
     
 }
 

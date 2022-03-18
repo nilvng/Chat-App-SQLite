@@ -93,6 +93,7 @@
 		0EFDD977276C2C2A00323984 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD976276C2C2A00323984 /* ChatViewController.swift */; };
 		0EFDD979276C2C4700323984 /* MessagesInteractorImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD978276C2C4700323984 /* MessagesInteractorImpl.swift */; };
 		0EFDD97E276C357E00323984 /* MessagesSQLiteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD97D276C357E00323984 /* MessagesSQLiteStore.swift */; };
+		0EFF595627E094BA00F4F366 /* MsgStatusSocketModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFF595527E094BA00F4F366 /* MsgStatusSocketModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -177,6 +178,7 @@
 		0EFDD976276C2C2A00323984 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		0EFDD978276C2C4700323984 /* MessagesInteractorImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesInteractorImpl.swift; sourceTree = "<group>"; };
 		0EFDD97D276C357E00323984 /* MessagesSQLiteStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesSQLiteStore.swift; sourceTree = "<group>"; };
+		0EFF595527E094BA00F4F366 /* MsgStatusSocketModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MsgStatusSocketModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -211,6 +213,7 @@
 				0EFDD96C276B7B0000323984 /* ServiceBasicAPIs.swift */,
 				0E6666BC2771882A00786E57 /* MessageStoreProxy.swift */,
 				0EDA95792775A08300646051 /* ConversationStoreProxy.swift */,
+				0E560B1D27BF5DEF0019B38C /* ConversationServiceDecorator.swift */,
 				0E66A9AA277A189E00525C3B /* FriendStoreProxy.swift */,
 				0E727F4F278571AA002EA7E3 /* NativeContactStore.swift */,
 				0E727F5127857416002EA7E3 /* NativeContactStoreAdapter.swift */,
@@ -347,9 +350,10 @@
 				0E062B0827CDCB14002DAF95 /* RawSocketClient.swift */,
 				0E062B1227CDD5BF002DAF95 /* ModelCodecHandlers.swift */,
 				0E7E897C27D10C64004375F7 /* DelegateHandlers.swift */,
-				0E062B1427CDFCF7002DAF95 /* SocketModel.swift */,
 				0E062B0A27CDCBF2002DAF95 /* Utils.swift */,
 				0E062B0E27CDD421002DAF95 /* JSONCodableCodec.swift */,
+				0EFF595527E094BA00F4F366 /* MsgStatusSocketModel.swift */,
+				0E062B1427CDFCF7002DAF95 /* SocketModel.swift */,
 			);
 			path = Socket;
 			sourceTree = "<group>";
@@ -403,7 +407,6 @@
 				0E560B1927BF4AE20019B38C /* MessageListWorker.swift */,
 				0E560B1B27BF53070019B38C /* ChatService.swift */,
 				0E560B1F27BF60030019B38C /* ChatServiceManager.swift */,
-				0E560B1D27BF5DEF0019B38C /* ConversationServiceDecorator.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -592,6 +595,7 @@
 				0E7E931427D05E2C00936B35 /* UserSettings.swift in Sources */,
 				0E393FC227B3C1A40011CB68 /* ConversationListViewController.swift in Sources */,
 				0EFDD97E276C357E00323984 /* MessagesSQLiteStore.swift in Sources */,
+				0EFF595627E094BA00F4F366 /* MsgStatusSocketModel.swift in Sources */,
 				0EFDD969276B7A4A00323984 /* Conversation.swift in Sources */,
 				0EA0589D27D7A02900E7E708 /* PostButton.swift in Sources */,
 				0EFDD971276B86AD00323984 /* FriendListViewController.swift in Sources */,

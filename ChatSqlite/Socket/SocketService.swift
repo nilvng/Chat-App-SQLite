@@ -17,8 +17,8 @@ class SocketService {
     var socketClient : RawSocketClient
     weak var delegate : SocketDelegate? = ChatServiceManager.shared
     
-    let host = "0.tcp.ngrok.io"
-    let port = 13649
+    let host = "localhost"
+    let port = 3000
     
     private var subscription: AnyCancellable?
     
@@ -41,6 +41,8 @@ class SocketService {
             print("Wifi connected")
             socketClient.connect(host: host, port: port)
         case .notReachable:
+            print("Wifi disconnected??")
+            // TODO: disconnect?
             let _ = socketClient.disconnect() // disconnect former socket if exists
             
             // queue unsent requests
@@ -56,8 +58,8 @@ class SocketService {
     
     func oserveSocketState(state: RawSocketClient.State){
         switch state {
-        case .connected: break
-            //print("\(self) Great!")
+        case .connected:
+            print("\(self) Great!")
         case .disconnected:
             //print("\(self) Bleh")
             let _ = socketClient.disconnect()
@@ -81,6 +83,18 @@ class SocketService {
     
     func receiveMessage(_ msg: MessageDomain){
         delegate?.onMessageReceived(msg: msg)
+        self.sendMessageState(msg: msg, status: .arrived)
+    }
+    
+    func sendMessageState(msg: MessageDomain, status: MessageStatus){
+        let msgModel = MsgStatusSocketModel(mid: msg.mid, cid: msg.sender, status: status)
+        socketClient.send(model: msgModel)
+    }
+    
+    func sendStateSeen(of conv: ConversationDomain){
+        let myID = UserSettings.shared.getUserID()
+        // TODO: Msg status model should have the recipient ID
+        socketClient.send(model: MsgStatusSocketModel(cid: myID, status: .seen))
     }
     
 }
@@ -90,9 +104,8 @@ extension SocketService : SocketParserDelegate {
         delegate?.onMessageReceived(msg: msg)
     }
     
-    func onMessageStatusUpdated(mid: String, status: MessageStatus) {
-        delegate?.onMessageStatusUpdated(mid: mid, status: status)
+    func onMessageStatusUpdated(cid: String, mid: String?, status: MessageStatus) {
+        delegate?.onMessageStatusUpdated(cid: cid, mid: mid, status: status)
     }
-    
     
 }

@@ -13,6 +13,7 @@ protocol MessagesPresenter : AnyObject{
     func presentReceivedItem(_ item : MessageDomain)
     func presentSentItem(_ item: MessageDomain)
     func onFoundConversation(_ c: ConversationDomain)
+    func presentMessageStatus(id: String, status: MessageStatus)
 
 }
 
@@ -62,7 +63,7 @@ class MessagesInteractorImpl : MessageListInteractor {
 
     func onSendMessage(content: String, conversation: ConversationDomain){
         // display message
-        let m = MessageDomain(cid: conversation.id, content: content, type: .text)
+        let m = MessageDomain(cid: conversation.id, content: content, type: .text, status: .sent)
         
         // update db
         chatService.sendMessage(m)

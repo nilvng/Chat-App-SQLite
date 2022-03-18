@@ -12,6 +12,7 @@ protocol ConversationListInteractor {
     func loadMoreData(tableOffset: CGFloat)
     func deleteConversation(item: ConversationDomain, indexPath: IndexPath)
     func filterBy(key: String)
+    func selectConversation(_ c: ConversationDomain)
 }
 
 class HomeViewController: UIViewController {

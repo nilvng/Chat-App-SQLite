@@ -28,7 +28,7 @@ class MessageDomain {
     // download subscriber
     var subscriber : MessageSubscriber?
     
-    init(mid: String, cid: String, content: String, type: MessageType, timestamp: Date, sender: String, downloaded: Bool = false) {
+    init(mid: String, cid: String, content: String, type: MessageType, timestamp: Date, sender: String, downloaded: Bool = false, status: MessageStatus) {
         self.mid = mid
         self.cid = cid
         self.content = content
@@ -36,8 +36,9 @@ class MessageDomain {
         self.timestamp = timestamp
         self.sender = sender
         self.downloaded = downloaded
+        self.status = status
     }
-    init(cid: String, content: String, type: MessageType,downloaded: Bool = false) {
+    init(cid: String, content: String, type: MessageType, status: MessageStatus,downloaded: Bool = false) {
         self.mid = UUID().uuidString
         self.cid = cid
         self.content = content
@@ -45,6 +46,11 @@ class MessageDomain {
         self.timestamp = Date()
         self.sender = UserSettings.shared.getUserID()
         self.downloaded = downloaded
+        self.status = status
+    }
+    
+    func isFromThisUser() -> Bool{
+        return self.sender == UserSettings.shared.getUserID()
     }
     
 }

@@ -7,7 +7,10 @@
 
 import Foundation
 import Alamofire
-class ConversationServiceDecorator {
+class ConversationServiceDecorator{
+
+    static let shared = ConversationServiceDecorator()
+    
     weak var observer : ConversationPresenter?
     var dbStore : ConversationService
     
@@ -27,7 +30,27 @@ class ConversationServiceDecorator {
             self?.observer?.presentFilteredItems(items)
         })
     }
-    func loadConversations(noRecords: Int, noPages: Int, desc: Bool){
+    
+    func updateConversation(_ c: ConversationDomain){
+        dbStore.updateItem(c, completionHandler: { [weak self] err in
+            guard let err = err else {
+                return
+            }
+            print("\(String(describing: self)): \(err.localizedDescription)")
+        })
+        self.observer?.presentUpdatedItem(c)
+    }
+    
+    func upsertConversation(_ c: ConversationDomain){
+        observer?.presentUpdatedItem(c)
+        dbStore.upsertItem(c, completionHandler: { err in
+            guard let err = err else {
+                return
+            }
+            print(err.localizedDescription)
+        })
+    }
+    func fetchAllItems(noRecords: Int, noPages: Int, desc: Bool){
         dbStore.fetchAllItems(noRecords: noRecords, noPages: noPages, desc: desc, completionHandler: { [weak self] items, err in
             guard let items = items else {
                 return

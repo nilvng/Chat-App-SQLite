@@ -7,6 +7,12 @@
 
 import Foundation
 import NIO
+
+protocol SocketParserDelegate : AnyObject{
+    func onMessageReceived(msg: MessageDomain)
+    func onMessageStatusUpdated(cid: String, mid: String?, status: MessageStatus)
+}
+
 protocol ChannelHandlerDelegate : AnyObject {
     func channelInactive()
 }
@@ -33,6 +39,11 @@ final class DelegateHandlers :ChannelInboundHandler {
         if unwrapData.getEvent() == .messageSent, let model = unwrapData as? MessageSocketModel{
             
             delegate?.onMessageReceived(msg: model.message)
+            return
+        }
+        
+        if unwrapData.getEvent() == .messageStatusUpdated, let model = unwrapData as? MsgStatusSocketModel {
+            delegate?.onMessageStatusUpdated(cid: model.cid, mid: model.mid, status: model.status)
         }
     }
     

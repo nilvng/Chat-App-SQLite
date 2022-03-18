@@ -41,6 +41,9 @@ enum ParsePattern : Character{
         if char == ParsePattern.S.rawValue {
             return .S
         }
+        if char == ParsePattern.s.rawValue {
+            return .s
+        }
         return nil
     }
  
@@ -83,21 +86,22 @@ enum SocketEvent : Int{
         case .messageReceived:
             return "cumS"
         case .messageStatusUpdated:
-            return "ms"
+            return "csm"
         }
     }
+    
 }
 
 protocol SocketModel {
     func getEvent() -> SocketEvent
-    func getBody(bytes: ByteBuffer) -> ByteBuffer
+    func encodeBody(bytes: ByteBuffer) -> ByteBuffer
     func encode(bytes: ByteBuffer) -> ByteBuffer
     static func decode(bytes: ByteBuffer) -> SocketModel?
 }
 
 struct MessageSocketModel : SocketModel {
     
-    func getBody(bytes: ByteBuffer) -> ByteBuffer {
+    func encodeBody(bytes: ByteBuffer) -> ByteBuffer {
         let pattern = SocketEvent.messageSent.getPattern()
         var mutableBytes = bytes
         for c in pattern {
@@ -129,7 +133,7 @@ struct MessageSocketModel : SocketModel {
     static func decode(bytes: ByteBuffer) -> SocketModel?{
         var mutableBytes = bytes
         let pattern = SocketEvent.messageSent.getPattern()
-        let model = MessageDomain(cid: "", content: "", type: .text)
+        let model = MessageDomain(cid: "", content: "", type: .text, status: .received)
         for c in pattern {
             guard let code = ParsePattern.find(char: c) else {
                 continue
@@ -170,7 +174,7 @@ struct MessageSocketModel : SocketModel {
         var mutable = bytes
         let eventInteger = getEvent().rawValue
         mutable.writeInteger(Int8(eventInteger))
-        mutable = getBody(bytes: mutable)
+        mutable = encodeBody(bytes: mutable)
         return mutable
     }
     

@@ -26,7 +26,7 @@ class HomeModule {
         
         let childListView = ConversationListViewController()
         
-        let service = ConversationServiceDecorator()
+        let service = ConversationServiceDecorator.shared
         let inter = ConversationsInteractorImpl(service: service)
         
         childListView.interactor = inter

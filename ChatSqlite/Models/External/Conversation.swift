@@ -18,6 +18,7 @@ protocol Conversation {
     var members: String! {get set}
     var lastMsg : String! {get set}
     var timestamp : Date! {get set}
+    var status : MessageStatus! {get set}
     func toUIModel() -> ConversationDomain
     mutating func fromUIModel(c : ConversationDomain)
 }
@@ -27,6 +28,7 @@ struct ConversationSQLite : SQLiteModel, Conversation {
     func toUIModel() -> ConversationDomain {
     var c =  ConversationDomain(theme: nil, thumbnail: thumbnail, title: title, id: id, members: members, lastMsg: lastMsg, timestamp: timestamp)
         c.theme = self.theme?.getTheme()
+        c.status = self.status
         return c
     }
     
@@ -57,5 +59,7 @@ struct ConversationSQLite : SQLiteModel, Conversation {
     var lastMsg : String!
     
     var timestamp: Date!
+    
+    var status : MessageStatus! = .seen
     
 }

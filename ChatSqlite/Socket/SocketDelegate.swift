@@ -15,6 +15,6 @@ protocol SocketDelegate : AnyObject {
     
     func onMessageSent()
     func onMessageReceived(msg: MessageDomain)
-    func onMessageStatusUpdated(mid: String, status: MessageStatus)
-    
+    func onMessageStatusUpdated(cid: String, mid: String?, status: MessageStatus)
+
 }

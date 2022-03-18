@@ -199,6 +199,14 @@ extension MessageListViewController {
 
 // MARK: Presenter
 extension MessageListViewController : MessagesPresenter {
+    
+    func presentMessageStatus(id: String, status: MessageStatus) {
+        if let index = items.firstIndex(where: { $0.mid == id}) {
+            items[index].status = status
+            tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+        }
+    }
+    
     func presentItems(_ items: [MessageDomain]?, offset: Int) {
         guard let validItems = items, offset >= self.items.count else {
             return

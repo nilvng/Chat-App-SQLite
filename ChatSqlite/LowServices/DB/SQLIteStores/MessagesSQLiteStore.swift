@@ -9,6 +9,7 @@ import Foundation
 import SQLite
 
 class MessagesSQLStore : MessageDBLogic {
+
     
     var conversationID: String
     
@@ -23,6 +24,7 @@ class MessagesSQLStore : MessageDBLogic {
     var type = Expression<Int>("type")
     var sender = Expression<String>("sender")
     var downloaded = Expression<Bool>("downloaded")
+    var status = Expression<Int?>("status")
     
         
     let serialQueue = DispatchQueue(
@@ -69,6 +71,7 @@ class MessagesSQLStore : MessageDBLogic {
             t.column(sender)
             t.column(type)
             t.column(downloaded)
+            t.column(status)
         })
         } catch let e {
             print(e.localizedDescription)
@@ -78,6 +81,14 @@ class MessagesSQLStore : MessageDBLogic {
 }
 extension MessagesSQLStore{
 
+    func updateStatus(id: String, status: MessageStatus, completionHandler: @escaping (StoreError?) -> Void) {
+        do {
+            let item = table.filter(mid == id)
+            try db?.run(item.update(self.status <- status.rawValue))
+        } catch let e {
+            print("\(self) update failed: \(e)")
+        }
+    }
     
     func getAll(noRecords : Int, noPages: Int, desc : Bool = false, completionHandler: @escaping ([Message]?, StoreError?) -> Void) {
             
@@ -95,6 +106,11 @@ extension MessagesSQLStore{
                 m.timestamp = row[timestamp]
                 m.sender = row[sender]
                 m.downloaded = row[downloaded]
+                if let val = row[status] {
+                    m.status = MessageStatus(rawValue: val) ?? .seen
+                } else {
+                    m.status = .seen
+                }
                 return m
             }
             completionHandler(result,nil)

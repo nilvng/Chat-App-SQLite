@@ -48,6 +48,7 @@ protocol MessageDBService{
     func fetchItemWithId(_ id: String, completionHandler : @escaping (MessageDomain?, StoreError?) -> Void)
     func createItem(_ item: MessageDomain,completionHandler : @escaping (StoreError?) -> Void)
     func updateItem(_ item: MessageDomain,completionHandler : @escaping (StoreError?) -> Void)
+    func updateStatus(id: String, status: MessageStatus, completionHandler : @escaping (StoreError?) -> Void)
     func deleteItem(id: String ,completionHandler : @escaping (StoreError?) -> Void)
     func deleteAllItems(completionHandler: @escaping (StoreError?) -> Void)
 }

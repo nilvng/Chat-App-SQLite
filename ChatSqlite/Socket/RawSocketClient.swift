@@ -33,15 +33,16 @@ public final class RawSocketClient {
         self.bootstrap = ClientBootstrap(group: self.group)
             .channelOption(ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET), SO_REUSEADDR), value: 1)
             .channelInitializer { channel in
-                return channel.pipeline.addTimeoutHandlers(self.config.requestTimeout)
+                return
+//                channel.pipeline.addTimeoutHandlers(self.config.requestTimeout)
 //                    .flatMap {
 //                        channel.pipeline.addFramingHandlers(framing: self.config.framing)}
-                    .flatMap {
+//                    .flatMap {
                         channel.pipeline.addHandlers([
-                            ModelCodecHandlers<MessageSocketModel, MessageSocketModel>(),
+                            ModelCodecHandlers(),
                             DelegateHandlers(delegate: SocketService.shared, channelDelegate: self),
                         ])
-                    }
+//                    }
             }
         
     }
@@ -132,7 +133,7 @@ public final class RawSocketClient {
         return channel.closeFuture
     }
 
-    func send(model: MessageSocketModel){
+    func send(model: SocketModel){
         if .connected != self.state {
             print("Server disconnected. Cant send...")
             return
@@ -182,7 +183,7 @@ public final class RawSocketClient {
         public let framing: Framing
         
 
-        public init(timeout: TimeAmount = TimeAmount.seconds(5),
+        public init(timeout: TimeAmount = TimeAmount.seconds(60),
                     framing: Framing = .default,
                     connectTimeout: Int = 2,
                     reconnectAttempt: Int = 5) {
