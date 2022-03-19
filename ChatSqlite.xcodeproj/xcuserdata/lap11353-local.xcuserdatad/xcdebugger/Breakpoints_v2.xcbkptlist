@@ -142,8 +142,8 @@
             filePath = "ChatSqlite/Scenes/Messages/controllers/MessageListViewConroller.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "241"
-            endingLineNumber = "241"
+            startingLineNumber = "251"
+            endingLineNumber = "251"
             landmarkName = "presentSentItem(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -158,8 +158,8 @@
             filePath = "ChatSqlite/Scenes/Messages/controllers/MessageListViewConroller.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "63"
-            endingLineNumber = "63"
+            startingLineNumber = "70"
+            endingLineNumber = "70"
             landmarkName = "appendNewItem(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -174,8 +174,8 @@
             filePath = "ChatSqlite/App/ChatService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "67"
-            endingLineNumber = "67"
+            startingLineNumber = "68"
+            endingLineNumber = "68"
             landmarkName = "addMessage(msg:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -206,8 +206,8 @@
             filePath = "ChatSqlite/Scenes/Messages/controllers/MessageListViewConroller.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "124"
-            endingLineNumber = "124"
+            startingLineNumber = "133"
+            endingLineNumber = "133"
             landmarkName = "scrollViewDidScroll(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -222,8 +222,8 @@
             filePath = "ChatSqlite/Scenes/Messages/controllers/MessageListViewConroller.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "168"
-            endingLineNumber = "168"
+            startingLineNumber = "177"
+            endingLineNumber = "177"
             landmarkName = "makeBubbleGradient(givenIndices:tableView:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -359,32 +359,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "17005F24-2DF4-4B3E-9A43-EA24870B93C1"
+            uuid = "47DA018E-9651-4FE6-A3B9-9E9F83B71FA1"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "ChatSqlite/Scenes/Messages/views/MessageCell.swift"
+            filePath = "ChatSqlite/App/ChatService.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "173"
-            endingLineNumber = "173"
-            landmarkName = "alignReceivedBubble(_:_:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "226E0932-F701-4B41-9BA4-3F94FAD433BD"
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ChatSqlite/Scenes/Messages/controllers/MessageListViewConroller.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "187"
-            endingLineNumber = "187"
-            landmarkName = "tableView(_:cellForRowAt:)"
+            startingLineNumber = "52"
+            endingLineNumber = "52"
+            landmarkName = "updateMessageStatus(mid:status:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -25,8 +25,8 @@ class ConversationsInteractorImpl : ConversationListInteractor{
         if conv.status == .received {
             conv.status = .seen
             localStore.upsertConversation(conv)
+            SocketService.shared.sendStateSeen(of: conv)
         }
-        SocketService.shared.sendStateSeen(of: conv)
     }
     
  

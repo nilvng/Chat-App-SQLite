@@ -43,14 +43,15 @@ class ChatService {
     func receiveMessage(_ msg: MessageDomain){
         self.addMessage(msg: msg)
         // send ack
-        socketService.sendMessageState(msg: msg, status: .arrived)
+        let uid = UserSettings.shared.getUserID()
+        socketService.sendMessageState(msg: msg, status: .arrived, from: uid)
         
     }
     func updateMessageStatus(mid: String?, status: MessageStatus){
         // update at conv level
         conversatioNWorker.updateMessageStatus(status)
         // update at msg level
-        if mid != nil {
+        if mid != nil || mid != "" {
             // update 1 msg
             messageWorker.updateState(id: mid!, status: status)
         } else {

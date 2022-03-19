@@ -42,6 +42,7 @@ struct ConversationSQLite : SQLiteModel, Conversation {
     members = c.members
     lastMsg = c.lastMsg
     timestamp = c.timestamp
+        status = c.status
     }
     
     init(){}

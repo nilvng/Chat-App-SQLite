@@ -21,12 +21,19 @@ class MessageListViewController : UITableViewController {
     var parentDelegate : MessageListViewDelegate?
     
     var items : [MessageDomain] = []
+    var dateSections : [DateSection] = []
+    
     var conversation : ConversationDomain!
     var theme : Theme = .basic
     
     var lastUpdatedOffset : Int = 0
     static var CELL_ID = "messCell"
-
+    
+    struct DateSection {
+        var title : String
+        var items : [MessageDomain]
+    }
+    
     
     func configure(friend: FriendDomain){
         self.conversation = ConversationDomain.fromFriend(friend: friend)
@@ -110,7 +117,9 @@ class MessageListViewController : UITableViewController {
             let date = item.timestamp.toSimpleDate()
             return date
         })
-        print(sections)
+        let keys = sections.keys.sorted()
+        // map the sorted keys to a struct
+        dateSections += keys.map{ DateSection(title: $0, items: sections[$0]!) }
     }
 }
 // MARK: - TableView Delegate
@@ -189,7 +198,6 @@ extension MessageListViewController {
         cell.configure(with: message, lastContinuousMess: isLastContinuous)
         if isLastContinuous { cell.showAvatar(name: conversation.title)} // show placeholder is the name of conversation
         cell.transform = CGAffineTransform(scaleX: 1, y: -1)
-        
         return cell
     }
     
@@ -206,7 +214,7 @@ extension MessageListViewController {
             }
         }
         isLastContinuous = laterMessage.sender != message.sender
-
+        
         return isLastContinuous
     }
     
@@ -218,7 +226,9 @@ extension MessageListViewController : MessagesPresenter {
     func presentMessageStatus(id: String, status: MessageStatus) {
         if let index = items.firstIndex(where: { $0.mid == id}) {
             items[index].status = status
-            tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+            DispatchQueue.main.async {
+                self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+            }
         }
     }
     

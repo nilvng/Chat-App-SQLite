@@ -83,11 +83,10 @@ class SocketService {
     
     func receiveMessage(_ msg: MessageDomain){
         delegate?.onMessageReceived(msg: msg)
-        self.sendMessageState(msg: msg, status: .arrived)
     }
     
-    func sendMessageState(msg: MessageDomain, status: MessageStatus){
-        let msgModel = MsgStatusSocketModel(mid: msg.mid, cid: msg.sender, status: status)
+    func sendMessageState(msg: MessageDomain, status: MessageStatus, from userID: String){
+        let msgModel = MsgStatusSocketModel(mid: msg.mid, cid: userID, status: status)
         socketClient.send(model: msgModel)
     }
     
