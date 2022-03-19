@@ -44,20 +44,29 @@ class MessageListViewController : UITableViewController {
         self.conversation = conversation
     }
     
-    func setItems(_ items: [MessageDomain]){
-        self.items = items
-        self.items.sort(by: { $0.timestamp > $1.timestamp})
+    func appendItems(_ items: [MessageDomain]){
+        self.items += items
+        //self.items.sort(by: { $0.timestamp > $1.timestamp})
+        
+        let newSections = sortByDate(items: items)
+        resolveAndMergeSections(newSections: newSections)
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
     }
     
-    func appendItems(_ items: [MessageDomain]){
-        self.items += items
-        self.items.sort(by: { $0.timestamp > $1.timestamp})
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
+    func resolveAndMergeSections(newSections: [DateSection]){
+        let curN = dateSections.count
+       
+        if curN > 0 && dateSections[curN-1].title == newSections[0].title {
+            dateSections[curN-1].items.append(contentsOf: newSections[0].items)
+            for i in 1..<newSections.count{
+                dateSections.append(newSections[i])
+            }
+        } else {
+            dateSections.append(contentsOf: newSections)
         }
+        
     }
     
     func setBubbleTheme(theme: Theme){
@@ -66,12 +75,30 @@ class MessageListViewController : UITableViewController {
     
     
     func appendNewItem(_ item: MessageDomain){
-        DispatchQueue.main.async {
-            self.items.insert(item, at: 0)
-            self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .top)
-            //self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .top)
-            self.scrollToLastMessage()
+        let timestampString = item.timestamp.toSimpleDate()
+        if dateSections.count > 0 {
+            let lastSection = dateSections[0]
+            
+            if lastSection.title == timestampString { // Same date with previous section
+                dateSections[0].items.insert(item, at: 0)
+                DispatchQueue.main.async {
+                    self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .top)
+                    self.scrollToLastMessage()
+                    
+                }
+                return
+            }
         }
+        
+        let newSection = DateSection(title: timestampString, items: [item])
+        dateSections.insert(newSection, at: 0)
+        DispatchQueue.main.async {
+            self.tableView.insertSections(IndexSet(integer: 0), with: .top)
+            self.scrollToLastMessage()
+            
+        }
+        
+        
     }
 
     lazy var myTableView : UITableView = {
@@ -82,7 +109,6 @@ class MessageListViewController : UITableViewController {
         
         table.showsVerticalScrollIndicator = false
         table.contentInsetAdjustmentBehavior = .never
-        table.register(MessageCell.self, forCellReuseIdentifier: MessageCell.identifier)
         table.estimatedRowHeight = 60
         table.rowHeight = UITableView.automaticDimension
         table.transform = CGAffineTransform(scaleX: 1, y: -1)
@@ -90,7 +116,10 @@ class MessageListViewController : UITableViewController {
     }()
     
     override func viewDidLoad() {
+        myTableView.register(MessageCell.self, forCellReuseIdentifier: MessageCell.identifier)
+        myTableView.register(TimestampHeaderView.self, forHeaderFooterViewReuseIdentifier: TimestampHeaderView.identifier)
         tableView = myTableView
+
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -112,14 +141,14 @@ class MessageListViewController : UITableViewController {
         }
     }
     
-    func sortByDate(){
+    func sortByDate(items: [MessageDomain]) -> [DateSection]{
         let sections = Dictionary(grouping: items, by: { (item) -> String in
             let date = item.timestamp.toSimpleDate()
             return date
         })
-        let keys = sections.keys.sorted()
+        let keys = sections.keys.sorted(by: {$0 > $1})
         // map the sorted keys to a struct
-        dateSections += keys.map{ DateSection(title: $0, items: sections[$0]!) }
+        return keys.map{ DateSection(title: $0, items: sections[$0]!) }
     }
 }
 // MARK: - TableView Delegate
@@ -185,38 +214,71 @@ func makeBubbleGradient(givenIndices: [IndexPath]? = nil, tableView: UITableView
 
 extension MessageListViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return items.count
+        return dateSections[section].items.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: MessageCell.identifier, for: indexPath) as! MessageCell
-        let reverseIndex = indexPath.row
-        let message =  items[reverseIndex]
+        let message =  dateSections[indexPath.section].items[indexPath.row]
         
-        let isLastContinuous = isLastContinuousMess(index: reverseIndex, message: message)
-                
-        cell.configure(with: message, lastContinuousMess: isLastContinuous)
-        if isLastContinuous { cell.showAvatar(name: conversation.title)} // show placeholder is the name of conversation
+        let isEndOfContinous = isEndOfContinuousMessages(indexPath: indexPath, message: message)
+        let isStartOfContinuous = isStartOfContinuousMessages(indexPath: indexPath, message: message)
+
+        cell.configure(with: message, isStartMessage: isStartOfContinuous, isEndMessage: isEndOfContinous)
+        if isStartOfContinuous { cell.showAvatar(name: conversation.title)} // show placeholder is the name of conversation
         cell.transform = CGAffineTransform(scaleX: 1, y: -1)
         return cell
     }
     
-    func isLastContinuousMess(index: Int, message: MessageDomain) -> Bool{
-        var isLastContinuous = true
+    func isEndOfContinuousMessages(indexPath: IndexPath, message: MessageDomain) -> Bool{
         var laterMessage : MessageDomain
-        if index + 1 < items.count {
-            laterMessage = items[index + 1]
-        } else {
-            if index - 1 > -1 {
-            laterMessage = items[index - 1]
-            } else {
-                return true
-            }
+        let sectionItems = dateSections[indexPath.section].items
+        var res = true
+        let row = indexPath.row
+        if row - 1 >= 0 { // last item <> next item
+            laterMessage = sectionItems[row - 1]
+            res = laterMessage.sender == message.sender
         }
-        isLastContinuous = laterMessage.sender != message.sender
-        
-        return isLastContinuous
+        if row + 1 < sectionItems.count { // last item == previous item
+            laterMessage = sectionItems[row + 1]
+            res = laterMessage.sender != message.sender && row == 0
+        }
+        return res
+
     }
+    
+    func isStartOfContinuousMessages(indexPath: IndexPath, message: MessageDomain) -> Bool{
+        var laterMessage : MessageDomain
+        let sectionItems = dateSections[indexPath.section].items
+        let row = indexPath.row
+        if row - 1 >= 0 { // last item <> next item
+            laterMessage = sectionItems[row - 1]
+            return laterMessage.sender != message.sender
+        }
+        if row + 1 < sectionItems.count { // last item == previous item
+            laterMessage = sectionItems[row + 1]
+            return laterMessage.sender == message.sender || row == 0
+        }
+        return true
+    }
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
+        dateSections.count
+    }
+    
+    override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        guard let view = tableView.dequeueReusableHeaderFooterView(withIdentifier: TimestampHeaderView.identifier) as? TimestampHeaderView else {
+            fatalError()
+        }
+        let curSection = dateSections[section]
+        let time = curSection.items[0].timestamp.getTimeString()
+        
+        let title = "\(curSection.title) at \(time)"
+        view.setTitle(s: title)
+        view.transform = CGAffineTransform(scaleX: 1, y: -1)
+        return view
+    }
+ 
     
 }
 
@@ -237,7 +299,6 @@ extension MessageListViewController : MessagesPresenter {
             return
         }
         self.appendItems(validItems)
-        sortByDate()
     }
 
     

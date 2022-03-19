@@ -35,7 +35,7 @@ class MessageCell: UITableViewCell {
     }()
     let timestampLabel : UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 10)
+        label.font = UIFont.systemFont(ofSize: 12)
         return label
     }()
     
@@ -57,16 +57,16 @@ class MessageCell: UITableViewCell {
     var incomingBubbleConfig : BackgroundConfig = {
         let config = BackgroundConfig()
         config.color = UIColor.trueLightGray
-        config.corner = [.allCorners]
-        config.radius = 13
+        config.corner = [.topRight, .bottomRight, .topLeft]
+        config.radius = 14
         return config
     }()
     
     var outgoingBubbleConfig : BackgroundConfig = {
         let config = BackgroundConfig()
         config.color = .none
-        config.corner = [.allCorners]
-        config.radius = 13
+        config.corner = [.topLeft, .bottomLeft, .topRight]
+        config.radius = 14
         return config
     }()
     
@@ -76,12 +76,17 @@ class MessageCell: UITableViewCell {
         contentView.addSubview(bubbleImageView)
         contentView.addSubview(avatarView)
         contentView.addSubview(messageBodyLabel)
+        contentView.addSubview(timestampLabel)
 
         setupAvatarView()
         setupMessageBody()
         setupBubbleBackground()
         setupDownloadButton()
+//        setupTimestamp()
+//        timestampLabel.isHidden = true
         
+        backgroundView = .none
+        backgroundColor = .clear
         setInteractor()
                 
         }
@@ -93,15 +98,7 @@ class MessageCell: UITableViewCell {
         interactor?.presenter = self
     }
     
-    func configure(with model: MessageDomain, lastContinuousMess: Bool = false){
-        
-        backgroundView = .none
-        backgroundColor = .clear
-
-        message = model
-        model.subscribe(self)
-        
-        let isReceived = isReceived(sender: model.sender)
+    fileprivate func styleByMessageType(_ model: MessageDomain, _ isReceived: Bool) {
         // Style bubble based on the type content
         switch model.type {
         case .text:
@@ -113,16 +110,65 @@ class MessageCell: UITableViewCell {
             styleDownloadbleBubble(isIt: false)
             messageBodyLabel.text = "Unprocessed bubble:" + model.content
         }
+    }
+    
+    func configure(with model: MessageDomain, isStartMessage isStart: Bool, isEndMessage isEnd: Bool){
+
+        message = model
+        model.subscribe(self)
+        
+        let isReceived = isReceived(sender: model.sender)
+        styleByMessageType(model, isReceived)
 
         // Align bubble based on whether the sender is the user themselves
+
         if !isReceived {
             alignSentBubble()
+            var config = outgoingBubbleConfig
+//            if isStart {
+//                config.corner = [.bottomRight, .bottomLeft, .topRight]
+//            }
+//            if isEnd {
+//                config.corner = [.topRight, .topLeft, .bottomLeft]
+//
+//            }
+//            if isStart && isEnd {
+//                config.corner = [.allCorners]
+//            }
+            bubbleImageView.image = BackgroundFactory.shared.getBackground(config: config)
         } else {
-            alignReceivedBubble(lastContinuousMess, model)
+            alignReceivedBubble(isStart, model)
+            var config = incomingBubbleConfig
+//            if isStart {
+//                config.corner = [.bottomRight, .bottomLeft, .topLeft]
+//            }
+//            if isEnd {
+//                config.corner = [.topRight, .topLeft, .bottomRight]
+//            }
+//            if isStart && isEnd {
+//                config.corner = [.allCorners]
+//            }
+            bubbleImageView.image = BackgroundFactory.shared.getBackground(config: config)
         }
-        // Continuous message would be closer to each other
-        continuousConstraint.constant = lastContinuousMess ? bubbleVPadding : bubbleVPadding - 4
+        
 
+
+        // Continuous message would be closer to each other
+        continuousConstraint.constant = isEnd ? bubbleVPadding : bubbleVPadding - 4
+
+    }
+    
+    func formatTimestamp(isStart: Bool, model: MessageDomain){
+        if isStart {
+            // show timestamp
+            timestampLabel.isHidden = false
+            let formatter = DateFormatter()
+            formatter.timeStyle = .short
+            timestampLabel.text = formatter.string(from: model.timestamp)
+
+        } else {
+            timestampLabel.isHidden = true
+        }
     }
     
     func isReceived(sender: String) -> Bool{
@@ -151,8 +197,6 @@ class MessageCell: UITableViewCell {
         
     }
     fileprivate func alignSentBubble() {
-        // get bubble
-        bubbleImageView.image = BackgroundFactory.shared.getBackground(config: outgoingBubbleConfig)
         // sent message will align to the right
         inboundConstraint?.isActive = false
         outboundConstraint?.isActive = true
@@ -162,17 +206,15 @@ class MessageCell: UITableViewCell {
         messageBodyLabel.textColor = .white
     }
     
-    fileprivate func alignReceivedBubble(_ lastContinuousMess: Bool, _ model: MessageDomain) {
-        // get the bubble image
-        bubbleImageView.image = BackgroundFactory.shared.getBackground(config: incomingBubbleConfig)
+    fileprivate func alignReceivedBubble(_ isStart: Bool, _ model: MessageDomain) {
         // received message will align to the left
         outboundConstraint?.isActive = false
         inboundConstraint?.isActive = true
         messageBodyLabel.textColor = .black
         // show avatar view if is the last continuous message a friend sent
-        avatarView.isHidden = !lastContinuousMess
+        avatarView.isHidden = !isStart
         
-        if lastContinuousMess{
+        if isStart{
             showAvatar(fid: model.sender)
         }
     }
@@ -243,6 +285,18 @@ class MessageCell: UITableViewCell {
             bubbleImageView.leadingAnchor.constraint(equalTo: messageBodyLabel.leadingAnchor, constant: -bubbleHPadding + BubbleConstant.contentHPadding),
             bubbleImageView.bottomAnchor.constraint(equalTo:  messageBodyLabel.bottomAnchor, constant: bubbleVPadding - BubbleConstant.contentVPadding),
             bubbleImageView.trailingAnchor.constraint(equalTo: messageBodyLabel.trailingAnchor, constant: bubbleHPadding - BubbleConstant.contentHPadding),
+        ]
+        
+        NSLayoutConstraint.activate(constraints)
+        }
+    func setupTimestamp(){
+        
+        timestampLabel.translatesAutoresizingMaskIntoConstraints = false
+        let constraints : [NSLayoutConstraint] = [
+            timestampLabel.topAnchor.constraint(equalTo: bubbleImageView.bottomAnchor, constant: 2),
+            timestampLabel.leadingAnchor.constraint(equalTo: bubbleImageView.leadingAnchor),
+            timestampLabel.heightAnchor.constraint(equalToConstant: 13),
+            timestampLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
         ]
         
         NSLayoutConstraint.activate(constraints)

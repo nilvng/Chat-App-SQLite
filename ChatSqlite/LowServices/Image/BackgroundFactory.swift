@@ -28,19 +28,19 @@ class BackgroundConfig: NSObject{
     }
     
     override func isEqual(_ object: Any?) -> Bool {
-           guard let other = object as? BackgroundConfig else {
-               return false
-           }
-           return corner == other.corner
-               && radius == other.radius
-            && color == other.color
-       }
+        guard let other = object as? BackgroundConfig else {
+            return false
+        }
+        return corner == other.corner
+        && radius == other.radius
+        && color == other.color
+    }
     
     override var hash: Int {
         return Int(radius)
     }
-
-    }
+    
+}
 
 class BackgroundFactory {
     var caches = NSCache<BackgroundConfig, UIImage>()

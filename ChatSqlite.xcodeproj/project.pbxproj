@@ -42,6 +42,7 @@
 		0E393FC427B3CE410011CB68 /* UIViewController+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E393FC327B3CE410011CB68 /* UIViewController+extension.swift */; };
 		0E3C0D1A2783F9EF00B23E21 /* ChatMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E3C0D192783F9EF00B23E21 /* ChatMenuController.swift */; };
 		0E51D2D227E04B2100748987 /* FriendHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E51D2D127E04B2100748987 /* FriendHeaderView.swift */; };
+		0E5527FC27E5845F00597C96 /* TimestampHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E5527FB27E5845F00597C96 /* TimestampHeaderView.swift */; };
 		0E560B1827BF48660019B38C /* ConversationWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E560B1727BF48660019B38C /* ConversationWorker.swift */; };
 		0E560B1A27BF4AE20019B38C /* MessageListWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E560B1927BF4AE20019B38C /* MessageListWorker.swift */; };
 		0E560B1C27BF53070019B38C /* ChatService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E560B1B27BF53070019B38C /* ChatService.swift */; };
@@ -127,6 +128,7 @@
 		0E393FC327B3CE410011CB68 /* UIViewController+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+extension.swift"; sourceTree = "<group>"; };
 		0E3C0D192783F9EF00B23E21 /* ChatMenuController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMenuController.swift; sourceTree = "<group>"; };
 		0E51D2D127E04B2100748987 /* FriendHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendHeaderView.swift; sourceTree = "<group>"; };
+		0E5527FB27E5845F00597C96 /* TimestampHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimestampHeaderView.swift; sourceTree = "<group>"; };
 		0E560B1727BF48660019B38C /* ConversationWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationWorker.swift; sourceTree = "<group>"; };
 		0E560B1927BF4AE20019B38C /* MessageListWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageListWorker.swift; sourceTree = "<group>"; };
 		0E560B1B27BF53070019B38C /* ChatService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatService.swift; sourceTree = "<group>"; };
@@ -270,6 +272,7 @@
 				0E124255277EF82B0054D069 /* MessageCell.swift */,
 				0EDC669927BA651600A2792E /* MessageCellInteractor.swift */,
 				0E94D0EB27991A26003485AF /* DownloadBtnView.swift */,
+				0E5527FB27E5845F00597C96 /* TimestampHeaderView.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -607,6 +610,7 @@
 				0E7008DE278806E400998BBB /* FriendEditDataSource.swift in Sources */,
 				0E124242277ED9E00054D069 /* Date+Chat.swift in Sources */,
 				0E124243277ED9E00054D069 /* UIImage+Chat.swift in Sources */,
+				0E5527FC27E5845F00597C96 /* TimestampHeaderView.swift in Sources */,
 				0EFDD94B276B72C400323984 /* HomeViewController.swift in Sources */,
 				0EFDD96D276B7B0000323984 /* ServiceBasicAPIs.swift in Sources */,
 				0E7008DB278806E400998BBB /* FriendDetailAvatarCell.swift in Sources */,
