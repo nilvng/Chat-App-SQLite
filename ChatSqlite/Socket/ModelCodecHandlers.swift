@@ -9,20 +9,13 @@ import Foundation
 import NIO
 
 
-final class ModelCodecHandlers: ChannelInboundHandler, ChannelOutboundHandler {
+final class ModelCodecHandlers: ChannelInboundHandler {
     public typealias InboundIn = ByteBuffer
     public typealias InboundOut = SocketModel
-    public typealias OutboundIn = SocketModel
-    public typealias OutboundOut = ByteBuffer
+//    public typealias OutboundIn = SocketModel
+//    public typealias OutboundOut = ByteBuffer
+//
 
-
-    
-    func channelActive(context: ChannelHandlerContext) {
-        print("Channel: active")
-        let uid = UserSettings.shared.getUserID()
-        let buff = context.channel.allocator.buffer(string: uid)
-        context.writeAndFlush(wrapOutboundOut(buff), promise: nil)
-    }
     
     func channelRead(context: ChannelHandlerContext, data: NIOAny) {
         var buffer = self.unwrapInboundIn(data)
@@ -56,13 +49,7 @@ final class ModelCodecHandlers: ChannelInboundHandler, ChannelOutboundHandler {
             
         }
     }
-    
-    func write(context: ChannelHandlerContext, data: NIOAny, promise: EventLoopPromise<Void>?) {
-        var buf = context.channel.allocator.buffer(capacity: 7)
-        let model = unwrapOutboundIn(data)
-        buf = model.encode(bytes: buf)
-        context.writeAndFlush(wrapOutboundOut(buf), promise: promise)
-    }
+
     func errorCaught(ctx: ChannelHandlerContext, error: Error) {
             print("Channel Error: \(error.localizedDescription)")
             ctx.close(promise: nil)

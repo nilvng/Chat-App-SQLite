@@ -67,9 +67,9 @@ extension UIView{
 extension UIView {
     
     func anchor (top: NSLayoutYAxisAnchor?,
-                 left: NSLayoutXAxisAnchor?,
+                 leading: NSLayoutXAxisAnchor?,
                  bottom: NSLayoutYAxisAnchor?,
-                 right: NSLayoutXAxisAnchor?,
+                 trailing: NSLayoutXAxisAnchor?,
                  padding: UIEdgeInsets = .zero,
                  size: CGSize = .zero,
                  enableInsets: Bool=false) {
@@ -90,11 +90,11 @@ extension UIView {
         if let top = top {
             self.topAnchor.constraint(equalTo: top, constant: padding.top+topInset).isActive = true
         }
-        if let left = left {
-            self.leftAnchor.constraint(equalTo: left, constant: padding.left).isActive = true
+        if let left = leading {
+            self.leadingAnchor.constraint(equalTo: left, constant: padding.left).isActive = true
         }
-        if let right = right {
-            rightAnchor.constraint(equalTo: right, constant: -padding.right).isActive = true
+        if let right = trailing {
+            self.trailingAnchor.constraint(equalTo: right, constant: -padding.right).isActive = true
         }
         if let bottom = bottom {
             bottomAnchor.constraint(equalTo: bottom, constant: -padding.bottom-bottomInset).isActive = true

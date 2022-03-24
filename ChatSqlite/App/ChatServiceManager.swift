@@ -100,7 +100,7 @@ extension ChatServiceManager : SocketDelegate {
         
     }
     
-    func onMessageStatusUpdated(cid: String, mid: String?, status: MessageStatus) {
+    func onMessageStatusUpdated(cid: String, mid: String, status: MessageStatus) {
         print("Delegate: message updated")
         
         getChatService(cid: cid, completion: { item in

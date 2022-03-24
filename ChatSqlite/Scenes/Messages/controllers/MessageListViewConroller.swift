@@ -20,6 +20,8 @@ class MessageListViewController : UITableViewController {
     var interactor : MessageListInteractor?
     var parentDelegate : MessageListViewDelegate?
     
+    var visible : Bool = false
+    
     var items : [MessageDomain] = []
     var dateSections : [DateSection] = []
     
@@ -124,6 +126,12 @@ class MessageListViewController : UITableViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         scrollToLastMessage()
+        visible = true
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        visible = false
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -305,6 +313,9 @@ extension MessageListViewController : MessagesPresenter {
     func presentReceivedItem(_ item: MessageDomain) {
         
         self.appendNewItem(item)
+        if visible {
+            interactor?.sendSeenStatus()
+        }
 
     }
     func presentSentItem(_ item: MessageDomain) {
@@ -313,11 +324,8 @@ extension MessageListViewController : MessagesPresenter {
             presentReceivedItem(item)
             return
         }
-
-//        DispatchQueue.main.async {
             self.appendNewItem(item)
             self.parentDelegate?.messageIsSent(content: item.content, inTable: self.tableView)
-//        }
     }
     
     func onFoundConversation(_ c: ConversationDomain){

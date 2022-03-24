@@ -10,7 +10,7 @@ import NIO
 
 protocol SocketParserDelegate : AnyObject{
     func onMessageReceived(msg: MessageDomain)
-    func onMessageStatusUpdated(cid: String, mid: String?, status: MessageStatus)
+    func onMessageStatusUpdated(cid: String, mid: String, status: MessageStatus)
 }
 
 protocol ChannelHandlerDelegate : AnyObject {

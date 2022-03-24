@@ -24,6 +24,8 @@ class ConversationSQLiteStore {
     var lastMsg = Expression<String>("lastMsg")
     var timestamp = Expression<Date>("timestamp")
     var status = Expression<Int?>("status")
+    var mid = Expression<String>("mid")
+
 
 
     
@@ -63,6 +65,8 @@ class ConversationSQLiteStore {
             t.column(lastMsg)
             t.column(timestamp)
             t.column(status)
+            t.column(mid)
+
         })
         } catch let e {
             print(e.localizedDescription)
@@ -91,6 +95,7 @@ extension ConversationSQLiteStore : ConversationDBLogic{
         m.timestamp = row[timestamp]
         m.lastMsg = row[lastMsg]
         m.thumbnail = row[thumbnail]
+        m.mid = row[mid]
         
         if let t = row[status] {
             m.status = MessageStatus(rawValue: t) ?? .seen

@@ -41,6 +41,7 @@ public final class RawSocketClient {
                         channel.pipeline.addHandlers([
                             ModelCodecHandlers(),
                             DelegateHandlers(delegate: SocketService.shared, channelDelegate: self),
+                            ModelCodecOutboundHandler()
                         ])
 //                    }
             }

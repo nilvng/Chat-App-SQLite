@@ -19,4 +19,8 @@ class ChatRouter {
         view.configure(conversation)
         viewController?.show(view, sender: nil)
     }
+    func toPhotoGallery(){
+        let view = PhotoCollectionViewController()
+        viewController?.show(view, sender: nil)
+    }
 }

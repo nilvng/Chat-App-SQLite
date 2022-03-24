@@ -136,7 +136,6 @@ extension ConversationListViewController {
 extension ConversationListViewController : ConversationPresenter{
     
     func presentUpdatedItem(_ item: ConversationDomain) {
-        
         if let index = self.items.firstIndex(where: {$0.id == item.id}){
             
             items[index] = item
@@ -148,6 +147,25 @@ extension ConversationListViewController : ConversationPresenter{
         }else {
             print("\(self) Update row of Conv that not exist")
         }
+//        if let index = self.items.firstIndex(where: {$0.id == item.id}){
+//            guard index > 0 else {
+//                items[index] = item
+//                DispatchQueue.main.async {
+//                self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+//                }
+//                return
+//            }
+//            DispatchQueue.main.async {
+//                self.items.remove(at: index)
+//                self.tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+//            }
+//            self.items.append(item)
+//            self.items.sort(by: {$0.timestamp > $1.timestamp})
+//            self.insertNewRow(conv: item)
+//
+//        }else {
+//            self.presentNewItem(item)
+//        }
     }
     
     func insertNewRow(conv: ConversationDomain){
@@ -169,6 +187,7 @@ extension ConversationListViewController : ConversationPresenter{
     
     func presentNewItem(_ item: ConversationDomain) {
         self.items.append(item)
+        self.items.sort(by: {$0.timestamp > $1.timestamp})
         self.insertNewRow(conv: item)
     }
     

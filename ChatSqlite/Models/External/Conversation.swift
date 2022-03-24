@@ -19,14 +19,19 @@ protocol Conversation {
     var lastMsg : String! {get set}
     var timestamp : Date! {get set}
     var status : MessageStatus! {get set}
+    var mid : String! {get set}
+
     func toUIModel() -> ConversationDomain
     mutating func fromUIModel(c : ConversationDomain)
 }
 
 struct ConversationSQLite : SQLiteModel, Conversation {
     
+    
     func toUIModel() -> ConversationDomain {
-    var c =  ConversationDomain(theme: nil, thumbnail: thumbnail, title: title, id: id, members: members, lastMsg: lastMsg, timestamp: timestamp)
+        var c =  ConversationDomain(theme: nil, thumbnail: thumbnail, title: title,
+                                    id: id, members: members,
+                                    lastMsg: lastMsg, timestamp: timestamp, mid: mid)
         c.theme = self.theme?.getTheme()
         c.status = self.status
         return c
@@ -34,15 +39,16 @@ struct ConversationSQLite : SQLiteModel, Conversation {
     
     mutating func fromUIModel(c: ConversationDomain){
         if let t = c.theme {
-           theme =  ThemeOptions.fromTheme(t)
+            theme =  ThemeOptions.fromTheme(t)
         }
-    thumbnail = c.thumbnail
-    title = c.title
-    id = c.id
-    members = c.members
-    lastMsg = c.lastMsg
-    timestamp = c.timestamp
+        thumbnail = c.thumbnail
+        title = c.title
+        id = c.id
+        members = c.members
+        lastMsg = c.lastMsg
+        timestamp = c.timestamp
         status = c.status
+        mid = c.mid
     }
     
     init(){}
@@ -62,5 +68,7 @@ struct ConversationSQLite : SQLiteModel, Conversation {
     var timestamp: Date!
     
     var status : MessageStatus! = .seen
+    var mid: String!
+
     
 }

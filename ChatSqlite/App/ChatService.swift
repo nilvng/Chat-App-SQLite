@@ -41,22 +41,35 @@ class ChatService {
     }
     
     func receiveMessage(_ msg: MessageDomain){
-        self.addMessage(msg: msg)
-        // send ack
         let uid = UserSettings.shared.getUserID()
         socketService.sendMessageState(msg: msg, status: .arrived, from: uid)
+        self.addMessage(msg: msg)
+        // send ack
         
     }
-    func updateMessageStatus(mid: String?, status: MessageStatus){
-        // update at conv level
-        conversatioNWorker.updateMessageStatus(status)
-        // update at msg level
-        if mid != nil || mid != "" {
-            // update 1 msg
-            messageWorker.updateState(id: mid!, status: status)
-        } else {
-            // update all msg status to seen
-            print("\(self) tbd: present seen animation...")
+    internal func updatetoSeen(){
+        if conversatioNWorker.model.status != .seen {
+            socketService.sendStateSeen(of: conversatioNWorker.model)
+            conversatioNWorker.updateMessageStatus(mid: nil, .seen) // Force to "seen" because it's done local
+        }
+    }
+    
+    func updateMessageStatus(mid: String, status: MessageStatus){
+        // TODO: Swich case msg status
+        switch status {
+        case .sent:
+            print("nah")
+            break
+        case .received:
+            print("nah")
+            break
+        case .arrived:
+            conversatioNWorker.updateMessageStatus(mid: mid, status)
+            messageWorker.updateState(id: mid, status: status)
+        case .seen:
+            conversatioNWorker.updateMessageStatus(mid: mid, status)
+            messageWorker.updateState(id: mid, status: status)
+            
         }
     }
     private func addMessage(msg : MessageDomain){

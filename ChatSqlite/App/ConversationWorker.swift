@@ -25,11 +25,15 @@ class ConversationWorker {
         model.lastMsg = msg.content
         model.timestamp = msg.timestamp
         model.status = msg.status
+        model.mid = msg.mid
         dbStore.upsertConversation(model)
         
     }
     
-    func updateMessageStatus(_ status: MessageStatus){
+    func updateMessageStatus(mid: String?, _ status: MessageStatus){
+        guard mid == nil || mid == model.mid else {
+            return
+        }
         model.status = status
         dbStore.updateConversation(model)
     }

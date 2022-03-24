@@ -47,7 +47,7 @@ class FriendTextEditCell: UITableViewCell {
         textfield.backgroundColor = .white
         textfield.isUserInteractionEnabled = true
     
-        textfield.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: nil, padding: .init(top: 7, left: 7, bottom: 3, right: 7), size: .init(width: contentView.frame.width-14, height: contentView.frame.height - 10))
+        textfield.anchor(top: topAnchor, leading: leftAnchor, bottom: nil, trailing: nil, padding: .init(top: 7, left: 7, bottom: 3, right: 7), size: .init(width: contentView.frame.width-14, height: contentView.frame.height - 10))
 
     }
     required init?(coder: NSCoder) {

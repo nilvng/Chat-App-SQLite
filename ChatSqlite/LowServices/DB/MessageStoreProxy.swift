@@ -44,6 +44,7 @@ class MessageStoreProxy{
 // MARK: MessageService
 extension MessageStoreProxy : MessageDBService {
     func updateStatus(id: String, status: MessageStatus, completionHandler: @escaping (StoreError?) -> Void) {
+        // TODO: Update status in memo
         store.updateStatus(id: id, status: status, completionHandler: completionHandler)
     }
     

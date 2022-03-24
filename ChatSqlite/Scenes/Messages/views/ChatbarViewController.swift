@@ -8,6 +8,7 @@
 import UIKit
 
 protocol ChatbarDelegate {
+    func photoIconSelected()
     func messageSubmitted(message: String)
     func adjustHeight(amount : CGFloat)
     func moveUp(constant: Double, duration: Double)
@@ -34,7 +35,7 @@ class ChatbarViewController: UIViewController {
     }()
     private var emojiButton : UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "circle.fill"), for: .normal)
+        button.setImage(UIImage(systemName: "briefcase.fill"), for: .normal)
         return button
     }()
     
@@ -137,6 +138,7 @@ class ChatbarViewController: UIViewController {
     
     @objc func selectEmoji(){
         print("emoji")
+        delegate?.photoIconSelected()
     }
     
     func setupObserveKeyboard(){

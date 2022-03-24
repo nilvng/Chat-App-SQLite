@@ -19,6 +19,10 @@ class SocketService {
     
     let host = "localhost"
     let port = 3000
+    var privateQueue  = DispatchQueue(label: "zalo.chatApp.SocketService",
+                                      qos: .userInteractive,
+                                      autoreleaseFrequency: .workItem,
+                                      target: nil)
     
     private var subscription: AnyCancellable?
     
@@ -77,23 +81,34 @@ class SocketService {
     }
     
     func sendMessage(_ msg: MessageDomain){
-        let socketModel = MessageSocketModel(message: msg)
-        socketClient.send(model: socketModel)
+        privateQueue.async {
+            let socketModel = MessageSocketModel(message: msg)
+            self.socketClient.send(model: socketModel)
+        }
+
     }
     
     func receiveMessage(_ msg: MessageDomain){
-        delegate?.onMessageReceived(msg: msg)
+        privateQueue.async {
+            self.delegate?.onMessageReceived(msg: msg)
+        }
     }
     
     func sendMessageState(msg: MessageDomain, status: MessageStatus, from userID: String){
-        let msgModel = MsgStatusSocketModel(mid: msg.mid, cid: userID, status: status)
-        socketClient.send(model: msgModel)
+        privateQueue.async {
+            let msgModel = MsgStatusSocketModel(mid: msg.mid, cid: userID, status: status)
+            self.socketClient.send(model: msgModel)
+        }
+       
     }
     
     func sendStateSeen(of conv: ConversationDomain){
-        let myID = UserSettings.shared.getUserID()
-        // TODO: Msg status model should have the recipient ID
-        socketClient.send(model: MsgStatusSocketModel(cid: myID, status: .seen))
+        privateQueue.async {
+            let myID = UserSettings.shared.getUserID()
+            // TODO: Msg status model should have the recipient ID
+            self.socketClient.send(model: MsgStatusSocketModel(mid: conv.mid, cid: myID, status: .seen))
+        }
+  
     }
     
 }
@@ -103,7 +118,7 @@ extension SocketService : SocketParserDelegate {
         delegate?.onMessageReceived(msg: msg)
     }
     
-    func onMessageStatusUpdated(cid: String, mid: String?, status: MessageStatus) {
+    func onMessageStatusUpdated(cid: String, mid: String, status: MessageStatus) {
         delegate?.onMessageStatusUpdated(cid: cid, mid: mid, status: status)
     }
     

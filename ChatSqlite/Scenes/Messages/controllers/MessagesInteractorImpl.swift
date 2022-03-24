@@ -37,6 +37,11 @@ class MessagesInteractorImpl : MessageListInteractor {
         self.selectedFriend = selectedFriend
     }
 
+    func sendSeenStatus(){
+        print("currently in Chat View")
+        chatService.updatetoSeen()
+    }
+    
     func setSelectedFriend(friend : FriendDomain){
         // find conversation with friend
         //memoStore?.requestGetAll(noRecords: noRecords, noPages: 0)

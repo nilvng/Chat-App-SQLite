@@ -7,6 +7,7 @@
 
 import UIKit
 import Alamofire
+import PhotosUI
 
 protocol MessageListInteractor {
     
@@ -14,6 +15,7 @@ protocol MessageListInteractor {
     func loadData()
     func loadMore(tableOffset: CGFloat)
     func onSendMessage(content: String, conversation: ConversationDomain)
+    func sendSeenStatus()
 }
 
 
@@ -312,6 +314,20 @@ extension ChatViewController {
 
 // MARK: Chatbar Delegate
 extension ChatViewController : ChatbarDelegate {
+    func photoIconSelected() {
+        //router?.toPhotoGallery()
+        configurePHPicker()
+    }
+    
+    func configurePHPicker(){
+        var config = PHPickerConfiguration()
+        config.selectionLimit = 0
+        config.filter = .images
+        let view = PHPickerViewController(configuration: config)
+        view.delegate = self
+        present(view, animated: true)
+    }
+    
     func moveUp(constant: Double, duration: Double) {
         chatBarBottomConstraint.constant = constant
         UIView.animate(withDuration: duration, animations: { [weak self] in
@@ -329,6 +345,17 @@ extension ChatViewController : ChatbarDelegate {
 
         interactor?.onSendMessage(content: message, conversation: conversation)
         }
+}
+
+extension ChatViewController : PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        dismiss(animated: true, completion: nil)
+        var providers = [NSItemProvider]()
+        providers = results.map(\.itemProvider)
+        print("done selecting photos.")
+    }
+
+
 }
 
 // MARK: MessageListDelegate

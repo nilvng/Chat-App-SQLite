@@ -9,13 +9,13 @@ import Foundation
 import NIO
 
 struct MsgStatusSocketModel : SocketModel {
-    internal init(mid: String? = "", cid: String, status: MessageStatus) {
+    internal init(mid: String = "", cid: String, status: MessageStatus) {
         self.mid = mid
         self.cid = cid
         self.status = status
     }
     
-    var mid : String?
+    var mid : String
     var cid : String
     var status : MessageStatus
     
@@ -58,7 +58,7 @@ struct MsgStatusSocketModel : SocketModel {
         var mutableBytes = bytes
         let pattern = SocketEvent.messageStatusUpdated.getPattern()
         var cid: String = ""
-        var mid: String?
+        var mid: String = ""
         var mstatus : MessageStatus? = nil
         for c in pattern {
             guard let code = ParsePattern.find(char: c) else {
@@ -78,7 +78,7 @@ struct MsgStatusSocketModel : SocketModel {
                 mstatus = MessageStatus(rawValue: Int(_status))
             case .m:
                 print("Msg status bytes left: \(mutableBytes.readableBytes)")
-                guard mutableBytes.readableBytes > 2, let _mid = mutableBytes.readString(length: mutableBytes.readableBytes) else {
+                guard let _mid = mutableBytes.readString(length: mutableBytes.readableBytes) else {
                     if mstatus != nil{
                         return MsgStatusSocketModel(cid: cid, status: mstatus!)
                     } else {
