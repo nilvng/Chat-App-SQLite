@@ -37,6 +37,7 @@ class ConversationWorker {
         model.status = status
         dbStore.updateConversation(model)
     }
+    
     func update(){
         dbStore.upsertConversation(model)
     }

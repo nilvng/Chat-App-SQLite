@@ -14,7 +14,7 @@ protocol ConversationPresenter : AnyObject {
     func presentDeleteItem(_ item: ConversationDomain, at: IndexPath)
     func presentFilteredItems(_ items: [ConversationDomain]?)
     func presentNewItem(_ item: ConversationDomain)
-    func presentUpsertedItems(item: ConversationDomain)
+    func presentUpsertedItem(item: ConversationDomain)
     func presentUpdatedItem(_ item: ConversationDomain)
 }
 

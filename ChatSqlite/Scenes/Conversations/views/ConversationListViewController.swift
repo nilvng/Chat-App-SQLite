@@ -15,6 +15,7 @@ class ConversationListViewController: UITableViewController {
     // MARK: - variables
     var items : [ConversationDomain] = []
     var ogItems : [ConversationDomain]?
+    var visible : Bool = false
     
     var interactor : ConversationListInteractor?
     var router : HomeRouter?
@@ -82,7 +83,13 @@ class ConversationListViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        visible = true
         interactor?.loadData()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        visible = false
     }
 
 }
@@ -136,6 +143,9 @@ extension ConversationListViewController {
 extension ConversationListViewController : ConversationPresenter{
     
     func presentUpdatedItem(_ item: ConversationDomain) {
+        guard visible else {
+            return
+        }
         if let index = self.items.firstIndex(where: {$0.id == item.id}){
             
             items[index] = item
@@ -147,48 +157,45 @@ extension ConversationListViewController : ConversationPresenter{
         }else {
             print("\(self) Update row of Conv that not exist")
         }
-//        if let index = self.items.firstIndex(where: {$0.id == item.id}){
-//            guard index > 0 else {
-//                items[index] = item
-//                DispatchQueue.main.async {
-//                self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-//                }
-//                return
-//            }
-//            DispatchQueue.main.async {
-//                self.items.remove(at: index)
-//                self.tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-//            }
-//            self.items.append(item)
-//            self.items.sort(by: {$0.timestamp > $1.timestamp})
-//            self.insertNewRow(conv: item)
-//
-//        }else {
-//            self.presentNewItem(item)
-//        }
+
     }
     
-    func insertNewRow(conv: ConversationDomain){
+    func insertNewRow(){
+        guard visible else {
+            return
+        }
         DispatchQueue.main.async {
             self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
         }
     }
-    func presentUpsertedItems(item: ConversationDomain) {
+    func presentUpsertedItem(item: ConversationDomain) {
+        guard visible else {
+            return
+        }
         if let index = self.items.firstIndex(where: {$0.id == item.id}){
             DispatchQueue.main.async {
+                self.tableView.beginUpdates()
                 self.tableView.deleteRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+                for i in (1...index+1).reversed(){
+                    self.items[i] = self.items[i-1]
+                }
+                self.items[0] = item
+                self.tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+                self.tableView.endUpdates()
             }
         } else {
             self.items.append(item)
+            self.insertNewRow()
         }
-        self.items.sort(by: {$0.timestamp > $1.timestamp})
-        self.insertNewRow(conv: item)
     }
     
     func presentNewItem(_ item: ConversationDomain) {
+        guard visible else {
+            return
+        }
         self.items.append(item)
         self.items.sort(by: {$0.timestamp > $1.timestamp})
-        self.insertNewRow(conv: item)
+        self.insertNewRow()
     }
     
     
@@ -199,6 +206,9 @@ extension ConversationListViewController : ConversationPresenter{
     }
     
     func presentMoreItems(_ items: [ConversationDomain]) {
+        guard visible else {
+            return
+        }
         self.items.append(contentsOf: items)
         DispatchQueue.main.async {
             self.tableView.reloadData()
@@ -206,7 +216,9 @@ extension ConversationListViewController : ConversationPresenter{
     }
     
     func presentDeleteItem(_ item: ConversationDomain, at index: IndexPath) {
-        
+        guard visible else {
+            return
+        }
         DispatchQueue.main.async {
             self.tableView.deleteRows(at: [index], with: .automatic)
         }

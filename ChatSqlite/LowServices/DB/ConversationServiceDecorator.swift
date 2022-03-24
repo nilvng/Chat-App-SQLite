@@ -42,7 +42,7 @@ class ConversationServiceDecorator{
     }
     
     func upsertConversation(_ c: ConversationDomain){
-        observer?.presentUpdatedItem(c)
+        observer?.presentUpsertedItem(item: c)
         dbStore.upsertItem(c, completionHandler: { err in
             guard let err = err else {
                 return
