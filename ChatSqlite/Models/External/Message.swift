@@ -5,7 +5,7 @@
 //  Created by LAP11353 on 14/12/2021.
 //
 
-import Foundation
+import UIKit
 import SQLite
 
 enum MessageType : Int, Codable {
@@ -21,6 +21,19 @@ enum MessageStatus : Int, Codable{
     case received
     case arrived
     case seen
+    
+    func getSymbol() -> UIImage? {
+        switch self {
+        case .sent:
+            return UIImage(systemName: "checkmark.circle")
+        case .received:
+            return nil
+        case .arrived:
+            return UIImage(systemName: "checkmark.circle.fill")
+        case .seen:
+            return UIImage(systemName: "person.fill")
+        }
+    }
 }
 
 protocol Message{
@@ -31,7 +44,7 @@ protocol Message{
     var timestamp : Date! {get}
     var sender : String! {get}
     var downloaded : Bool! {get}
-    var status : MessageStatus! {get}
+    var status : MessageStatus! {get set}
     
         
     func toUIModel() -> MessageDomain

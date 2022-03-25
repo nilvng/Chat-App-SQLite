@@ -9,7 +9,7 @@ import UIKit
 
 struct BubbleConstant{
     static var vPadding :CGFloat = 14
-    static var  hPadding : CGFloat = 18
+    static var  hPadding : CGFloat = 13
     static var maxWidth : CGFloat = 220
     
     static var contentHPadding : CGFloat = 7

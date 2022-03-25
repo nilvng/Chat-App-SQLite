@@ -19,6 +19,7 @@ protocol MessageDBLogic {
     func deleteAllMessages(completion: @escaping (StoreError?) -> Void)
     func update(item: Message, completionHandler: @escaping (StoreError?) -> Void)
     func updateStatus(id: String, status: MessageStatus, completionHandler: @escaping (StoreError?) -> Void)
+    func ffUpdateStatus(completionHandler: @escaping (StoreError?) -> Void)
 
 }
 class MessageStoreProxy{
@@ -43,9 +44,26 @@ class MessageStoreProxy{
 }
 // MARK: MessageService
 extension MessageStoreProxy : MessageDBService {
+    func ffUpdateStatus(completionHandler: @escaping (StoreError?) -> Void) {
+        utilityQueue.async {
+            for i in 0..<self.messages.count {
+                self.messages[i].status = .seen
+            }
+            self.store.ffUpdateStatus(completionHandler: completionHandler)
+
+        }
+    }
+    
     func updateStatus(id: String, status: MessageStatus, completionHandler: @escaping (StoreError?) -> Void) {
         // TODO: Update status in memo
-        store.updateStatus(id: id, status: status, completionHandler: completionHandler)
+        utilityQueue.async {
+            // update in memo
+            if let index = self.messages.firstIndex(where: {$0.mid == id}) {
+                self.messages[index].status = status
+            }
+            //update db
+            self.store.updateStatus(id: id, status: status, completionHandler: completionHandler)
+        }
     }
     
     func fetchAllItems(noRecords: Int, noPages: Int, desc: Bool, completionHandler: @escaping ([MessageDomain]?, StoreError?) -> Void) {

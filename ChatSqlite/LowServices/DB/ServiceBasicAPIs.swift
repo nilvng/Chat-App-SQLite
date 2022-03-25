@@ -51,4 +51,5 @@ protocol MessageDBService{
     func updateStatus(id: String, status: MessageStatus, completionHandler : @escaping (StoreError?) -> Void)
     func deleteItem(id: String ,completionHandler : @escaping (StoreError?) -> Void)
     func deleteAllItems(completionHandler: @escaping (StoreError?) -> Void)
+    func ffUpdateStatus(completionHandler: @escaping (StoreError?) -> Void)
 }

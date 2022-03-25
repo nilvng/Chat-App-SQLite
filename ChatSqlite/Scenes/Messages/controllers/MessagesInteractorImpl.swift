@@ -14,6 +14,7 @@ protocol MessagesPresenter : AnyObject{
     func presentSentItem(_ item: MessageDomain)
     func onFoundConversation(_ c: ConversationDomain)
     func presentMessageStatus(id: String, status: MessageStatus)
+    func presentFFMessageStatus()
 
 }
 

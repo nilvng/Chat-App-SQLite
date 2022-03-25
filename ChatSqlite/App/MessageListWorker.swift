@@ -71,6 +71,12 @@ class MessageListWorker {
         observer?.presentMessageStatus(id: id, status: status)
     }
     
+    func updateToSeenState(){
+        dbStore?.ffUpdateStatus(completionHandler: handleError)
+        observer?.presentFFMessageStatus()
+
+    }
+    
     fileprivate func handleError(err : StoreError?){
         print(err?.localizedDescription ?? "Successfully update Conversation.")
     }

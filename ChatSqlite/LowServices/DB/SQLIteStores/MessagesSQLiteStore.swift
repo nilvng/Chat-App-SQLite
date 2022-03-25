@@ -80,6 +80,15 @@ class MessagesSQLStore : MessageDBLogic {
     
 }
 extension MessagesSQLStore{
+    
+    func ffUpdateStatus(completionHandler: @escaping (StoreError?) -> Void){
+        do {
+            let item = table.filter(self.status != MessageStatus.seen.rawValue)
+            try db?.run(item.update(self.status <- MessageStatus.seen.rawValue))
+        } catch let e {
+            print("\(self) update failed: \(e)")
+        }
+    }
 
     func updateStatus(id: String, status: MessageStatus, completionHandler: @escaping (StoreError?) -> Void) {
         do {

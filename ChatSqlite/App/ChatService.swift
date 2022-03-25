@@ -47,6 +47,7 @@ class ChatService {
         // send ack
         
     }
+    // from the current user to their friend
     internal func updatetoSeen(){
         if conversatioNWorker.model.status != .seen {
             socketService.sendStateSeen(of: conversatioNWorker.model)
@@ -54,6 +55,7 @@ class ChatService {
         }
     }
     
+    // called by their friends to current user
     func updateMessageStatus(mid: String, status: MessageStatus){
         // TODO: Swich case msg status
         switch status {
@@ -68,7 +70,7 @@ class ChatService {
             messageWorker.updateState(id: mid, status: status)
         case .seen:
             conversatioNWorker.updateMessageStatus(mid: mid, status)
-            messageWorker.updateState(id: mid, status: status)
+            messageWorker.updateToSeenState()
             
         }
     }

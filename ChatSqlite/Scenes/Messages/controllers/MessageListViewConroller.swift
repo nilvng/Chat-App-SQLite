@@ -78,6 +78,8 @@ class MessageListViewController : UITableViewController {
     
     func appendNewItem(_ item: MessageDomain){
         let timestampString = item.timestamp.toSimpleDate()
+        items.insert(item, at: 0)
+        
         if dateSections.count > 0 {
             let lastSection = dateSections[0]
             
@@ -232,8 +234,12 @@ extension MessageListViewController {
         let isEndOfContinous = isEndOfContinuousMessages(indexPath: indexPath, message: message)
         let isStartOfContinuous = isStartOfContinuousMessages(indexPath: indexPath, message: message)
 
-        cell.configure(with: message, isStartMessage: isStartOfContinuous, isEndMessage: isEndOfContinous)
+        cell.configure(with: message,
+                       indexPath: indexPath,
+                       isStartMessage: isStartOfContinuous,
+                       isEndMessage: isEndOfContinous)
         if isStartOfContinuous { cell.showAvatar(name: conversation.title)} // show placeholder is the name of conversation
+        
         cell.transform = CGAffineTransform(scaleX: 1, y: -1)
         return cell
     }
@@ -292,13 +298,50 @@ extension MessageListViewController {
 
 // MARK: Presenter
 extension MessageListViewController : MessagesPresenter {
+    func presentFFMessageStatus() {
+        //
+        var stopPoint : Int = 0
+        if visible {
+            for index in 0..<items.count {
+                if items[index].status != .seen {
+                    items[index].status = .seen
+                } else {
+                    stopPoint = index
+                    break
+                }
+            }
+            let updatedSections = sortByDate(items: items)
+            dateSections = updatedSections
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
+    func updateARowItem(item: MessageDomain){
+        guard dateSections.count > 0 else {
+            return
+        }
+        for sIndex in 0..<dateSections.count {
+            var section = dateSections[sIndex]
+            if let row = section.items.firstIndex(where: { $0.mid == item.mid}) {
+                section.items[row] = item
+                DispatchQueue.main.async {
+                    self.tableView.reloadRows(at: [IndexPath(row: row, section: sIndex)], with: .automatic)
+                }
+            }
+        }
+    }
+    
     
     func presentMessageStatus(id: String, status: MessageStatus) {
+        guard visible else{
+            return
+        }
         if let index = items.firstIndex(where: { $0.mid == id}) {
             items[index].status = status
-            DispatchQueue.main.async {
-                self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
-            }
+            updateARowItem(item: items[index])
+            
         }
     }
     

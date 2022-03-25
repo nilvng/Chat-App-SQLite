@@ -24,6 +24,8 @@ class MessageCell: UITableViewCell {
     var notDownloadConstraint : NSLayoutConstraint!
 
     
+    var statusImage = UIImageView()
+    
     let messageBodyLabel : UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 16)
@@ -73,6 +75,7 @@ class MessageCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        contentView.addSubview(statusImage)
         contentView.addSubview(bubbleImageView)
         contentView.addSubview(avatarView)
         contentView.addSubview(messageBodyLabel)
@@ -81,10 +84,9 @@ class MessageCell: UITableViewCell {
         setupAvatarView()
         setupMessageBody()
         setupBubbleBackground()
+        setupStatusImage()
         setupDownloadButton()
-//        setupTimestamp()
-//        timestampLabel.isHidden = true
-        
+
         backgroundView = .none
         backgroundColor = .clear
         setInteractor()
@@ -112,7 +114,8 @@ class MessageCell: UITableViewCell {
         }
     }
     
-    func configure(with model: MessageDomain, isStartMessage isStart: Bool, isEndMessage isEnd: Bool){
+    func configure(with model: MessageDomain, indexPath: IndexPath,
+                   isStartMessage isStart: Bool, isEndMessage isEnd: Bool){
 
         message = model
         model.subscribe(self)
@@ -124,38 +127,40 @@ class MessageCell: UITableViewCell {
 
         if !isReceived {
             alignSentBubble()
-            var config = outgoingBubbleConfig
-//            if isStart {
-//                config.corner = [.bottomRight, .bottomLeft, .topRight]
-//            }
-//            if isEnd {
-//                config.corner = [.topRight, .topLeft, .bottomLeft]
-//
-//            }
-//            if isStart && isEnd {
-//                config.corner = [.allCorners]
-//            }
+            let config = outgoingBubbleConfig
             bubbleImageView.image = BackgroundFactory.shared.getBackground(config: config)
+            
+            if let symbol = model.status.getSymbol(){
+                statusImage.isHidden = false
+                statusImage.image = symbol
+            }
+            
         } else {
+            statusImage.isHidden = true
             alignReceivedBubble(isStart, model)
-            var config = incomingBubbleConfig
-//            if isStart {
-//                config.corner = [.bottomRight, .bottomLeft, .topLeft]
-//            }
-//            if isEnd {
-//                config.corner = [.topRight, .topLeft, .bottomRight]
-//            }
-//            if isStart && isEnd {
-//                config.corner = [.allCorners]
-//            }
+            let config = incomingBubbleConfig
             bubbleImageView.image = BackgroundFactory.shared.getBackground(config: config)
         }
         
-
-
+        if model.status == .seen{
+            if indexPath.section == 0 && indexPath.row == 0 {
+                statusImage.isHidden = false
+            } else {
+                statusImage.isHidden = true
+            }
+        }
+        
+        
         // Continuous message would be closer to each other
         continuousConstraint.constant = isEnd ? bubbleVPadding : bubbleVPadding - 4
 
+
+    }
+    
+    func updateStatus(to status: MessageStatus){
+        if !statusImage.isHidden {
+            statusImage.image = status.getSymbol()
+        }
     }
     
     func formatTimestamp(isStart: Bool, model: MessageDomain){
@@ -261,7 +266,7 @@ class MessageCell: UITableViewCell {
     
     func setupMessageBody(){
         messageBodyLabel.translatesAutoresizingMaskIntoConstraints = false
-        self.outboundConstraint =  messageBodyLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -bubbleHPadding)
+        self.outboundConstraint =  messageBodyLabel.trailingAnchor.constraint(equalTo: statusImage.leadingAnchor, constant: -bubbleHPadding)
         self.inboundConstraint = messageBodyLabel.leadingAnchor.constraint(equalTo: avatarView.trailingAnchor, constant: bubbleHPadding)
         self.continuousConstraint = messageBodyLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: bubbleVPadding)
 
@@ -276,6 +281,18 @@ class MessageCell: UITableViewCell {
         NSLayoutConstraint.activate(constraints)
 
     }
+    func setupStatusImage(){
+        
+        statusImage.translatesAutoresizingMaskIntoConstraints = false
+        let constraints : [NSLayoutConstraint] = [
+            statusImage.widthAnchor.constraint(equalToConstant: 15),
+            statusImage.heightAnchor.constraint(equalToConstant: 15),
+            statusImage.trailingAnchor.constraint(equalTo:  contentView.trailingAnchor, constant: -4),
+            statusImage.bottomAnchor.constraint(equalTo: bubbleImageView.bottomAnchor),
+        ]
+        
+        NSLayoutConstraint.activate(constraints)
+        }
     
     func setupBubbleBackground(){
         

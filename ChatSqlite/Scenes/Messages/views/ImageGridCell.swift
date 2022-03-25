@@ -16,16 +16,17 @@ class ImageGridCell: UITableViewCell {
     var collectionView : UICollectionView!
     var dataSource: UICollectionViewDiffableDataSource<Section, Int>! = nil
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        configureHierarchy()
+        configureDataSource()
+        
     }
     
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
 }
@@ -55,7 +56,7 @@ extension ImageGridCell {
     func configureHierarchy() {
         collectionView = UICollectionView(frame: contentView.bounds, collectionViewLayout: createLayout())
         collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        collectionView.backgroundColor = .systemBackground
+        collectionView.backgroundColor = .clear
         collectionView.register(ImageCollectionCell.self, forCellWithReuseIdentifier: ImageCollectionCell.identifier)
         contentView.addSubview(collectionView)
     }
@@ -77,11 +78,29 @@ extension ImageGridCell {
         // initial data
         var snapshot = NSDiffableDataSourceSnapshot<Section, Int>()
         snapshot.appendSections([.main])
-        snapshot.appendItems(Array(0..<94))
+        snapshot.appendItems(Array(0..<10))
         dataSource.apply(snapshot, animatingDifferences: false)
     }
 }
 
 class ImageCollectionCell : UICollectionViewCell {
     static let identifier = "ImageCell"
+    
+    var imageView = UIImageView()
+    
+    init() {
+        super.init(frame: .zero)
+        imageView.anchor(top: contentView.topAnchor, leading: contentView.leadingAnchor, bottom: contentView.bottomAnchor, trailing: contentView.trailingAnchor)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    func configure(imageAddress: String){
+        guard let url = URL(string: imageAddress) else {
+            return
+        }
+        imageView.af.setImage(withURL: url)
+    }
 }
