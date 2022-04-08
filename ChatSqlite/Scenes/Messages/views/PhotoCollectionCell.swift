@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PhotoCollectionViewCell: UICollectionViewCell {
+class PhotoCollectionCell: UICollectionViewCell {
     static let identifier = "PhotoCell"
     var imageView = UIImageView()
 
@@ -16,6 +16,10 @@ class PhotoCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
         setupImageView()
 
+    }
+    
+    func configure(with im: UIImage){
+        imageView.image = im
     }
     
     func configure(urlString: String){

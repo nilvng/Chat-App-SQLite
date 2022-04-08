@@ -15,6 +15,7 @@ protocol MessageListInteractor {
     func loadData()
     func loadMore(tableOffset: CGFloat)
     func onSendMessage(content: String, conversation: ConversationDomain)
+    func onSendMessage(m: MessageDomain)
     func sendSeenStatus()
 }
 
@@ -88,7 +89,9 @@ class ChatViewController: UIViewController {
     init(){
         super.init(nibName: nil, bundle: nil)
     }
-    
+    deinit{
+        print("\(self) deinit.")
+    }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -347,14 +350,76 @@ extension ChatViewController : ChatbarDelegate {
         }
 }
 
+// MARK: PHPicker
 extension ChatViewController : PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        dismiss(animated: true, completion: nil)
         var providers = [NSItemProvider]()
         providers = results.map(\.itemProvider)
-        print("done selecting photos.")
+        let m = MessageDomain(cid: conversation.id, content: "New photos", type: .image, status: .sent)
+//            getPhoto(from: providers, completion: { ims in
+//                m.images = ims
+//                self.interactor?.onSendMessage(m: m)
+//            })
+        getPhotoURLs(from: providers, completion: { urls in
+            m.encodeImageUrls(urls)
+            self.interactor?.onSendMessage(m: m)
+        })
+        dismiss(animated: true, completion: nil)
     }
 
+    private func getPhoto(from itemProviders: [NSItemProvider], completion: @escaping ([UIImage]) -> Void) {
+        var locals : [UIImage] = []
+        itemProviders.forEach { itemProvider in
+            if itemProvider.canLoadObject(ofClass: UIImage.self) {
+                itemProvider.loadObject(ofClass: UIImage.self) { object, error in
+                    if let error = error {
+                        print(error.localizedDescription)
+                    }
+         
+                    if let image = object as? UIImage {
+                        locals.append(image)
+                        if locals.count == itemProviders.count {
+                            completion(locals)
+                        }
+                    }
+                }
+            }
+        }
+    
+        }
+    
+    private func getPhotoURLs(from itemProviders: [NSItemProvider], completion: @escaping ([String]) -> Void) {
+        var locals : [String] = []
+        itemProviders.forEach { itemProvider in
+            guard let typeIdentifier = itemProvider.registeredTypeIdentifiers.first,
+                  let utType = UTType(typeIdentifier)
+            else { return }
+            itemProvider.loadFileRepresentation(forTypeIdentifier: typeIdentifier) { url, error in
+                if let error = error {
+                    print(error.localizedDescription)
+                }
+                
+                guard let url = url else { return }
+                
+                let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+                guard let targetURL = documentsDirectory?.appendingPathComponent(url.lastPathComponent) else { return }
+                
+                do {
+                    if FileManager.default.fileExists(atPath: targetURL.path) {
+                        try FileManager.default.removeItem(at: targetURL)
+                    }
+                    
+                    try FileManager.default.copyItem(at: url, to: targetURL)
+                    locals.append(targetURL.lastPathComponent)
+                    if locals.count == itemProviders.count {
+                        completion(locals)
+                    }
+                } catch {
+                    print(error.localizedDescription)
+                }
+            }
+        }
+    }
 
 }
 
@@ -369,7 +434,7 @@ extension ChatViewController : MessageListViewDelegate {
 
     }
     
-    func messageIsSent(content: String, inTable tableView: UITableView) {
+    func textMessageIsSent(content: String, inTable tableView: UITableView) {
         configureFloatBubble(content: content)
         let bbRect = tableView.convert(tableView.rectForRow(at: IndexPath(row: 0, section: 0)), to: self.view)
         animateBubble(toRect: bbRect)

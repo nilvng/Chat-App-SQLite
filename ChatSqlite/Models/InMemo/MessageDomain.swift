@@ -7,6 +7,7 @@
 
 import Foundation
 import Alamofire
+import UIKit
 
 class MessageDomain {
     
@@ -53,7 +54,12 @@ class MessageDomain {
         return self.sender == UserSettings.shared.getUserID()
     }
     
+    var images : [UIImage] = []
+    var urls : [URL] = []
+
 }
+
+
 
 extension MessageDomain {
     func download(sub : MessageSubscriber? = nil){
@@ -82,6 +88,23 @@ extension MessageDomain {
     
     func subscribe(_ sr : MessageSubscriber){
         subscriber = sr
+    }
+    
+    func encodeImageUrls(_ urls: [String]){
+        self.content = ""
+        for u in urls {
+            self.content += "\(u)|"
+        }
+    }
+    
+    func getImageURL(index: Int) -> URL? {
+        let urls = self.content.components(separatedBy: "|")
+        guard urls.count >= index else {
+            return nil
+        }
+        let filename = urls[index]
+        var documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        return documentsUrl.appendingPathComponent(filename)
     }
 
 }

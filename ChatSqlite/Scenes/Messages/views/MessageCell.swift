@@ -26,15 +26,8 @@ class MessageCell: UITableViewCell {
     
     var statusImage = UIImageView()
     
-    let messageBodyLabel : UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.numberOfLines = 0
-        label.lineBreakMode = .byWordWrapping
-        label.sizeToFit()
-        label.backgroundColor = .clear
-        return label
-    }()
+    var messageContainerView = UIView()
+    
     let timestampLabel : UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 12)
@@ -78,14 +71,13 @@ class MessageCell: UITableViewCell {
         contentView.addSubview(statusImage)
         contentView.addSubview(bubbleImageView)
         contentView.addSubview(avatarView)
-        contentView.addSubview(messageBodyLabel)
+        contentView.addSubview(messageContainerView)
         contentView.addSubview(timestampLabel)
 
         setupAvatarView()
         setupMessageBody()
-        setupBubbleBackground()
         setupStatusImage()
-        setupDownloadButton()
+//        setupDownloadButton()
 
         backgroundView = .none
         backgroundColor = .clear
@@ -94,25 +86,15 @@ class MessageCell: UITableViewCell {
         }
     
     // MARK: Configuration
-
+    
+    var bubbleVPadding : CGFloat = BubbleConstant.vPadding
+    var bubbleHPadding : CGFloat = BubbleConstant.hPadding
+    
     func setInteractor(){
         interactor = MessageCellInteractor()
         interactor?.presenter = self
     }
-    
-    fileprivate func styleByMessageType(_ model: MessageDomain, _ isReceived: Bool) {
-        // Style bubble based on the type content
-        switch model.type {
-        case .text:
-            styleDownloadbleBubble(isIt: false)
-            messageBodyLabel.text = model.content
-        case .file:
-            styleDownloadbleBubble(isIt: true, content: model.content, isReceived: isReceived)
-        default:
-            styleDownloadbleBubble(isIt: false)
-            messageBodyLabel.text = "Unprocessed bubble:" + model.content
-        }
-    }
+
     
     func configure(with model: MessageDomain, indexPath: IndexPath,
                    isStartMessage isStart: Bool, isEndMessage isEnd: Bool){
@@ -121,7 +103,6 @@ class MessageCell: UITableViewCell {
         model.subscribe(self)
         
         let isReceived = isReceived(sender: model.sender)
-        styleByMessageType(model, isReceived)
 
         // Align bubble based on whether the sender is the user themselves
 
@@ -185,12 +166,7 @@ class MessageCell: UITableViewCell {
     
     func styleDownloadbleBubble(isIt: Bool, content: String = "", isReceived: Bool = false){
         // show download button next to content message
-        let size : CGFloat = 16
-        messageBodyLabel.font = isIt ? UIFont.boldSystemFont(ofSize: size) : UIFont.systemFont(ofSize: size)
-        messageBodyLabel.text = content
-        
         let showDownload = isIt && isReceived
-        
         downloadButton.isHidden = !showDownload
         
         if message!.downloaded {
@@ -198,7 +174,6 @@ class MessageCell: UITableViewCell {
         } else {
             downloadButton.progressTo(val: 0)
         }
-        
         
     }
     fileprivate func alignSentBubble() {
@@ -208,14 +183,14 @@ class MessageCell: UITableViewCell {
         // remove avatar view as message is sent by me
         avatarView.isHidden = true
         // bubble will have color so, text color = .white
-        messageBodyLabel.textColor = .white
+//        messageContentView.textColor = .white
     }
     
     fileprivate func alignReceivedBubble(_ isStart: Bool, _ model: MessageDomain) {
         // received message will align to the left
         outboundConstraint?.isActive = false
         inboundConstraint?.isActive = true
-        messageBodyLabel.textColor = .black
+//        messageContentView.textColor = .black
         // show avatar view if is the last continuous message a friend sent
         avatarView.isHidden = !isStart
         
@@ -240,9 +215,7 @@ class MessageCell: UITableViewCell {
             self.avatarView.update(url: nil, text: name)
         })
     }
-    
-    var bubbleVPadding : CGFloat = BubbleConstant.vPadding
-    var bubbleHPadding : CGFloat = BubbleConstant.hPadding
+
 
     
     
@@ -265,19 +238,19 @@ class MessageCell: UITableViewCell {
     // MARK: Setup views
     
     func setupMessageBody(){
-        messageBodyLabel.translatesAutoresizingMaskIntoConstraints = false
-        self.outboundConstraint =  messageBodyLabel.trailingAnchor.constraint(equalTo: statusImage.leadingAnchor, constant: -bubbleHPadding)
-        self.inboundConstraint = messageBodyLabel.leadingAnchor.constraint(equalTo: avatarView.trailingAnchor, constant: bubbleHPadding)
-        self.continuousConstraint = messageBodyLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: bubbleVPadding)
+        messageContainerView.translatesAutoresizingMaskIntoConstraints = false
+        self.outboundConstraint =  messageContainerView.trailingAnchor.constraint(equalTo: statusImage.leadingAnchor, constant: -bubbleHPadding)
+        self.inboundConstraint = messageContainerView.leadingAnchor.constraint(equalTo: avatarView.trailingAnchor, constant: bubbleHPadding)
+        self.continuousConstraint = messageContainerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: bubbleVPadding)
 
         let constraints : [NSLayoutConstraint] = [
-            messageBodyLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -bubbleVPadding),
+            messageContainerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -bubbleVPadding),
             continuousConstraint,
             outboundConstraint,
             inboundConstraint,
-            messageBodyLabel.widthAnchor.constraint(lessThanOrEqualToConstant: BubbleConstant.maxWidth),
+            messageContainerView.widthAnchor.constraint(lessThanOrEqualToConstant: BubbleConstant.maxWidth),
         ]
-        messageBodyLabel.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        messageContainerView.setContentHuggingPriority(.defaultHigh, for: .vertical)
         NSLayoutConstraint.activate(constraints)
 
     }
@@ -294,18 +267,7 @@ class MessageCell: UITableViewCell {
         NSLayoutConstraint.activate(constraints)
         }
     
-    func setupBubbleBackground(){
-        
-        bubbleImageView.translatesAutoresizingMaskIntoConstraints = false
-        let constraints : [NSLayoutConstraint] = [
-            bubbleImageView.topAnchor.constraint(equalTo: messageBodyLabel.topAnchor, constant: -bubbleVPadding + BubbleConstant.contentVPadding),
-            bubbleImageView.leadingAnchor.constraint(equalTo: messageBodyLabel.leadingAnchor, constant: -bubbleHPadding + BubbleConstant.contentHPadding),
-            bubbleImageView.bottomAnchor.constraint(equalTo:  messageBodyLabel.bottomAnchor, constant: bubbleVPadding - BubbleConstant.contentVPadding),
-            bubbleImageView.trailingAnchor.constraint(equalTo: messageBodyLabel.trailingAnchor, constant: bubbleHPadding - BubbleConstant.contentHPadding),
-        ]
-        
-        NSLayoutConstraint.activate(constraints)
-        }
+
     func setupTimestamp(){
         
         timestampLabel.translatesAutoresizingMaskIntoConstraints = false

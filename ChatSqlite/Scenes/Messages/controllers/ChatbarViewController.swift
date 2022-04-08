@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol ChatbarDelegate {
+protocol ChatbarDelegate : AnyObject{
     func photoIconSelected()
     func messageSubmitted(message: String)
     func adjustHeight(amount : CGFloat)
@@ -15,7 +15,7 @@ protocol ChatbarDelegate {
 }
 class ChatbarViewController: UIViewController {
 
-    var delegate : ChatbarDelegate?
+    weak var delegate : ChatbarDelegate?
     
     var textView : UITextView = {
         let tview = UITextView()
@@ -35,7 +35,7 @@ class ChatbarViewController: UIViewController {
     }()
     private var emojiButton : UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "briefcase.fill"), for: .normal)
+        button.setImage(UIImage(systemName: "camera"), for: .normal)
         return button
     }()
     
@@ -45,6 +45,9 @@ class ChatbarViewController: UIViewController {
         return line
     }()
 
+    deinit{
+        print("\(self) deinit.")
+    }
     override func viewDidLoad() {
         
         super.viewDidLoad()
@@ -98,10 +101,10 @@ class ChatbarViewController: UIViewController {
         submitButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            submitButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            submitButton.topAnchor.constraint(equalTo: view.topAnchor),
             submitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
             submitButton.widthAnchor.constraint(equalToConstant: 50),
-            submitButton.heightAnchor.constraint(equalToConstant: 50)
+            submitButton.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
     }
@@ -110,10 +113,10 @@ class ChatbarViewController: UIViewController {
         emojiButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            emojiButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            emojiButton.topAnchor.constraint(equalTo: view.topAnchor),
             emojiButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: -padding),
             emojiButton.widthAnchor.constraint(equalToConstant: 50),
-            emojiButton.heightAnchor.constraint(equalToConstant: 50)
+            emojiButton.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
     }

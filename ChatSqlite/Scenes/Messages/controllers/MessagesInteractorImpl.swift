@@ -22,7 +22,6 @@ class MessagesInteractorImpl : MessageListInteractor {
 
             
     var chatService : ChatService
-//    var friendStore
         
     var noRecords : Int = 20
     var offSet : CGFloat {
@@ -74,6 +73,10 @@ class MessagesInteractorImpl : MessageListInteractor {
         // update db
         chatService.sendMessage(m)
         
+    }
+    
+    func onSendMessage(m: MessageDomain){
+        chatService.sendMessage(m)
     }
     
     

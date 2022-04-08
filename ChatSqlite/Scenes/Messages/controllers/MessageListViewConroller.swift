@@ -10,15 +10,15 @@ import UIKit
 import Alamofire
 import Combine
 
-protocol MessageListViewDelegate {
-    func messageIsSent(content: String, inTable tableView: UITableView)
+protocol MessageListViewDelegate : AnyObject{
+    func textMessageIsSent(content: String, inTable tableView: UITableView)
     func messageWillDisplay(tableView: UITableView)
     func onConversationChanged(conversation: ConversationDomain)
 }
 
 class MessageListViewController : UITableViewController {
     var interactor : MessageListInteractor?
-    var parentDelegate : MessageListViewDelegate?
+    weak var parentDelegate : MessageListViewDelegate?
     
     var visible : Bool = false
     
@@ -120,7 +120,9 @@ class MessageListViewController : UITableViewController {
     }()
     
     override func viewDidLoad() {
+        myTableView.register(TextMessageCell.self, forCellReuseIdentifier: TextMessageCell.ID)
         myTableView.register(MessageCell.self, forCellReuseIdentifier: MessageCell.identifier)
+        myTableView.register(ImageCell.self, forCellReuseIdentifier: ImageCell.ID)
         myTableView.register(TimestampHeaderView.self, forHeaderFooterViewReuseIdentifier: TimestampHeaderView.identifier)
         tableView = myTableView
 
@@ -227,13 +229,38 @@ extension MessageListViewController {
         return dateSections[section].items.count
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    fileprivate func getTextCell(_ tableView: UITableView, _ indexPath: IndexPath, _ message: MessageDomain) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: MessageCell.identifier, for: indexPath) as! MessageCell
-        let message =  dateSections[indexPath.section].items[indexPath.row]
-        
         let isEndOfContinous = isEndOfContinuousMessages(indexPath: indexPath, message: message)
         let isStartOfContinuous = isStartOfContinuousMessages(indexPath: indexPath, message: message)
+        
+        cell.configure(with: message,
+                       indexPath: indexPath,
+                       isStartMessage: isStartOfContinuous,
+                       isEndMessage: isEndOfContinous)
+        if isStartOfContinuous { cell.showAvatar(name: conversation.title)} // show placeholder is the name of conversation
+        
+        cell.transform = CGAffineTransform(scaleX: 1, y: -1)
+        return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        var cell : MessageCell!
+        
+        let message =  dateSections[indexPath.section].items[indexPath.row]
+        
+        if message.type == .text {
+            cell = tableView.dequeueReusableCell(withIdentifier: TextMessageCell.ID, for: indexPath) as? TextMessageCell
+        } else if message.type == .image{
+            let c = tableView.dequeueReusableCell(withIdentifier: ImageCell.ID) as! ImageCell
+            c.configure(with: message)
+            c.transform = CGAffineTransform(scaleX: 1, y: -1)
 
+            return c
+        }
+        let isEndOfContinous = isEndOfContinuousMessages(indexPath: indexPath, message: message)
+        let isStartOfContinuous = isStartOfContinuousMessages(indexPath: indexPath, message: message)
+        
         cell.configure(with: message,
                        indexPath: indexPath,
                        isStartMessage: isStartOfContinuous,
@@ -368,7 +395,10 @@ extension MessageListViewController : MessagesPresenter {
             return
         }
             self.appendNewItem(item)
-            self.parentDelegate?.messageIsSent(content: item.content, inTable: self.tableView)
+        
+        if item.type == .text {
+            self.parentDelegate?.textMessageIsSent(content: item.content, inTable: self.tableView)
+        }
     }
     
     func onFoundConversation(_ c: ConversationDomain){

@@ -8,99 +8,83 @@
 import UIKit
 
 class ImageGridCell: UITableViewCell {
-    
-    enum Section {
-        case main
-    }
-    
-    var collectionView : UICollectionView!
-    var dataSource: UICollectionViewDiffableDataSource<Section, Int>! = nil
-
-
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+    static let ID = "ImageGridCell"
+    var collectionView : UICollectionView?
+    var photoItems : [UIImage] = []
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?){
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        configureHierarchy()
-        configureDataSource()
-        
+        layoutCollectionView()
+        setupCollectionView()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+
+    }
+    
+    func configure(with model: MessageDomain, indexPath: IndexPath, isStartMessage isStart: Bool, isEndMessage isEnd: Bool) {
+//        super.configure(with: model, indexPath: indexPath, isStartMessage: isStart, isEndMessage: isEnd)
+//        layoutCollectionView()
+//        setupCollectionView()
+        photoItems = model.images
+        collectionView?.reloadData()
+        
+    }
+    
+    func layoutCollectionView(){
+        let v = UICollectionView(frame: .zero,
+                                 collectionViewLayout: UICollectionViewFlowLayout())
+        collectionView = v
+        contentView.addSubview(collectionView!)
+        collectionView!.anchor(top: contentView.topAnchor, leading: contentView.leadingAnchor,
+                                      bottom: contentView.bottomAnchor, trailing: contentView.trailingAnchor)
+    }
+    
+    func setupCollectionView(){
+        collectionView?.backgroundColor = .white
+        collectionView?.dataSource = self
+        collectionView?.delegate = self
+        collectionView?.register(PhotoCollectionCell.self, forCellWithReuseIdentifier: PhotoCollectionCell.identifier)
+        let layout = PinterestLayout()
+        layout.delegate = self
+        collectionView?.collectionViewLayout = layout
+    }
+    
+    override func prepareForReuse(){
+        collectionView = nil
     }
 
 }
 
-// --MARK: CollectionView
-extension ImageGridCell {
-    func createLayout() -> UICollectionViewLayout {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                             heightDimension: .fractionalHeight(1.0))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                              heightDimension: .absolute(44))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 3)
-        let spacing = CGFloat(2)
-        group.interItemSpacing = .fixed(spacing)
-
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = spacing
-
-        // Another way to add spacing. This is done for the section.
-        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5)
-
-        let layout = UICollectionViewCompositionalLayout(section: section)
-        return layout
+extension ImageGridCell : PinterestLayoutDelegate {
+    func collectionView(_ collectionView: UICollectionView, ratioHWForPhotoAtIndexPath indexPath: IndexPath) -> CGFloat {
+        let item = photoItems[indexPath.row]
+        let width = item.size.width
+        let height = item.size.height
+        return height / width
     }
-    func configureHierarchy() {
-        collectionView = UICollectionView(frame: contentView.bounds, collectionViewLayout: createLayout())
-        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        collectionView.backgroundColor = .clear
-        collectionView.register(ImageCollectionCell.self, forCellWithReuseIdentifier: ImageCollectionCell.identifier)
-        contentView.addSubview(collectionView)
+    
+    
+}
+
+extension ImageGridCell : UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return photoItems.count
+
     }
-    func configureDataSource() {
-        dataSource = UICollectionViewDiffableDataSource<Section, Int>(collectionView: collectionView) {
-            (collectionView: UICollectionView, indexPath: IndexPath, identifier: Int) -> UICollectionViewCell? in
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCollectionCell.identifier, for: indexPath) as? PhotoCollectionCell  else {
+        fatalError()
 
-            // Get a cell of the desired kind.
-            guard let cell = collectionView.dequeueReusableCell(
-                withReuseIdentifier: ImageCollectionCell.identifier,
-                for: indexPath) as? ImageCollectionCell else { fatalError("Cannot create new cell") }
-
-            // Populate the cell with our item description.
-            
-            // Return the cell.
-            return cell
         }
-
-        // initial data
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Int>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(Array(0..<10))
-        dataSource.apply(snapshot, animatingDifferences: false)
+        cell.configure(with: photoItems[indexPath.row])
+        return cell
     }
 }
 
-class ImageCollectionCell : UICollectionViewCell {
-    static let identifier = "ImageCell"
+extension ImageGridCell : UICollectionViewDelegate{
     
-    var imageView = UIImageView()
-    
-    init() {
-        super.init(frame: .zero)
-        imageView.anchor(top: contentView.topAnchor, leading: contentView.leadingAnchor, bottom: contentView.bottomAnchor, trailing: contentView.trailingAnchor)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    func configure(imageAddress: String){
-        guard let url = URL(string: imageAddress) else {
-            return
-        }
-        imageView.af.setImage(withURL: url)
-    }
 }
+
+
