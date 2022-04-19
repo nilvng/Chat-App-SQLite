@@ -17,6 +17,7 @@ protocol MessageListInteractor {
     func onSendMessage(content: String, conversation: ConversationDomain)
     func onSendMessage(m: MessageDomain)
     func sendSeenStatus()
+    func doneSelectLocalMedia(_ asset: [PHAsset])
 }
 
 
@@ -318,8 +319,8 @@ extension ChatViewController {
 // MARK: Chatbar Delegate
 extension ChatViewController : ChatbarDelegate {
     func photoIconSelected() {
-        //router?.toPhotoGallery()
-        configurePHPicker()
+        router?.toPhotoGallery()
+//        configurePHPicker()
     }
     
     func configurePHPicker(){

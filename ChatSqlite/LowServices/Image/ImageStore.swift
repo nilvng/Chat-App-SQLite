@@ -80,7 +80,7 @@ class ImageConfig : NSObject{
     
 }
 
-class ImageStore {
+actor ImageStore {
     
     let cache = NSCache<ImageConfig, UIImage>()
     let cacheSizeLimit = 4500000
@@ -112,42 +112,35 @@ class ImageStore {
         return img
     }
 
-    func getImage(forUrl urlKey: String, type: ImageType, completion: @escaping (Result<UIImage, Error>) -> Void) {
+    func getImage(forUrl urlKey: String, type: ImageType) async throws -> UIImage {
         // Case1: Find in memo
         let config = ImageConfig(url: urlKey, type: type)
         if let existingImage = cache.object(forKey: config) {
-            completion(.success(existingImage))
-            return
+            return existingImage
         }
         // Case2: Find on disk
         let url = imageURL(forKey: config.getFilename())
         if let imageFromDisk = UIImage(contentsOfFile: url.path) {
             let image = self.setImage(imageFromDisk, forKey: config, inMemOnly: true)
             print("Found on disk..")
-            completion(.success(image))
-            return
+            return image
         }
         // Case3: Finally, request to the server
         print("From server")
-        getImageFromServer(forKey: urlKey, type: type, completion: completion)
+        return try await getImageFromServer(forKey: urlKey, type: type)
     
         }
 
-    func getImageFromServer(forKey key: String, type: ImageType, completion: @escaping (Result<UIImage, Error>) -> Void) {
+    func getImageFromServer(forKey key: String, type: ImageType) async throws -> UIImage {
         guard let remoteURL = URL(string: key) else {
-            completion(.failure(PhotoError.brokenURL))
-            return
+            throw PhotoError.brokenURL
         }
         
-        photoRequest.fetchImage(url: remoteURL){ res in
-            if case let .success(im) = res {
-                let config = ImageConfig(url: key, type: type)
-                let image = self.setImage(im, forKey: config,inMemOnly: false)
-                completion(.success(image))
-            } else{
-                completion(.failure(PhotoError.brokenURL))
-            }
-        }
+        let im = try await photoRequest.fetchImage(url: remoteURL)
+        let config = ImageConfig(url: key, type: type)
+        let image = self.setImage(im, forKey: config,inMemOnly: false)
+        return image
+            
     }
 
 

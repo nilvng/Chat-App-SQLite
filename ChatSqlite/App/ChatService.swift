@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Photos
 
 class ChatService {
     typealias RegisterAction = (String ,ChatService) -> Void
@@ -38,6 +39,52 @@ class ChatService {
         self.addMessage(msg: msg)
         socketService.sendMessage(msg)
 
+    }
+    
+    func sendMessage(_ assets: [PHAsset]){
+        let cid = conversatioNWorker.getId()
+        let model = MessageDomain(cid: cid, content: "", type: .image, status: .sent)
+        model.assets = assets
+        self.savePhotos(of: model)
+    }
+
+    func savePhotos(of model: MessageDomain){
+        Task.detached {
+            var urlStrings : [String] = []
+            do {
+                let results = try await withThrowingTaskGroup(of: (Int, String).self,
+                                                              returning: [Int: String].self,
+                                                              body: { taskGroup in
+                    for i in 0..<model.assets.count {
+                        taskGroup.addTask{
+                            let st = try await LocalMediaWorker.shared.savePhoto(asset: model.assets[i], folder: model.cid)
+                            return (i,st)
+                        }
+                    }
+                    // Collect results of all child task in a dictionary
+                    var childTaskResults = [Int: String]()
+                    for try await result in taskGroup {
+                        // Set operation name as key and operation result as value
+                        childTaskResults[result.0] = result.1
+                    }
+                    
+                    // All child tasks finish running, thus task group result
+                    return childTaskResults
+                    
+                })
+                // waiting until finished all tasks
+                for st in results.values {
+                    urlStrings.append(st)
+                }
+                model.setContent(urlString: urlStrings)
+                self.sendMessage(model)
+                
+            } catch let e {
+                print(e.localizedDescription)
+                print("\(self): Failed to save photos")
+            }
+            
+        }
     }
     
     func receiveMessage(_ msg: MessageDomain){

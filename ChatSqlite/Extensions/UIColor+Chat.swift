@@ -27,4 +27,23 @@ extension UIColor{
     static func rgb(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat = 1) -> UIColor{
         return UIColor(red: red / 255, green: green / 255, blue: blue / 255, alpha: alpha)
     }
+    func darker(amount : CGFloat = 0.25) -> UIColor {
+        return hueColorWithBrightnessAmount(amount: 1 - amount)
+      }
+    private func hueColorWithBrightnessAmount(amount: CGFloat) -> UIColor {
+            var hue         : CGFloat = 0
+            var saturation  : CGFloat = 0
+            var brightness  : CGFloat = 0
+            var alpha       : CGFloat = 0
+
+            if getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha) {
+                return UIColor( hue: hue,
+                                saturation: saturation,
+                                brightness: brightness * amount,
+                                alpha: alpha )
+            } else {
+                return self
+            }
+
+    }
 }

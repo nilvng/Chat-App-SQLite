@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import Alamofire
 import Combine
+import Photos
 
 protocol MessageListViewDelegate : AnyObject{
     func textMessageIsSent(content: String, inTable tableView: UITableView)
@@ -113,7 +114,7 @@ class MessageListViewController : UITableViewController {
         
         table.showsVerticalScrollIndicator = false
         table.contentInsetAdjustmentBehavior = .never
-        table.estimatedRowHeight = 60
+        table.estimatedRowHeight = 70
         table.rowHeight = UITableView.automaticDimension
         table.transform = CGAffineTransform(scaleX: 1, y: -1)
         return table
@@ -123,6 +124,7 @@ class MessageListViewController : UITableViewController {
         myTableView.register(TextMessageCell.self, forCellReuseIdentifier: TextMessageCell.ID)
         myTableView.register(MessageCell.self, forCellReuseIdentifier: MessageCell.identifier)
         myTableView.register(ImageCell.self, forCellReuseIdentifier: ImageCell.ID)
+        myTableView.register(ImageGridCell.self, forCellReuseIdentifier: ImageGridCell.ID)
         myTableView.register(TimestampHeaderView.self, forHeaderFooterViewReuseIdentifier: TimestampHeaderView.identifier)
         tableView = myTableView
 
@@ -154,13 +156,20 @@ class MessageListViewController : UITableViewController {
     }
     
     func sortByDate(items: [MessageDomain]) -> [DateSection]{
-        let sections = Dictionary(grouping: items, by: { (item) -> String in
-            let date = item.timestamp.toSimpleDate()
-            return date
+        let sections = Dictionary(grouping: items, by: { (item) -> DateComponents in
+            let date = Calendar.current.dateComponents([.day, .year, .month], from: (item.timestamp))
+
+                return date
         })
-        let keys = sections.keys.sorted(by: {$0 > $1})
+        let sortedSections = sections.sorted {
+            Calendar.current.date(from: $0.key) ?? Date.distantFuture >
+                   Calendar.current.date(from: $1.key) ?? Date.distantFuture
+        }
         // map the sorted keys to a struct
-        return keys.map{ DateSection(title: $0, items: sections[$0]!) }
+        return sortedSections.map{ section in
+            let date = Calendar.current.date(from: section.key) ?? Date.distantFuture
+            return DateSection(title: date.toSimpleDate(), items: section.value)
+        }
     }
 }
 // MARK: - TableView Delegate
@@ -252,11 +261,14 @@ extension MessageListViewController {
         if message.type == .text {
             cell = tableView.dequeueReusableCell(withIdentifier: TextMessageCell.ID, for: indexPath) as? TextMessageCell
         } else if message.type == .image{
-            let c = tableView.dequeueReusableCell(withIdentifier: ImageCell.ID) as! ImageCell
-            c.configure(with: message)
-            c.transform = CGAffineTransform(scaleX: 1, y: -1)
+            if message.urls.count > 1 {
+                var gridCell = tableView.dequeueReusableCell(withIdentifier: ImageGridCell.ID) as! ImageGridCell
+                gridCell.gridCellDelegate = self
+                cell = gridCell
+            } else {
+                cell = tableView.dequeueReusableCell(withIdentifier: ImageCell.ID) as! ImageCell
+                }
 
-            return c
         }
         let isEndOfContinous = isEndOfContinuousMessages(indexPath: indexPath, message: message)
         let isStartOfContinuous = isStartOfContinuousMessages(indexPath: indexPath, message: message)
@@ -323,8 +335,18 @@ extension MessageListViewController {
     
 }
 
+// MARK: GridCellDelegate
+extension MessageListViewController : GridCellDelegate {
+    func didSelect(asset: PHAsset) {
+        let photoVC = PhotoViewController()
+        photoVC.configure(with: asset)
+        show(photoVC, sender: nil)
+    }
+}
+
 // MARK: Presenter
 extension MessageListViewController : MessagesPresenter {
+
     func presentFFMessageStatus() {
         //
         var stopPoint : Int = 0

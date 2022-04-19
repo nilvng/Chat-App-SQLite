@@ -7,22 +7,24 @@
 
 import UIKit
 
-class ImageCell : UITableViewCell {
+class ImageCell : MessageCell {
     static let ID = "PhotoBubbleCell"
     var myImageView = UIImageView()
 
-
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        messageContainerView.addSubview(myImageView)
         setupImageView()
-
     }
     
     func configure(with im: UIImage){
         myImageView.image = im
     }
-    func configure(with message: MessageDomain){
-        guard let u = message.getImageURL(index: 0) else {
+    override func configure(with model: MessageDomain, indexPath: IndexPath, isStartMessage isStart: Bool, isEndMessage isEnd: Bool) {
+    
+        super.configure(with: model, indexPath: indexPath, isStartMessage: isStart, isEndMessage: isEnd)
+        
+        guard let u = model.getImageURL(index: 0) else {
             print("Cant display image: \(message.content)")
             return
         }
@@ -35,7 +37,7 @@ class ImageCell : UITableViewCell {
                 }
                 
             } else {
-                print("Failed find image data.")
+                print("Failed find image data. \(u)")
             }
         }
     }
@@ -49,16 +51,14 @@ class ImageCell : UITableViewCell {
     }
     
     func setupImageView(){
-        contentView.addSubview(myImageView)
-        myImageView.contentMode = .scaleToFill
-//        myImageView.heightAnchor.constraint(lessThanOrEqualToConstant: 160).isActive = true
+//        myImageView.contentMode = .
+        myImageView.heightAnchor.constraint(lessThanOrEqualToConstant: 160).isActive = true
         myImageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
         myImageView.widthAnchor.constraint(lessThanOrEqualToConstant: 130).isActive = true
 
-        myImageView.addConstraints(top: contentView.topAnchor,
-                                   bottom: contentView.bottomAnchor,
-                                   trailing: contentView.trailingAnchor,
-                                   topConstant: 5  , rightConstant: 20)
+        myImageView.addConstraints(top: messageContainerView.topAnchor,
+                                   bottom: messageContainerView.bottomAnchor,
+                                   trailing: messageContainerView.trailingAnchor)
         
     }
     

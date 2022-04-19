@@ -51,6 +51,7 @@ class MessageListWorker {
             })
     }
     
+    @discardableResult
     func add(_ msg: MessageDomain) -> Bool{
         observer?.presentSentItem(msg)
         dbStore?.createItem(msg, completionHandler: handleError)

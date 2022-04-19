@@ -8,6 +8,7 @@
 import Foundation
 import Alamofire
 import UIKit
+import Photos
 
 class MessageDomain {
     
@@ -15,7 +16,13 @@ class MessageDomain {
 
     var cid: String
     
-    var content: String
+    var content: String {
+        didSet {
+            if type == .image {
+                parseToUrls()
+            }
+        }
+    }
     
     var type: MessageType
     
@@ -55,8 +62,16 @@ class MessageDomain {
     }
     
     var images : [UIImage] = []
-    var urls : [URL] = []
+    var urls : [String] = []
+    
+    var assets : [PHAsset] = []
 
+    func parseToUrls(){
+        urls = self.content.components(separatedBy: "|")
+        for url in urls {
+            
+        }
+    }
 }
 
 
@@ -98,15 +113,40 @@ extension MessageDomain {
     }
     
     func getImageURL(index: Int) -> URL? {
-        let urls = self.content.components(separatedBy: "|")
+        if urls.count == 0 {
+            urls = self.content.components(separatedBy: "|")
+        }
         guard urls.count >= index else {
             return nil
         }
         let filename = urls[index]
-        var documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        print(filename)
+        let documentsUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         return documentsUrl.appendingPathComponent(filename)
     }
-
+    func getImageID(index: Int) -> String? {
+        if urls.count == 0 {
+            urls = self.content.components(separatedBy: "|")
+        }
+        guard urls.count >= index else {
+            return nil
+        }
+        let filename = urls[index]
+        return filename
+    }
+    
+    
+    func getAsset(index i: Int) -> PHAsset?{
+        if i >= assets.count {
+            return nil
+        }
+        return assets[i]
+    }
+    
+    func setContent(urlString: [String]){
+        content = urlString.joined(separator: "|")
+        print(content)
+    }
 }
 
 extension MessageDomain {

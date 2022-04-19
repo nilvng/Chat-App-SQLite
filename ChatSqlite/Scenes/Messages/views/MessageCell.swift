@@ -36,10 +36,10 @@ class MessageCell: UITableViewCell {
     
 
     
-    var bubbleImageView : UIImageView = {
-        let imageView = UIImageView()
-        return imageView
-    }()
+//    var bubbleImageView : UIImageView = {
+//        let imageView = UIImageView()
+//        return imageView
+//    }()
     
     var avatarView : AvatarView = {
         let view = AlamoAvatarView(frame: CGRect(x: 0, y: 0, width: 33, height: 33))
@@ -69,7 +69,7 @@ class MessageCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         contentView.addSubview(statusImage)
-        contentView.addSubview(bubbleImageView)
+//        contentView.addSubview(bubbleImageView)
         contentView.addSubview(avatarView)
         contentView.addSubview(messageContainerView)
         contentView.addSubview(timestampLabel)
@@ -109,7 +109,7 @@ class MessageCell: UITableViewCell {
         if !isReceived {
             alignSentBubble()
             let config = outgoingBubbleConfig
-            bubbleImageView.image = BackgroundFactory.shared.getBackground(config: config)
+//            bubbleImageView.image = BackgroundFactory.shared.getBackground(config: config)
             
             if let symbol = model.status.getSymbol(){
                 statusImage.isHidden = false
@@ -120,7 +120,7 @@ class MessageCell: UITableViewCell {
             statusImage.isHidden = true
             alignReceivedBubble(isStart, model)
             let config = incomingBubbleConfig
-            bubbleImageView.image = BackgroundFactory.shared.getBackground(config: config)
+//            bubbleImageView.image = BackgroundFactory.shared.getBackground(config: config)
         }
         
         if model.status == .seen{
@@ -232,14 +232,14 @@ class MessageCell: UITableViewCell {
         }
 
         let color = theme.gradientImage.getPixelColor(pos: CGPoint(x:10 , y: normalizedY))
-        self.bubbleImageView.tintColor = color
+//        self.bubbleImageView.tintColor = color
     }
     
     // MARK: Setup views
     
     func setupMessageBody(){
         messageContainerView.translatesAutoresizingMaskIntoConstraints = false
-        self.outboundConstraint =  messageContainerView.trailingAnchor.constraint(equalTo: statusImage.leadingAnchor, constant: -bubbleHPadding)
+        self.outboundConstraint =  messageContainerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -bubbleHPadding-3)
         self.inboundConstraint = messageContainerView.leadingAnchor.constraint(equalTo: avatarView.trailingAnchor, constant: bubbleHPadding)
         self.continuousConstraint = messageContainerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: bubbleVPadding)
 
@@ -260,8 +260,8 @@ class MessageCell: UITableViewCell {
         let constraints : [NSLayoutConstraint] = [
             statusImage.widthAnchor.constraint(equalToConstant: 15),
             statusImage.heightAnchor.constraint(equalToConstant: 15),
-            statusImage.trailingAnchor.constraint(equalTo:  contentView.trailingAnchor, constant: -4),
-            statusImage.bottomAnchor.constraint(equalTo: bubbleImageView.bottomAnchor),
+            statusImage.leadingAnchor.constraint(equalTo:  messageContainerView.trailingAnchor, constant: 1),
+            statusImage.bottomAnchor.constraint(equalTo: messageContainerView.bottomAnchor),
         ]
         
         NSLayoutConstraint.activate(constraints)
@@ -272,8 +272,8 @@ class MessageCell: UITableViewCell {
         
         timestampLabel.translatesAutoresizingMaskIntoConstraints = false
         let constraints : [NSLayoutConstraint] = [
-            timestampLabel.topAnchor.constraint(equalTo: bubbleImageView.bottomAnchor, constant: 2),
-            timestampLabel.leadingAnchor.constraint(equalTo: bubbleImageView.leadingAnchor),
+            timestampLabel.topAnchor.constraint(equalTo: messageContainerView.bottomAnchor, constant: 2),
+            timestampLabel.leadingAnchor.constraint(equalTo: messageContainerView.leadingAnchor),
             timestampLabel.heightAnchor.constraint(equalToConstant: 13),
             timestampLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
         ]
@@ -284,7 +284,7 @@ class MessageCell: UITableViewCell {
     func setupAvatarView(){
         avatarView.translatesAutoresizingMaskIntoConstraints = false
         let constraints : [NSLayoutConstraint] = [
-            avatarView.bottomAnchor.constraint(equalTo: bubbleImageView.bottomAnchor),
+            avatarView.bottomAnchor.constraint(equalTo: messageContainerView.bottomAnchor, constant: 8),
             avatarView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: BubbleConstant.contentHPadding),
             avatarView.widthAnchor.constraint(equalToConstant: BubbleConstant.avatarSize),
             avatarView.heightAnchor.constraint(equalToConstant: BubbleConstant.avatarSize)
@@ -299,7 +299,7 @@ class MessageCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
             downloadButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-            downloadButton.leadingAnchor.constraint(equalTo: bubbleImageView.trailingAnchor, constant: 0),
+            downloadButton.leadingAnchor.constraint(equalTo: messageContainerView.trailingAnchor, constant: 0),
             downloadButton.widthAnchor.constraint(equalToConstant: 35),
             downloadButton.heightAnchor.constraint(equalToConstant: 35)
         ])

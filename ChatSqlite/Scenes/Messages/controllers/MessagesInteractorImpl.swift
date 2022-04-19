@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import Photos
 
 protocol MessagesPresenter : AnyObject{
     func presentItems(_ items: [MessageDomain]?, offset: Int)
@@ -15,11 +16,9 @@ protocol MessagesPresenter : AnyObject{
     func onFoundConversation(_ c: ConversationDomain)
     func presentMessageStatus(id: String, status: MessageStatus)
     func presentFFMessageStatus()
-
 }
 
 class MessagesInteractorImpl : MessageListInteractor {
-
             
     var chatService : ChatService
         
@@ -30,12 +29,17 @@ class MessagesInteractorImpl : MessageListInteractor {
     var currPage = 0
     var selectedFriend : FriendDomain?
     
+    func doneSelectLocalMedia(_ assets: [PHAsset]){
+        chatService.sendMessage(assets)
+    }
+    
     internal init(chatService: ChatService, noRecords: Int = 20, currPage: Int = 0, selectedFriend: FriendDomain? = nil) {
         self.chatService = chatService
         self.noRecords = noRecords
         self.currPage = currPage
         self.selectedFriend = selectedFriend
     }
+
 
     func sendSeenStatus(){
         print("currently in Chat View")

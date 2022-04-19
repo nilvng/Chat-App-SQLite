@@ -20,7 +20,18 @@ class ChatRouter {
         viewController?.show(view, sender: nil)
     }
     func toPhotoGallery(){
-        let view = PhotoCollectionViewController()
-        viewController?.show(view, sender: nil)
+        let vc = GalleryContainerViewController()
+        vc.callback  =  { assets in
+            guard let viewController = self.viewController as? ChatViewController else {
+                return
+            }
+            viewController.interactor?.doneSelectLocalMedia(assets)
+        }
+        vc.modalPresentationStyle = .pageSheet
+        if let presentation  = vc.sheetPresentationController {
+            presentation.detents = [.medium(), .large()]
+            presentation.prefersScrollingExpandsWhenScrolledToEdge = true
+        }
+        viewController?.present(vc, animated: true, completion: nil)
     }
 }

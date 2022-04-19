@@ -22,14 +22,14 @@ class AvatarView: UIImageView {
         // check if contact has image, or else create an image of their first letter name
         let theKey = url != nil ? url! : text
 
-
-        ImageStore.shared.getImage(forUrl: theKey, type: .rounded){ res in
-        if case let .success(image) = res{
-                self.image = image
-                //print("show avatar")
-        } else {
-            print("use placeholder avatar...")
-            self.usePlaceholderAvatar(with: text)
+        Task {
+            do {
+        
+            let im = try await ImageStore.shared.getImage(forUrl: theKey, type: .rounded)
+            self.image = im
+            } catch let e {
+                print("use placeholder avatar...")
+                self.usePlaceholderAvatar(with: text)
             }
         }
     }
@@ -38,8 +38,10 @@ class AvatarView: UIImageView {
         let firstCharacter = String((text.first)!) as NSString
         let im = self.drawText(text: firstCharacter)
         let config = ImageConfig(url: text, type: .rounded)
-        let image = ImageStore.shared.setImage(im, forKey: config, inMemOnly: false)
-        self.image = image
+        Task {
+            let image = await ImageStore.shared.setImage(im, forKey: config, inMemOnly: false)
+            self.image = image
+        }
     }
     
     func drawText(text: NSString) -> UIImage{

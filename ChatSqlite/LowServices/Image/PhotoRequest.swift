@@ -23,32 +23,19 @@ class PhotoRequest{
         return URLSession(configuration: config)
     }()
     
-    func fetchImage(url: URL, completion: @escaping (Result<UIImage, Error>) -> Void){
-        let request = URLRequest(url: url)
-        let task = session.dataTask(with: request){ (data, response, error) in
-            let result = self.processImageRequest(data: data, error: error)
-
-            OperationQueue.main.addOperation {
-                completion(result)
-            }
-        }
-        
-        task.resume()
+    func fetchImage(url: URL) async throws -> UIImage{
+//        let request = URLRequest(url: url)
+        let (data, _) = try await session.data(from: url)
+        return try await processImageRequest(data: data)
     }
     
-    private func processImageRequest(data: Data?, error: Error?) -> (Result<UIImage, Error>) {
+    private func processImageRequest(data: Data) async throws -> UIImage {
         guard
-            let imageData = data,
-            let image = UIImage(data: imageData) else {
+            let image = UIImage(data: data) else {
 
-                // Couldn't create an image
-                if data == nil {
-                    return .failure(error!)
-                } else {
-                    return .failure(PhotoError.imageCreationError)
+                    throw PhotoError.imageCreationError
                 }
-        }
 
-        return .success(image)
+        return image
     }
 }
