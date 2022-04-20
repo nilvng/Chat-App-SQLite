@@ -75,7 +75,7 @@ public final class RawSocketClient {
             
             /// the above closure didn't run -> res = failure 
             if self.state != .connected { //
-                print("\(self) Error: Connection failed")
+//                print("\(self) Error: Connection failed")
                 self.state = .disconnected
             }
         }
@@ -92,7 +92,7 @@ public final class RawSocketClient {
             reconnectCounter = 0
         }
         reconnectCounter += 1
-        print("Reconnecting...\(reconnectCounter)")
+//        print("Reconnecting...\(reconnectCounter)")
                 
         self.state = .reconnecting
         let delay = reconnectCounter * config.connectTimeout
@@ -161,7 +161,7 @@ public final class RawSocketClient {
         set {
             self.lock.withLock {
                 _state = newValue
-                print("\(self) \(_state)")
+//                print("\(self) \(_state)")
             }
         }
         

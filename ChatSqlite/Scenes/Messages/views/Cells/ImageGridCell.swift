@@ -11,7 +11,8 @@ import Photos
 import PhotosUI
 
 protocol GridCellDelegate : AnyObject {
-    func didSelect(asset: PHAsset)
+    func didSelect(i: Int, of message: MessageDomain)
+    
 }
 
 class ImageGridCell : MessageCell {
@@ -28,10 +29,12 @@ class ImageGridCell : MessageCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        print("Init Grid Cell")
         setupCollectionView()
         layoutCollectionView()
-//        contentView.backgroundColor = UIColor(r: 82, g: 120, b: 72)
-//        collectionView.clipsToBounds = true
+        contentView.clipsToBounds = true
+        collectionView.clipsToBounds = true
+        collectionView.isScrollEnabled = false
     }
     
     func setupCollectionView(){
@@ -45,10 +48,11 @@ class ImageGridCell : MessageCell {
     
     func layoutCollectionView(){
         messageContainerView.addSubview(collectionView)
+        messageContainerView.widthAnchor.constraint(equalToConstant: 220).isActive = true
         collectionView.addConstraints(top: messageContainerView.topAnchor,
                                       bottom: messageContainerView.bottomAnchor,
                                       trailing: messageContainerView.trailingAnchor,
-                                      widthConstant: 210)
+                                      widthConstant: 220)
     
     }
     
@@ -56,12 +60,11 @@ class ImageGridCell : MessageCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configure(_ model : MessageDomain){
-//        self.model = model
-        
-    }
+
+// MARK: - Configure
     override func configure(with: MessageDomain, indexPath: IndexPath, isStartMessage: Bool, isEndMessage: Bool){
         super.configure(with: with, indexPath: indexPath, isStartMessage: isStartMessage, isEndMessage: isEndMessage)
+//        setupCollectionView()
     }
 
     
@@ -73,36 +76,47 @@ class ImageGridCell : MessageCell {
             self.collectionView.layoutIfNeeded()
             self.layoutIfNeeded()
             let contentSize = self.collectionView.collectionViewLayout.collectionViewContentSize
-            return CGSize(width: contentSize.width, height: contentSize.height)
+            let padding = bubbleVPadding + BubbleConstant.contentVPadding * 2
+            return CGSize(width: contentSize.width, height: contentSize.height + padding)
         }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        message = nil
+//        collectionView.reloadData()
+    }
 }
 
+// MARK: CollageLayout Delegate
 extension ImageGridCell : CollageLayoutDelegate {
     func collectionView(_ collectionView: UICollectionView, ratioHWForPhotoAtIndexPath indexPath: IndexPath) -> CGFloat {
-        guard let a = message.getAsset(index: indexPath.row) else {
-            return 1
+        guard let prep = message.getPrep(index: indexPath.item) else {
+            fatalError("No Image Prep but show a ImageGridCell??")
         }
-        return CGFloat(a.pixelHeight) / CGFloat(a.pixelWidth)
-        
+        return CGFloat(prep.height) / CGFloat(prep.width)
     }
     
     
 }
 
+// MARK: - CollectionView DataSource
 extension ImageGridCell : UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        message.urls.count
+        message.mediaPreps?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoGridViewCell.identifier, for: indexPath) as! PhotoGridViewCell
-        
-        Task{
+        let i = indexPath.item
+        cell.identifier = message.getPrep(index: i)?.imageID
+        Task{ [weak self] in
             do{
-                let im = try await LocalMediaWorker.shared.getImage(index: indexPath.item,
+                let im = try await LocalMediaWorker.shared.getImage(index: i,
                                                                 of: message,
                                                                 type: .thumbnail)
-                cell.configure(with: im)
+                if cell.identifier == message.getPrep(index: i)?.imageID{
+                    cell.configure(with: im)
+                }
             } catch {
                 print("\(self): Failed loading image from local storage")
             }
@@ -113,9 +127,6 @@ extension ImageGridCell : UICollectionViewDataSource {
 
 extension ImageGridCell : UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let a = message.getAsset(index: indexPath.row) else {
-            fatalError()
-        }
-        gridCellDelegate?.didSelect(asset: a)
+        gridCellDelegate?.didSelect(i: indexPath.item, of: message)
     }
 }

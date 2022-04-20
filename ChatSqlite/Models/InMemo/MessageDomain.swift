@@ -9,6 +9,21 @@ import Foundation
 import Alamofire
 import UIKit
 import Photos
+import SQLite
+
+
+struct MediaPrep : Codable{
+    var imageID: String
+    var width : Int
+    var height: Int
+    var bgColor: ColorRGB?
+}
+
+struct ColorRGB : Codable{
+    var red: Int
+    var green : Int
+    var blue: Int
+}
 
 class MessageDomain {
     
@@ -32,11 +47,12 @@ class MessageDomain {
     
     var downloaded : Bool = false
     var status : MessageStatus = .sent
- 
+    var urls : [String] = []
+    var mediaPreps : [MediaPrep]?
     // download subscriber
     var subscriber : MessageSubscriber?
     
-    init(mid: String, cid: String, content: String, type: MessageType, timestamp: Date, sender: String, downloaded: Bool = false, status: MessageStatus) {
+    init(mid: String, cid: String, content: String, type: MessageType, timestamp: Date, sender: String, downloaded: Bool = false, status: MessageStatus, mediaPreps: [MediaPrep]?=nil) {
         self.mid = mid
         self.cid = cid
         self.content = content
@@ -45,8 +61,11 @@ class MessageDomain {
         self.sender = sender
         self.downloaded = downloaded
         self.status = status
+        self.mediaPreps = mediaPreps
     }
-    init(cid: String, content: String, type: MessageType, status: MessageStatus,downloaded: Bool = false) {
+    init(cid: String, content: String="", type: MessageType,
+         status: MessageStatus = .sent,
+         downloaded: Bool = false) {
         self.mid = UUID().uuidString
         self.cid = cid
         self.content = content
@@ -60,17 +79,9 @@ class MessageDomain {
     func isFromThisUser() -> Bool{
         return self.sender == UserSettings.shared.getUserID()
     }
-    
-    var images : [UIImage] = []
-    var urls : [String] = []
-    
-    var assets : [PHAsset] = []
 
     func parseToUrls(){
         urls = self.content.components(separatedBy: "|")
-        for url in urls {
-            
-        }
     }
 }
 
@@ -135,13 +146,14 @@ extension MessageDomain {
         return filename
     }
     
-    
-    func getAsset(index i: Int) -> PHAsset?{
-        if i >= assets.count {
+    func getPrep(index: Int) -> MediaPrep? {
+ 
+        guard mediaPreps != nil && mediaPreps!.count > index else {
             return nil
         }
-        return assets[i]
+        return mediaPreps?[index]
     }
+
     
     func setContent(urlString: [String]){
         content = urlString.joined(separator: "|")

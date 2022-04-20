@@ -45,7 +45,7 @@ protocol Message{
     var sender : String! {get}
     var downloaded : Bool! {get}
     var status : MessageStatus! {get set}
-    
+    var mediaPreps: [MediaPrep]? {get set}
         
     func toUIModel() -> MessageDomain
     
@@ -58,8 +58,12 @@ protocol SQLiteModel : Codable{
 
 struct MessageSQLite : Message, Codable {
     
+    
     func toUIModel() -> MessageDomain {
-        return MessageDomain(mid: mid, cid: cid, content: content, type: type, timestamp: timestamp, sender: sender,downloaded: downloaded, status: status)
+        return MessageDomain(mid: mid, cid: cid, content: content, type: type,
+                             timestamp: timestamp, sender: sender,
+                             downloaded: downloaded, status: status,
+                             mediaPreps: mediaPreps)
     }
     
     mutating func fromUIModel(c: MessageDomain) {
@@ -71,6 +75,7 @@ struct MessageSQLite : Message, Codable {
         self.sender = c.sender
         self.downloaded = c.downloaded
         self.status = c.status
+        self.mediaPreps = c.mediaPreps
     }
     
     var mid : String! = UUID().uuidString
@@ -89,6 +94,8 @@ struct MessageSQLite : Message, Codable {
     
     var downloaded : Bool!
     
+    var mediaPreps: [MediaPrep]?
+
     init(){
     }
     

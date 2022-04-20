@@ -68,17 +68,9 @@ class CollageLayout: UICollectionViewLayout {
           let yOffset = CGFloat(row) * rowHeight
           
           var width =  rowHeight / ratio
-//          let widthLeft = contentWidth - xOffset
           
-//          print(contentWidth)
-          if width > (contentWidth * 2 / 5 ) {
-              print("before: \(width) after: \(8 * contentWidth / 15)")
-
-              width = 2 * contentWidth / 5
-          }
-          
-          if (contentWidth - width - xOffset) < (contentWidth / 4) {
-              print("expand... \(item)")
+          if (contentWidth - width - xOffset) < (contentWidth / 5) {
+//              print("expand... \(item)")
               width = contentWidth - xOffset
           }
           
@@ -87,11 +79,9 @@ class CollageLayout: UICollectionViewLayout {
                   xOffset = contentWidth - width
               
           }
-          
-//          if alignRight && item == noItems -  2 {
-//              xOffset = contentWidth - (width + contentWidth/3 )
-//          }
-          
+//          print("width: \(width) height: \(rowHeight)")
+
+       
           let frame = CGRect(x: xOffset,
                              y: yOffset,
                              width: width,

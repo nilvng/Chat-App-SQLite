@@ -17,7 +17,6 @@ class MessageListWorker {
     
     init(cid: String) {
         dbStore = MessageStoreProxy(cid: cid)
-        self.loadInitialData()
     }
     
     func setDBStore(store : MessageDBService){

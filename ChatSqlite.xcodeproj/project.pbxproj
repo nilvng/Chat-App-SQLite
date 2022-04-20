@@ -43,7 +43,6 @@
 		0E393FC427B3CE410011CB68 /* UIViewController+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E393FC327B3CE410011CB68 /* UIViewController+extension.swift */; };
 		0E3C0D1A2783F9EF00B23E21 /* ChatMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E3C0D192783F9EF00B23E21 /* ChatMenuController.swift */; };
 		0E44B00727F2C11400F1A790 /* BubbleTextContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E44B00627F2C11400F1A790 /* BubbleTextContentView.swift */; };
-		0E44B00B27F2C33F00F1A790 /* PinterestLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E44B00A27F2C33F00F1A790 /* PinterestLayout.swift */; };
 		0E44B00D27F2EA8900F1A790 /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E44B00C27F2EA8900F1A790 /* ImageCell.swift */; };
 		0E50A73D27EAD62700DC7787 /* ModelCodecOutboundHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E50A73C27EAD62700DC7787 /* ModelCodecOutboundHandler.swift */; };
 		0E50A73F27EDA4AF00DC7787 /* MessageBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E50A73E27EDA4AF00DC7787 /* MessageBody.swift */; };
@@ -87,13 +86,14 @@
 		0EC6A98B280563F000366957 /* ImageGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC6A98A280563F000366957 /* ImageGridCell.swift */; };
 		0EC6A98D2805640100366957 /* FullPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC6A98C2805640100366957 /* FullPhotoViewController.swift */; };
 		0EC6A98F2805641300366957 /* CollageLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC6A98E2805641300366957 /* CollageLayout.swift */; };
-		0EC6A9922805683400366957 /* PhotoCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC6A9912805683400366957 /* PhotoCollectionCell.swift */; };
+		0EC6A9922805683400366957 /* PhotoGridViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC6A9912805683400366957 /* PhotoGridViewCell.swift */; };
 		0EC6A99428056A9100366957 /* LocalMediaWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC6A99328056A9100366957 /* LocalMediaWorker.swift */; };
 		0EC6A99628056B0400366957 /* PHAsset+Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC6A99528056B0400366957 /* PHAsset+Chat.swift */; };
 		0ED966D127CF5F2200393E35 /* ReachabilityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ED966D027CF5F2200393E35 /* ReachabilityService.swift */; };
 		0EDA957A2775A08300646051 /* ConversationStoreProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDA95792775A08300646051 /* ConversationStoreProxy.swift */; };
 		0EDC669A27BA651600A2792E /* MessageCellInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDC669927BA651600A2792E /* MessageCellInteractor.swift */; };
 		0EDC669C27BA698A00A2792E /* FriendRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDC669B27BA698A00A2792E /* FriendRouter.swift */; };
+		0EE0D6EC280EB47600ADB3E3 /* String+Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE0D6EB280EB47600ADB3E3 /* String+Chat.swift */; };
 		0EF89B62278ECEEF005C3BE1 /* AlamoAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF89B61278ECEEF005C3BE1 /* AlamoAvatarView.swift */; };
 		0EFDD947276B72C400323984 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD946276B72C400323984 /* AppDelegate.swift */; };
 		0EFDD949276B72C400323984 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD948276B72C400323984 /* SceneDelegate.swift */; };
@@ -148,7 +148,6 @@
 		0E393FC327B3CE410011CB68 /* UIViewController+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+extension.swift"; sourceTree = "<group>"; };
 		0E3C0D192783F9EF00B23E21 /* ChatMenuController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMenuController.swift; sourceTree = "<group>"; };
 		0E44B00627F2C11400F1A790 /* BubbleTextContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleTextContentView.swift; sourceTree = "<group>"; };
-		0E44B00A27F2C33F00F1A790 /* PinterestLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PinterestLayout.swift; sourceTree = "<group>"; };
 		0E44B00C27F2EA8900F1A790 /* ImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
 		0E50A73C27EAD62700DC7787 /* ModelCodecOutboundHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelCodecOutboundHandler.swift; sourceTree = "<group>"; };
 		0E50A73E27EDA4AF00DC7787 /* MessageBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBody.swift; sourceTree = "<group>"; };
@@ -191,13 +190,14 @@
 		0EC6A98A280563F000366957 /* ImageGridCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageGridCell.swift; sourceTree = "<group>"; };
 		0EC6A98C2805640100366957 /* FullPhotoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullPhotoViewController.swift; sourceTree = "<group>"; };
 		0EC6A98E2805641300366957 /* CollageLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollageLayout.swift; sourceTree = "<group>"; };
-		0EC6A9912805683400366957 /* PhotoCollectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionCell.swift; sourceTree = "<group>"; };
+		0EC6A9912805683400366957 /* PhotoGridViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoGridViewCell.swift; sourceTree = "<group>"; };
 		0EC6A99328056A9100366957 /* LocalMediaWorker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalMediaWorker.swift; sourceTree = "<group>"; };
 		0EC6A99528056B0400366957 /* PHAsset+Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PHAsset+Chat.swift"; sourceTree = "<group>"; };
 		0ED966D027CF5F2200393E35 /* ReachabilityService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReachabilityService.swift; sourceTree = "<group>"; };
 		0EDA95792775A08300646051 /* ConversationStoreProxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationStoreProxy.swift; sourceTree = "<group>"; };
 		0EDC669927BA651600A2792E /* MessageCellInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCellInteractor.swift; sourceTree = "<group>"; };
 		0EDC669B27BA698A00A2792E /* FriendRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRouter.swift; sourceTree = "<group>"; };
+		0EE0D6EB280EB47600ADB3E3 /* String+Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Chat.swift"; sourceTree = "<group>"; };
 		0EF89B61278ECEEF005C3BE1 /* AlamoAvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlamoAvatarView.swift; sourceTree = "<group>"; };
 		0EFDD943276B72C400323984 /* ChatSqlite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatSqlite.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0EFDD946276B72C400323984 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -291,6 +291,7 @@
 				0E393FC327B3CE410011CB68 /* UIViewController+extension.swift */,
 				0EC6A99528056B0400366957 /* PHAsset+Chat.swift */,
 				0EB78325280962A2004F511D /* PHImageManager+Chat.swift */,
+				0EE0D6EB280EB47600ADB3E3 /* String+Chat.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -318,7 +319,6 @@
 				0E94D0EB27991A26003485AF /* DownloadBtnView.swift */,
 				0E5527FB27E5845F00597C96 /* TimestampHeaderView.swift */,
 				0EC6A98E2805641300366957 /* CollageLayout.swift */,
-				0E44B00A27F2C33F00F1A790 /* PinterestLayout.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -465,7 +465,7 @@
 			children = (
 				0EC6A98A280563F000366957 /* ImageGridCell.swift */,
 				0E44B00C27F2EA8900F1A790 /* ImageCell.swift */,
-				0EC6A9912805683400366957 /* PhotoCollectionCell.swift */,
+				0EC6A9912805683400366957 /* PhotoGridViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -694,7 +694,6 @@
 				0EFDD977276C2C2A00323984 /* ChatViewController.swift in Sources */,
 				0E560B1A27BF4AE20019B38C /* MessageListWorker.swift in Sources */,
 				0E12423B277ED9560054D069 /* AvatarView.swift in Sources */,
-				0E44B00B27F2C33F00F1A790 /* PinterestLayout.swift in Sources */,
 				0E7008DE278806E400998BBB /* FriendEditDataSource.swift in Sources */,
 				0E124242277ED9E00054D069 /* Date+Chat.swift in Sources */,
 				0E124243277ED9E00054D069 /* UIImage+Chat.swift in Sources */,
@@ -726,6 +725,7 @@
 				0E2395B927708340006B2DE2 /* FriendDomain.swift in Sources */,
 				0E51D2D227E04B2100748987 /* FriendHeaderView.swift in Sources */,
 				0E560B2027BF60030019B38C /* ChatServiceManager.swift in Sources */,
+				0EE0D6EC280EB47600ADB3E3 /* String+Chat.swift in Sources */,
 				0EC6A98D2805640100366957 /* FullPhotoViewController.swift in Sources */,
 				0E15EC3227742B790082FA1B /* SQLiteManager.swift in Sources */,
 				0E124253277EF4590054D069 /* ConvConfigController.swift in Sources */,
@@ -761,7 +761,7 @@
 				0E837C1127B5077F00317E0B /* ChatModule.swift in Sources */,
 				0E50A73F27EDA4AF00DC7787 /* MessageBody.swift in Sources */,
 				0E7008D9278806E400998BBB /* FriendTextEditCell.swift in Sources */,
-				0EC6A9922805683400366957 /* PhotoCollectionCell.swift in Sources */,
+				0EC6A9922805683400366957 /* PhotoGridViewCell.swift in Sources */,
 				0E124251277EF3A10054D069 /* ConversationCell.swift in Sources */,
 				0E70090B278EB76100998BBB /* FileDownloader.swift in Sources */,
 				0E99D1B827E81DC200840C87 /* PhotoGalleryViewController.swift in Sources */,

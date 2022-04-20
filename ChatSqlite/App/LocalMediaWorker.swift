@@ -48,7 +48,7 @@ actor LocalMediaWorker {
         guard let im =  UIImage(data: imageData) else {
             throw PhotoError.imageCreationError
         }
-        cache.setObject(im, forKey: fileURL.lastPathComponent as NSString)
+        cache.setObject(im, forKey: id as NSString)
         return im
       
     }
@@ -70,20 +70,20 @@ actor LocalMediaWorker {
     }
     
     func getImage(index: Int, of msg: MessageDomain, type: ImageFileType) async throws -> UIImage {
-        guard let id = msg.getImageID(index: index) else {
+        guard let id = msg.getPrep(index: index)?.imageID else {
             throw PhotoError.missingImageURL
         }
         if let im = try await getCachedImage(key: id, imageType: type){
-            print(im)
+//            print("cached")
             return im
         }
         let id_name = ImageFileType.fullsize.getName(id: id)
-        print("loading image from storage...\(id_name)")
+//        print("loading image from storage...\(id_name)")
         let im = try loadImage(id: id_name, folder: msg.cid)
         return im
         
     }
-    
+        
     
     func getCachedImage(key: String, imageType: ImageFileType) async throws -> UIImage?{
         let realKey = imageType.getName(id: key)
@@ -117,8 +117,9 @@ actor LocalMediaWorker {
 //        }
         let t = ImageFileType.fullsize
 //        for t in types {
-        let targetSize : CGSize = t.getScaledSize(width: CGFloat(asset.pixelWidth), height: CGFloat(asset.pixelHeight))
-            let filename = "\(t.getName(id: id)).jpg"
+        let targetSize : CGSize = t.getScaledSize(width: CGFloat(asset.pixelWidth),
+                                                  height: CGFloat(asset.pixelHeight))
+            let filename = "\(t.getName(id: id))"
             let targetURL = generateURL(filename: filename, folder: folder, isExisted: false)
 
         let im = try await self.savePhoto(asset: asset, targetSize: targetSize, targetURL: targetURL)
@@ -147,7 +148,7 @@ actor LocalMediaWorker {
     }
     
     func savePhoto(from localURL: URL, id: String, folder: String?){
-        let filename = "\(id).\(localURL.pathExtension)"
+        let filename = "\(id)"
         let targetURL = generateURL(filename: filename, folder: folder)
         savePhoto(from: localURL, to: targetURL)
     }

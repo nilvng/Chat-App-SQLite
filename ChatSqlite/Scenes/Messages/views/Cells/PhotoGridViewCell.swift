@@ -13,6 +13,9 @@ class PhotoGridViewCell: UICollectionViewCell {
     let imageView = UIImageView()
     let textLabel = UILabel()
     var progressView: UIProgressView!
+    
+    var identifier: String!
+    
     var targetSize : CGSize  {
     
         return CGSize(width: self.bounds.width, height: self.bounds.height)

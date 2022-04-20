@@ -43,7 +43,6 @@ class ConversationSQLiteStore {
         let dir = dirs[0]
                 
         let path = dir.appendingPathComponent(subPath)
-        print(" dtb address: \(path)")
         
         do{
             db = try Connection(path)

@@ -138,6 +138,22 @@ class PhotoViewController: UIViewController {
         })
         
     }
+    func configure(i: Int, of message: MessageDomain){
+        updateStaticImage(i: i, of: message)
+        
+    }
+    
+    func updateStaticImage(i: Int, of message: MessageDomain) {
+        Task{
+            do{
+                let im = try await LocalMediaWorker.shared.getImage(index: i, of: message, type: .fullsize)
+                self.imageView.image = im
+                self.configureBGColor(im)
+            } catch {
+                print("Can't load image from storage!!!")
+            }
+        }
+    }
     
     func updateStaticImage(asset: PHAsset, callback: @escaping (UIImage) -> Void) {
         // Prepare the options to pass when fetching the (photo, or video preview) image.
@@ -169,13 +185,13 @@ class PhotoViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.navigationBar.tintColor = .white
-        if asset.mediaType == .video {
-            playButton.isHidden = false
-            play()
-        } else {
-            playButton.isHidden = true
-        }
+//        navigationController?.navigationBar.tintColor = .white
+//        if asset.mediaType == .video {
+//            playButton.isHidden = false
+//            play()
+//        } else {
+//            playButton.isHidden = true
+//        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {

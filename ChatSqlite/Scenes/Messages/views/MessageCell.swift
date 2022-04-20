@@ -250,7 +250,6 @@ class MessageCell: UITableViewCell {
             inboundConstraint,
             messageContainerView.widthAnchor.constraint(lessThanOrEqualToConstant: BubbleConstant.maxWidth),
         ]
-        messageContainerView.setContentHuggingPriority(.defaultHigh, for: .vertical)
         NSLayoutConstraint.activate(constraints)
 
     }

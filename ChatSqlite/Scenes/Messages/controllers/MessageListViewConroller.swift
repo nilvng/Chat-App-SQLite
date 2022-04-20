@@ -21,9 +21,7 @@ class MessageListViewController : UITableViewController {
     var interactor : MessageListInteractor?
     weak var parentDelegate : MessageListViewDelegate?
     
-    var visible : Bool = false
-    
-    var items : [MessageDomain] = []
+    var itemsCount : Int = 0
     var dateSections : [DateSection] = []
     
     var conversation : ConversationDomain!
@@ -48,7 +46,6 @@ class MessageListViewController : UITableViewController {
     }
     
     func appendItems(_ items: [MessageDomain]){
-        self.items += items
         //self.items.sort(by: { $0.timestamp > $1.timestamp})
         
         let newSections = sortByDate(items: items)
@@ -79,7 +76,6 @@ class MessageListViewController : UITableViewController {
     
     func appendNewItem(_ item: MessageDomain){
         let timestampString = item.timestamp.toSimpleDate()
-        items.insert(item, at: 0)
         
         if dateSections.count > 0 {
             let lastSection = dateSections[0]
@@ -114,7 +110,7 @@ class MessageListViewController : UITableViewController {
         
         table.showsVerticalScrollIndicator = false
         table.contentInsetAdjustmentBehavior = .never
-        table.estimatedRowHeight = 70
+        table.estimatedRowHeight = 250
         table.rowHeight = UITableView.automaticDimension
         table.transform = CGAffineTransform(scaleX: 1, y: -1)
         return table
@@ -131,22 +127,20 @@ class MessageListViewController : UITableViewController {
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        interactor?.loadData()
         scrollToLastMessage()
-        visible = true
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        visible = false
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        interactor?.loadData()
     }
     func scrollToLastMessage(animated: Bool = true){
 
-        guard !items.isEmpty else {
+        guard itemsCount > 0 && tableView.numberOfSections > 0 else {
             return
         }
         DispatchQueue.main.async {
@@ -261,14 +255,18 @@ extension MessageListViewController {
         if message.type == .text {
             cell = tableView.dequeueReusableCell(withIdentifier: TextMessageCell.ID, for: indexPath) as? TextMessageCell
         } else if message.type == .image{
-            if message.urls.count > 1 {
-                var gridCell = tableView.dequeueReusableCell(withIdentifier: ImageGridCell.ID) as! ImageGridCell
+            if message.urls.count > 1 || message.mediaPreps?.count ?? 0 > 1 {
+                let gridCell = tableView.dequeueReusableCell(withIdentifier: ImageGridCell.ID) as! ImageGridCell
                 gridCell.gridCellDelegate = self
                 cell = gridCell
             } else {
                 cell = tableView.dequeueReusableCell(withIdentifier: ImageCell.ID) as! ImageCell
                 }
 
+        }
+        cell.transform = CGAffineTransform(scaleX: 1, y: -1)
+        if indexPath.section == 0 && indexPath.row == 0 {
+            print(message)
         }
         let isEndOfContinous = isEndOfContinuousMessages(indexPath: indexPath, message: message)
         let isStartOfContinuous = isStartOfContinuousMessages(indexPath: indexPath, message: message)
@@ -277,9 +275,9 @@ extension MessageListViewController {
                        indexPath: indexPath,
                        isStartMessage: isStartOfContinuous,
                        isEndMessage: isEndOfContinous)
+        
         if isStartOfContinuous { cell.showAvatar(name: conversation.title)} // show placeholder is the name of conversation
         
-        cell.transform = CGAffineTransform(scaleX: 1, y: -1)
         return cell
     }
     
@@ -337,9 +335,9 @@ extension MessageListViewController {
 
 // MARK: GridCellDelegate
 extension MessageListViewController : GridCellDelegate {
-    func didSelect(asset: PHAsset) {
+    func didSelect(i: Int, of message: MessageDomain) {
         let photoVC = PhotoViewController()
-        photoVC.configure(with: asset)
+        photoVC.configure(i: i, of: message)
         show(photoVC, sender: nil)
     }
 }
@@ -350,21 +348,19 @@ extension MessageListViewController : MessagesPresenter {
     func presentFFMessageStatus() {
         //
         var stopPoint : Int = 0
-        if visible {
-            for index in 0..<items.count {
-                if items[index].status != .seen {
-                    items[index].status = .seen
-                } else {
-                    stopPoint = index
-                    break
-                }
-            }
-            let updatedSections = sortByDate(items: items)
-            dateSections = updatedSections
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        }
+//            for index in 0..<itemsCount {
+//                if items[index].status != .seen {
+//                    items[index].status = .seen
+//                } else {
+//                    stopPoint = index
+//                    break
+//                }
+//            }
+//            let updatedSections = sortByDate(items: items)
+//            dateSections = updatedSections
+//            DispatchQueue.main.async {
+//                self.tableView.reloadData()
+//            }
     }
     
     func updateARowItem(item: MessageDomain){
@@ -384,20 +380,19 @@ extension MessageListViewController : MessagesPresenter {
     
     
     func presentMessageStatus(id: String, status: MessageStatus) {
-        guard visible else{
-            return
-        }
-        if let index = items.firstIndex(where: { $0.mid == id}) {
-            items[index].status = status
-            updateARowItem(item: items[index])
-            
-        }
+
+//        if let index = items.firstIndex(where: { $0.mid == id}) {
+//            items[index].status = status
+//            updateARowItem(item: items[index])
+//
+//        }
     }
     
     func presentItems(_ items: [MessageDomain]?, offset: Int) {
-        guard let validItems = items, offset >= self.items.count else {
+        guard let validItems = items, offset >= self.itemsCount else {
             return
         }
+        itemsCount += validItems.count
         self.appendItems(validItems)
     }
 
@@ -405,9 +400,7 @@ extension MessageListViewController : MessagesPresenter {
     func presentReceivedItem(_ item: MessageDomain) {
         
         self.appendNewItem(item)
-        if visible {
-            interactor?.sendSeenStatus()
-        }
+        interactor?.sendSeenStatus()
 
     }
     func presentSentItem(_ item: MessageDomain) {
