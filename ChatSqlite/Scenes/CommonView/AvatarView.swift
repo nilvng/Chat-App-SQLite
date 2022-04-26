@@ -9,6 +9,7 @@ import UIKit
 import AlamofireImage
 
 class AvatarView: UIImageView {
+    lazy var avatarWorker : AvatarWorker = AvatarWorker.shared
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -23,25 +24,23 @@ class AvatarView: UIImageView {
         let theKey = url != nil ? url! : text
 
         Task {
-            do {
-        
-            let im = try await ImageStore.shared.getImage(forUrl: theKey, type: .rounded)
-            self.image = im
-            } catch let e {
-                print("use placeholder avatar...")
-                self.usePlaceholderAvatar(with: text)
-            }
+            
+            let im = await avatarWorker.load(url: theKey)
+            self.image = im?.rounded()
+      
         }
+        self.usePlaceholderAvatar(with: text)
     }
     
     func usePlaceholderAvatar(with text: String){
         let firstCharacter = String((text.first)!) as NSString
         let im = self.drawText(text: firstCharacter)
-        let config = ImageConfig(url: text, type: .rounded)
-        Task {
-            let image = await ImageStore.shared.setImage(im, forKey: config, inMemOnly: false)
-            self.image = image
-        }
+        self.image = im.rounded()
+//        Task {
+//        let config = ImageConfig(url: text, type: .rounded)
+//            let image = await ImageStore.shared.setImage(im, forKey: config, inMemOnly: false)
+//            self.image = image
+//        }
     }
     
     func drawText(text: NSString) -> UIImage{

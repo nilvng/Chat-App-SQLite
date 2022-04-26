@@ -7,14 +7,22 @@
 
 import UIKit
 
+protocol ImageCellDelegate : AnyObject{
+    func didTap(_ cell: ImageCell)
+}
+
 class ImageCell : MessageCell {
     static let ID = "PhotoBubbleCell"
-    var myImageView = UIImageView()
-
+    var myImageView : PhotoView = PhotoView()
+    var prep : MediaPrep!
+    weak var delegate : ImageCellDelegate?
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         messageContainerView.addSubview(myImageView)
         setupImageView()
+        messageContainerView.clipsToBounds = true
+        messageContainerView.layer.cornerRadius = 15
     }
     
     func configure(with im: UIImage){
@@ -24,22 +32,14 @@ class ImageCell : MessageCell {
     
         super.configure(with: model, indexPath: indexPath, isStartMessage: isStart, isEndMessage: isEnd)
         
-        guard let u = model.getImageURL(index: 0) else {
+        guard let prep = model.getPrep(index: 0) else {
             print("Cant display image: \(message.content)")
             return
         }
-        DispatchQueue.global().async {
-            
-            if let data = try? Data(contentsOf: u) {
-                DispatchQueue.main.async {
-                    
-                    self.myImageView.image = UIImage(data: data)
-                }
-                
-            } else {
-                print("Failed find image data. \(u)")
-            }
-        }
+        
+        self.prep = prep
+        
+        myImageView.load(filename: prep.imageID, folder: model.cid, type: .thumbnail)
     }
     
     func configure(urlString: String){
@@ -51,15 +51,15 @@ class ImageCell : MessageCell {
     }
     
     func setupImageView(){
-//        myImageView.contentMode = .
-        myImageView.heightAnchor.constraint(lessThanOrEqualToConstant: 160).isActive = true
-        myImageView.heightAnchor.constraint(equalToConstant: 100).isActive = true
-        myImageView.widthAnchor.constraint(lessThanOrEqualToConstant: 130).isActive = true
-
         myImageView.addConstraints(top: messageContainerView.topAnchor,
-                                   bottom: messageContainerView.bottomAnchor,
+                                   leading: messageContainerView.leadingAnchor, bottom: messageContainerView.bottomAnchor,
                                    trailing: messageContainerView.trailingAnchor)
-        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        messageContainerView.addGestureRecognizer(tapGesture)
+    }
+    
+    @objc func handleTap(sender: UIGestureRecognizer){
+        delegate?.didTap(self)
     }
     
     required init?(coder: NSCoder) {
@@ -68,6 +68,13 @@ class ImageCell : MessageCell {
     
     override func prepareForReuse() {
         myImageView.image = nil
+    }
+    
+    override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
+        self.layoutIfNeeded()
+        let width = bubbleWidth
+        let height = bubbleWidth * CGFloat(prep.height) / CGFloat(prep.width)
+        return CGSize(width: width, height: height)
     }
     
 }

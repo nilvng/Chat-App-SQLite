@@ -12,8 +12,8 @@ enum MessageType : Int, Codable {
     case text = 0
     case file
     case image
+    case video
     case gif
-    case sticker
 }
 
 enum MessageStatus : Int, Codable{

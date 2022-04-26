@@ -23,6 +23,7 @@ struct ColorRGB : Codable{
     var red: Int
     var green : Int
     var blue: Int
+    var alpha: Int
 }
 
 class MessageDomain {

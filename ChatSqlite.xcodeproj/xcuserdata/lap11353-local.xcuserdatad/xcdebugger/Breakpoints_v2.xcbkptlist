@@ -78,8 +78,8 @@
             filePath = "ChatSqlite/Scenes/Messages/controllers/MessagesInteractorImpl.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "128"
-            endingLineNumber = "128"
+            startingLineNumber = "135"
+            endingLineNumber = "135"
             landmarkName = "onSendMessage(content:conversation:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -190,8 +190,8 @@
             filePath = "ChatSqlite/Scenes/Messages/views/MessageCell.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "197"
-            endingLineNumber = "197"
+            startingLineNumber = "198"
+            endingLineNumber = "198"
             landmarkName = "alignReceivedBubble(_:_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -206,8 +206,8 @@
             filePath = "ChatSqlite/Scenes/Messages/views/MessageCell.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "224"
-            endingLineNumber = "224"
+            startingLineNumber = "225"
+            endingLineNumber = "225"
             landmarkName = "updateGradient(currentFrame:theme:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -382,8 +382,8 @@
             filePath = "ChatSqlite/Scenes/Messages/controllers/MessageListViewConroller.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "412"
-            endingLineNumber = "412"
+            startingLineNumber = "422"
+            endingLineNumber = "422"
             landmarkName = "presentSentItem(_:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -455,85 +455,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "26A7E8B7-876E-4BDC-977E-C1F544C53363"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ChatSqlite/Scenes/Messages/views/Cells/ImageCell.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "27"
-            endingLineNumber = "27"
-            landmarkName = "configure(with:indexPath:isStartMessage:isEndMessage:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "63D4739B-4262-4EC3-8B56-A89BD482939C"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ChatSqlite/App/LocalMediaWorker.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "73"
-            endingLineNumber = "73"
-            landmarkName = "getImage(index:of:type:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "63D4739B-4262-4EC3-8B56-A89BD482939C - 5bb629d93a45ae45"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(1) suspend resume partial function for ChatSqlite.LocalMediaWorker.getImage(index: Swift.Int, of: ChatSqlite.MessageDomain, type: ChatSqlite.ImageFileType) async throws -&gt; __C.UIImage"
-                  moduleName = "ChatSqlite"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/lap11353-local/Desktop/ios/ChatSqlite/ChatSqlite/App/LocalMediaWorker.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "73"
-                  endingLineNumber = "73"
-                  offsetFromSymbolStart = "117">
-               </Location>
-               <Location
-                  uuid = "63D4739B-4262-4EC3-8B56-A89BD482939C - efeb4af9c63f1247"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(3) suspend resume partial function for ChatSqlite.LocalMediaWorker.getImage(index: Swift.Int, of: ChatSqlite.MessageDomain, type: ChatSqlite.ImageFileType) async throws -&gt; __C.UIImage"
-                  moduleName = "ChatSqlite"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/lap11353-local/Desktop/ios/ChatSqlite/ChatSqlite/App/LocalMediaWorker.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "73"
-                  endingLineNumber = "73"
-                  offsetFromSymbolStart = "186">
-               </Location>
-               <Location
-                  uuid = "63D4739B-4262-4EC3-8B56-A89BD482939C - c43ddd68340bb440"
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "(4) suspend resume partial function for ChatSqlite.LocalMediaWorker.getImage(index: Swift.Int, of: ChatSqlite.MessageDomain, type: ChatSqlite.ImageFileType) async throws -&gt; __C.UIImage"
-                  moduleName = "ChatSqlite"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/lap11353-local/Desktop/ios/ChatSqlite/ChatSqlite/App/LocalMediaWorker.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "73"
-                  endingLineNumber = "73"
-                  offsetFromSymbolStart = "74">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "CFF64625-3625-494A-B222-2D98D60C52BC"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -544,22 +465,6 @@
             startingLineNumber = "113"
             endingLineNumber = "113"
             landmarkName = "getAll(noRecords:noPages:desc:completionHandler:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "544CE57B-83F5-4B3A-B30B-F1AB8B075BE7"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ChatSqlite/App/LocalMediaWorker.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "90"
-            endingLineNumber = "90"
-            landmarkName = "getCachedImage(key:imageType:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -582,38 +487,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "52829A12-DAAF-48A8-811D-4501A5A4E224"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ChatSqlite/Scenes/Messages/controllers/MessageListViewConroller.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "258"
-            endingLineNumber = "258"
-            landmarkName = "tableView(_:cellForRowAt:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "6EA01EC0-F889-4F6B-8AF5-1A6FDDC29BE2"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ChatSqlite/App/LocalMediaWorker.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "47"
-            endingLineNumber = "47"
-            landmarkName = "loadImage(id:folder:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "B26DBECE-0EBA-4943-B591-31DB8F8CD800"
             shouldBeEnabled = "No"
             ignoreCount = "0"
@@ -621,26 +494,10 @@
             filePath = "ChatSqlite/App/LocalMediaWorker.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "151"
-            endingLineNumber = "151"
-            landmarkName = "savePhoto(from:id:folder:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "486B3048-0A97-46FD-ACE2-AC458D47B770"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ChatSqlite/Scenes/Messages/views/Cells/ImageGridCell.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "114"
-            endingLineNumber = "114"
-            landmarkName = "collectionView(_:cellForItemAt:)"
-            landmarkType = "7">
+            startingLineNumber = "148"
+            endingLineNumber = "148"
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -701,8 +558,8 @@
             filePath = "ChatSqlite/Scenes/Messages/controllers/MessageListViewConroller.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "392"
-            endingLineNumber = "392"
+            startingLineNumber = "402"
+            endingLineNumber = "402"
             landmarkName = "presentItems(_:offset:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -710,33 +567,222 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "F88BEC75-3191-4013-8639-18CFA3B5B6E3"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "ChatSqlite/Scenes/Messages/controllers/MessageListViewConroller.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "269"
-            endingLineNumber = "269"
-            landmarkName = "tableView(_:cellForRowAt:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "671BA70B-0CF2-45D7-83C6-19EF3F375F87"
+            uuid = "B19D97A9-2AE5-4DC5-B0A8-67BADB812422"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ChatSqlite/App/LocalMediaWorker.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "51"
-            endingLineNumber = "51"
-            landmarkName = "loadImage(id:folder:)"
+            startingLineNumber = "118"
+            endingLineNumber = "118"
+            landmarkName = "unknown"
+            landmarkType = "0">
+            <Locations>
+               <Location
+                  uuid = "B19D97A9-2AE5-4DC5-B0A8-67BADB812422 - e2aea87984ab4b7e"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for ChatSqlite.LocalMediaWorker.savePhoto(asset: __C.PHAsset, folder: Swift.Optional&lt;Swift.String&gt;, type: ChatSqlite.ImageFileType) async throws -&gt; Swift.String"
+                  moduleName = "ChatSqlite"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/lap11353-local/Desktop/ios/ChatSqlite/ChatSqlite/App/LocalMediaWorker.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "142"
+                  endingLineNumber = "142"
+                  offsetFromSymbolStart = "1614">
+               </Location>
+               <Location
+                  uuid = "B19D97A9-2AE5-4DC5-B0A8-67BADB812422 - 57f669828036ce90"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for ChatSqlite.LocalMediaWorker.savePhoto(asset: __C.PHAsset, folder: Swift.Optional&lt;Swift.String&gt;, type: ChatSqlite.ImageFileType) async throws -&gt; Swift.String"
+                  moduleName = "ChatSqlite"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/lap11353-local/Desktop/ios/ChatSqlite/ChatSqlite/App/LocalMediaWorker.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "142"
+                  endingLineNumber = "142"
+                  offsetFromSymbolStart = "1428">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "20EDF4EB-9CD5-43E2-8D69-EE67D9989586"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ChatSqlite/App/LocalMediaWorker.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "26"
+            endingLineNumber = "26"
+            landmarkName = "unknown"
+            landmarkType = "0">
+            <Locations>
+               <Location
+                  uuid = "20EDF4EB-9CD5-43E2-8D69-EE67D9989586 - e48af923dcf00d20"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "ChatSqlite.LocalMediaWorker.getImage(id: Swift.String, folder: Swift.Optional&lt;Swift.String&gt;, type: ChatSqlite.ImageFileType) async throws -&gt; __C.UIImage"
+                  moduleName = "ChatSqlite"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/lap11353-local/Desktop/ios/ChatSqlite/ChatSqlite/App/LocalMediaWorker.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "53"
+                  endingLineNumber = "53"
+                  offsetFromSymbolStart = "209">
+               </Location>
+               <Location
+                  uuid = "20EDF4EB-9CD5-43E2-8D69-EE67D9989586 - 812f06e4e0d786de"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) await resume partial function for ChatSqlite.LocalMediaWorker.getImage(id: Swift.String, folder: Swift.Optional&lt;Swift.String&gt;, type: ChatSqlite.ImageFileType) async throws -&gt; __C.UIImage"
+                  moduleName = "ChatSqlite"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/lap11353-local/Desktop/ios/ChatSqlite/ChatSqlite/App/LocalMediaWorker.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "53"
+                  endingLineNumber = "53"
+                  offsetFromSymbolStart = "92">
+               </Location>
+               <Location
+                  uuid = "20EDF4EB-9CD5-43E2-8D69-EE67D9989586 - 812f06e4e0d786de"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) await resume partial function for ChatSqlite.LocalMediaWorker.getImage(id: Swift.String, folder: Swift.Optional&lt;Swift.String&gt;, type: ChatSqlite.ImageFileType) async throws -&gt; __C.UIImage"
+                  moduleName = "ChatSqlite"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/lap11353-local/Desktop/ios/ChatSqlite/ChatSqlite/App/LocalMediaWorker.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "53"
+                  endingLineNumber = "53"
+                  offsetFromSymbolStart = "149">
+               </Location>
+               <Location
+                  uuid = "20EDF4EB-9CD5-43E2-8D69-EE67D9989586 - 1aa9e810f9d6dc28"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) suspend resume partial function for ChatSqlite.LocalMediaWorker.getImage(id: Swift.String, folder: Swift.Optional&lt;Swift.String&gt;, type: ChatSqlite.ImageFileType) async throws -&gt; __C.UIImage"
+                  moduleName = "ChatSqlite"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/lap11353-local/Desktop/ios/ChatSqlite/ChatSqlite/App/LocalMediaWorker.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "53"
+                  endingLineNumber = "53"
+                  offsetFromSymbolStart = "103">
+               </Location>
+               <Location
+                  uuid = "20EDF4EB-9CD5-43E2-8D69-EE67D9989586 - 1aa9e810f9d6dc28"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) suspend resume partial function for ChatSqlite.LocalMediaWorker.getImage(id: Swift.String, folder: Swift.Optional&lt;Swift.String&gt;, type: ChatSqlite.ImageFileType) async throws -&gt; __C.UIImage"
+                  moduleName = "ChatSqlite"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/lap11353-local/Desktop/ios/ChatSqlite/ChatSqlite/App/LocalMediaWorker.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "53"
+                  endingLineNumber = "53"
+                  offsetFromSymbolStart = "149">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "A7B6712E-1FC0-4F79-B131-FEB89EA7E7B3"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ChatSqlite/Extensions/UIView+anchor.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "195"
+            endingLineNumber = "195"
+            landmarkName = "backgroundColor(_:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "38730588-0E91-4F7C-8133-F0EDFA9F1D87"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ChatSqlite/Extensions/UIView+anchor.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "188"
+            endingLineNumber = "188"
+            landmarkName = "backgroundColor(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "8FD563DD-6377-4260-BF86-94FFB9208FEF"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ChatSqlite/Scenes/CommonView/PhotoView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "19"
+            endingLineNumber = "19"
+            landmarkName = "load(filename:folder:type:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6BB9A5DB-FDC2-4944-980D-588A613359FD"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ChatSqlite/Scenes/Messages/views/Cells/ImageCell.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "62"
+            endingLineNumber = "62"
+            landmarkName = "handleTap(sender:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "6B6363D8-5842-40C2-9983-3467D2C77A37"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "ChatSqlite/App/MediaWorker.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "134"
+            endingLineNumber = "134"
+            landmarkName = "save(asset:folder:type:)"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

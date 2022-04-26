@@ -7,61 +7,30 @@
 
 import UIKit
 
-enum ImageType {
-    case rounded
-    case original
-    
-    func getImage(image: UIImage) -> UIImage{
-        switch self {
-        case .rounded:
-            let im = makeRoundedImage(fullsizeImage: image)
-            return im
-        default:
-            return image
-        }
-    }
-    
-    func makeRoundedImage(fullsizeImage: UIImage) -> UIImage{
-        // create roundedImage from this fullsize image
-        let size = CGSize(width: 70, height: 70) // proposed size
-        let aspectWidth = size.width / fullsizeImage.size.width
-        let aspectHeight = size.height / fullsizeImage.size.height
-
-        let aspectRatio = max(aspectWidth, aspectHeight)
-
-        let sizeIm = CGSize(width: fullsizeImage.size.width * aspectRatio, height: fullsizeImage.size.height * aspectRatio)
-        let circleX = aspectWidth > aspectHeight ? 0 :  sizeIm.width/2 - sizeIm.height/2
-        let circleY = aspectWidth > aspectHeight ? sizeIm.height/2 - sizeIm.width/2 : 0
-        
-        let renderer = UIGraphicsImageRenderer(size: sizeIm)
-        return renderer.image { _ in
-            UIBezierPath(ovalIn: CGRect(x: circleX,
-                                                y: circleY,
-                                                width: size.width,
-                                                height: size.width)).addClip()
-            fullsizeImage.draw(in: CGRect(origin: .zero, size: sizeIm))
-        }
-        
-    }
+enum ImageSource {
+    case remote, local
 }
-
 class ImageConfig : NSObject{
     var urlString : String
-    var type : ImageType
+    var type : ImageFileType
+    var source : ImageSource
+    var storageFolder: StorageFolder
     
-    
-    init(url: String, type: ImageType) {
+    init(url: String, type: ImageFileType, source: ImageSource = .remote, storage: StorageFolder = .cache) {
         self.urlString  = url
         self.type = type
+        self.source = source
+        self.storageFolder = storage
     }
+
     
-    
-    func getFilename() -> String{
-        if let url = URL(string: self.urlString){
+    func localFileName() -> String{
+        if source == .remote, let url = URL(string: self.urlString){
             return url.lastPathComponent
         } else {
             return urlString
         }
+        
     }
     
     override func isEqual(_ object: Any?) -> Bool {
@@ -80,84 +49,89 @@ class ImageConfig : NSObject{
     
 }
 
+enum StorageFolder{
+    case cache, document
+    
+    func dir() -> FileManager.SearchPathDirectory{
+        switch self {
+        case .cache:
+            return .cachesDirectory
+        case .document:
+            return .documentDirectory
+        }
+    }
+}
 actor ImageStore {
+
     
     let cache = NSCache<ImageConfig, UIImage>()
     let cacheSizeLimit = 4500000
-    let photoRequest = PhotoRequest()
     
     static let shared = ImageStore()
     private init(){
         cache.totalCostLimit = 20
     }
         
-    func setImage(_ image: UIImage, forKey key: ImageConfig, inMemOnly: Bool = true) -> UIImage{
+    func setImage(_ image: UIImage,
+                  forKey key: ImageConfig,
+                  inMemOnly: Bool = true) -> UIImage{
         // Save in memory
-        let img = key.type.getImage(image: image)
-        
-        cache.setObject(img, forKey: key)
+        if cache.object(forKey: key) == nil {
+            // reentrancy problem
+            cache.setObject(image, forKey: key)
+        }
         
         if !inMemOnly{
             // Save to disk
             /// Create full URL for image
-            let url = imageURL(forKey: key.getFilename())
-            
+            let url = imageURL(forKey: key.localFileName(),
+                               storage: key.storageFolder)
+            let quality : CGFloat = key.type == .original ? 1.0 : 1.0
             /// Turn image into JPEG data
-            if let data = image.jpegData(compressionQuality: 0.5) {
+            if let data = image.jpegData(compressionQuality: quality) {
                 try? data.write(to: url)
             }
             
         }
-        // return correct image type
-        return img
+        return image
     }
-
-    func getImage(forUrl urlKey: String, type: ImageType) async throws -> UIImage {
+    
+    func getImage(config: ImageConfig) async throws -> UIImage? {
         // Case1: Find in memo
-        let config = ImageConfig(url: urlKey, type: type)
         if let existingImage = cache.object(forKey: config) {
             return existingImage
         }
         // Case2: Find on disk
-        let url = imageURL(forKey: config.getFilename())
+        let url = imageURL(forKey: config.localFileName(),
+                           storage: config.storageFolder)
         if let imageFromDisk = UIImage(contentsOfFile: url.path) {
             let image = self.setImage(imageFromDisk, forKey: config, inMemOnly: true)
             print("Found on disk..")
+            print(url.path)
             return image
         }
-        // Case3: Finally, request to the server
-        print("From server")
-        return try await getImageFromServer(forKey: urlKey, type: type)
-    
-        }
-
-    func getImageFromServer(forKey key: String, type: ImageType) async throws -> UIImage {
-        guard let remoteURL = URL(string: key) else {
-            throw PhotoError.brokenURL
-        }
         
-        let im = try await photoRequest.fetchImage(url: remoteURL)
-        let config = ImageConfig(url: key, type: type)
-        let image = self.setImage(im, forKey: config,inMemOnly: false)
-        return image
-            
-    }
+        return nil
 
+    }
 
     func deleteImage(forKey key: ImageConfig) {
         cache.removeObject(forKey: key)
         
-        let url = imageURL(forKey: key.getFilename())
+        let url = imageURL(forKey: key.localFileName(), storage: key.storageFolder)
         do {
             try FileManager.default.removeItem(at: url)
         } catch {
             print("Error removing the image from disk: \(error)")
         }
     }
+    let imageExtension = ".jpg"
     
-    func imageURL(forKey key: String) -> URL {
+    func imageURL(forKey key: String, storage: StorageFolder) -> URL {
+
+        let dir = storage.dir()
         let documentsDirectories =
-            FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
+            FileManager.default.urls(for: dir, in: .userDomainMask)
         let documentDirectory = documentsDirectories.first!
 
         return documentDirectory.appendingPathComponent(key)

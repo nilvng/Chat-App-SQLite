@@ -16,6 +16,47 @@ extension UIColor {
 
 }
 extension UIColor {
+
+    var complement: UIColor {
+        return self.withHueOffset(0.5)
+    }
+    
+    var splitComplement1: UIColor {
+        return self.withHueOffset(210 / 360)
+    }
+    var triadic0: UIColor {
+        return self.withHueOffset(120 / 360)
+    }
+    func withHueOffset(_ offset: CGFloat) -> UIColor {
+            var h: CGFloat = 0
+            var s: CGFloat = 0
+            var b: CGFloat = 0
+            var a: CGFloat = 0
+            self.getHue(&h, saturation: &s, brightness: &b, alpha: &a)
+            return UIColor(hue: fmod(h + offset, 1), saturation: s, brightness: b, alpha: a)
+        }
+}
+extension UIColor {
+
+    func rgb() -> (red:Int, green:Int, blue:Int, alpha:Int)? {
+        var fRed : CGFloat = 0
+        var fGreen : CGFloat = 0
+        var fBlue : CGFloat = 0
+        var fAlpha: CGFloat = 0
+        if self.getRed(&fRed, green: &fGreen, blue: &fBlue, alpha: &fAlpha) {
+            let iRed = Int(fRed * 255.0)
+            let iGreen = Int(fGreen * 255.0)
+            let iBlue = Int(fBlue * 255.0)
+            let iAlpha = Int(fAlpha * 255.0)
+
+            return (red:iRed, green:iGreen, blue:iBlue, alpha:iAlpha)
+        } else {
+            // Could not extract RGBA components:
+            return nil
+        }
+    }
+}
+extension UIColor {
     /// color components value between 0 to 255
       public convenience init(r: Int, g: Int, b: Int, alpha: CGFloat = 1.0) {
         self.init(red: CGFloat(r) / 255.0, green: CGFloat(g) / 255.0, blue: CGFloat(b) / 255.0, alpha: alpha)

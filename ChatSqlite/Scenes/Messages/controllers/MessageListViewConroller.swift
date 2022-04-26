@@ -260,14 +260,14 @@ extension MessageListViewController {
                 gridCell.gridCellDelegate = self
                 cell = gridCell
             } else {
-                cell = tableView.dequeueReusableCell(withIdentifier: ImageCell.ID) as! ImageCell
+                let imCell = tableView.dequeueReusableCell(withIdentifier: ImageCell.ID) as! ImageCell
+                imCell.delegate = self
+                cell = imCell
                 }
 
         }
         cell.transform = CGAffineTransform(scaleX: 1, y: -1)
-        if indexPath.section == 0 && indexPath.row == 0 {
-            print(message)
-        }
+
         let isEndOfContinous = isEndOfContinuousMessages(indexPath: indexPath, message: message)
         let isStartOfContinuous = isStartOfContinuousMessages(indexPath: indexPath, message: message)
         
@@ -280,6 +280,7 @@ extension MessageListViewController {
         
         return cell
     }
+
     
     func isEndOfContinuousMessages(indexPath: IndexPath, message: MessageDomain) -> Bool{
         var laterMessage : MessageDomain
@@ -338,6 +339,15 @@ extension MessageListViewController : GridCellDelegate {
     func didSelect(i: Int, of message: MessageDomain) {
         let photoVC = PhotoViewController()
         photoVC.configure(i: i, of: message)
+        show(photoVC, sender: nil)
+    }
+}
+
+extension MessageListViewController : ImageCellDelegate {
+    func didTap(_ cell: ImageCell) {
+        let photoVC = PhotoViewController()
+        
+        photoVC.configure(i: cell.index, of: cell.message)
         show(photoVC, sender: nil)
     }
 }

@@ -29,12 +29,13 @@ class ImageGridCell : MessageCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        print("Init Grid Cell")
         setupCollectionView()
         layoutCollectionView()
         contentView.clipsToBounds = true
         collectionView.clipsToBounds = true
         collectionView.isScrollEnabled = false
+        messageContainerView.clipsToBounds = true
+        messageContainerView.layer.cornerRadius = 15
     }
     
     func setupCollectionView(){
@@ -43,7 +44,7 @@ class ImageGridCell : MessageCell {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.register(PhotoGridViewCell.self, forCellWithReuseIdentifier: PhotoGridViewCell.identifier)
+        collectionView.register(PhotoViewGridCell.self, forCellWithReuseIdentifier: PhotoViewGridCell.identifier)
     }
     
     func layoutCollectionView(){
@@ -106,21 +107,12 @@ extension ImageGridCell : UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoGridViewCell.identifier, for: indexPath) as! PhotoGridViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoViewGridCell.identifier, for: indexPath) as! PhotoViewGridCell
         let i = indexPath.item
-        cell.identifier = message.getPrep(index: i)?.imageID
-        Task{ [weak self] in
-            do{
-                let im = try await LocalMediaWorker.shared.getImage(index: i,
-                                                                of: message,
-                                                                type: .thumbnail)
-                if cell.identifier == message.getPrep(index: i)?.imageID{
-                    cell.configure(with: im)
-                }
-            } catch {
-                print("\(self): Failed loading image from local storage")
-            }
+        guard let prep = message.getPrep(index: i) else {
+            return cell
         }
+        cell.configure(id: prep.imageID, folder: message.cid, type: .thumbnail)
         return cell
     }
 }

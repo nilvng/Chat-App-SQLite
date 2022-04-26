@@ -182,6 +182,28 @@ extension UIView {
 
     
 }
+extension UINavigationController {
+
+    func backgroundColor(_ color: UIColor) {
+        navigationBar.setBackgroundImage(nil, for: .default)
+//        self.navigationBar.barTintColor = color
+//        navigationBar.shadowImage = UIImage()
+        if #available(iOS 15, *) {
+                // Navigation Bar background color
+                let appearance = UINavigationBarAppearance()
+                appearance.configureWithOpaqueBackground()
+                appearance.backgroundColor = color
+
+//            let titleAttribute = [NSAttributedString.Key.font:  UIFont.systemFont(ofSize: 25, weight: .bold), NSAttributedString.Key.foregroundColor: color.complement] //alter to fit your needs
+//
+//            appearance.titleTextAttributes = titleAttribute
+                self.navigationBar.standardAppearance = appearance
+                self.navigationBar.scrollEdgeAppearance = appearance
+                self.navigationBar.compactAppearance = appearance
+
+            }
+    }
+}
 extension UIView {
 
   func fadeIn(duration: TimeInterval = 0.5,

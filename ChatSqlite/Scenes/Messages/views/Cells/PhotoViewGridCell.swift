@@ -8,9 +8,10 @@
 import UIKit
 import Photos
 import PhotosUI
+import CloudKit
 
-class PhotoGridViewCell: UICollectionViewCell {
-    let imageView = UIImageView()
+class PhotoViewGridCell: UICollectionViewCell {
+    let imageView : UIImageView = PhotoView()
     let textLabel = UILabel()
     var progressView: UIProgressView!
     
@@ -56,6 +57,8 @@ class PhotoGridViewCell: UICollectionViewCell {
         imageView.contentMode = .scaleAspectFill
         imageView.backgroundColor = .clear
         imageView.clipsToBounds = true
+
+
     }
     
     func configure(name: String){
@@ -67,11 +70,18 @@ class PhotoGridViewCell: UICollectionViewCell {
         updateStaticImage(asset: asset)
     }
     
+    func configure(id: String, folder: String?=nil, type: ImageFileType){
+        identifier = id
+        if let myPhotoView = imageView as? PhotoView {
+            myPhotoView.load(filename: id, folder: folder, type: type)
+        }
+    }
+    
     func configure(with im: UIImage){
         imageView.image = im
     }
     
-    func updateStaticImage(asset: PHAsset) {
+    private func updateStaticImage(asset: PHAsset) {
         // Prepare the options to pass when fetching the (photo, or video preview) image.
         let options = PHImageRequestOptions()
         options.deliveryMode = .opportunistic

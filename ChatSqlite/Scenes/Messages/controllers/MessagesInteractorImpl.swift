@@ -21,6 +21,7 @@ protocol MessagesPresenter : AnyObject{
 class MessagesInteractorImpl : MessageListInteractor {
             
     var chatService : ChatService
+    var mediaWorker : MediaWorker = MediaWorker.shared
         
     var noRecords : Int = 20
     var offSet : CGFloat {
@@ -62,9 +63,15 @@ class MessagesInteractorImpl : MessageListInteractor {
                                                       body: { taskGroup in
             for i in 0..<assets.count {
                 taskGroup.addTask{
-                    let id = try await LocalMediaWorker.shared.savePhoto(asset: assets[i],
-                                                                         folder: model.cid)
-                    let prep = MediaPrep(imageID: id, width: assets[i].pixelWidth, height: assets[i].pixelHeight, bgColor: nil)
+                    let (img,id) = try await self.mediaWorker.save(asset: assets[i],
+                                                                   folder: model.cid, type: .both)
+                    var bgColor : ColorRGB? = nil
+                    if let avgColor = img.averageColor, let (red, green, blue, alpha) = avgColor.rgb(){
+                        bgColor = ColorRGB(red: red, green: green, blue: blue, alpha: alpha)
+                    }
+                    let prep = MediaPrep(imageID: id,
+                                         width: assets[i].pixelWidth,
+                                         height: assets[i].pixelHeight, bgColor: bgColor)
                     return (i,prep)
                 }
             }

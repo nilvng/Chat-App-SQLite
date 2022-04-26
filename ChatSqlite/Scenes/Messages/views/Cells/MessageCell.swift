@@ -14,6 +14,8 @@ class MessageCell: UITableViewCell {
     var interactor : MessageCellInteractor?
     
     var message : MessageDomain!
+    var index: Int!
+    
     var downloadAction : MessageCellAction?
     
     static let identifier = "MessageCell"
@@ -22,6 +24,7 @@ class MessageCell: UITableViewCell {
     var continuousConstraint : NSLayoutConstraint!
     var downloadConstraint : NSLayoutConstraint!
     var notDownloadConstraint : NSLayoutConstraint!
+    var bubbleWidth = BubbleConstant.maxWidth
 
     
     var statusImage = UIImageView()
@@ -100,6 +103,7 @@ class MessageCell: UITableViewCell {
                    isStartMessage isStart: Bool, isEndMessage isEnd: Bool){
 
         message = model
+        index = indexPath.item
         model.subscribe(self)
         
         let isReceived = isReceived(sender: model.sender)
@@ -239,7 +243,7 @@ class MessageCell: UITableViewCell {
     
     func setupMessageBody(){
         messageContainerView.translatesAutoresizingMaskIntoConstraints = false
-        self.outboundConstraint =  messageContainerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -bubbleHPadding-3)
+        self.outboundConstraint =  messageContainerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -bubbleHPadding - 6)
         self.inboundConstraint = messageContainerView.leadingAnchor.constraint(equalTo: avatarView.trailingAnchor, constant: bubbleHPadding)
         self.continuousConstraint = messageContainerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: bubbleVPadding)
 
@@ -248,10 +252,9 @@ class MessageCell: UITableViewCell {
             continuousConstraint,
             outboundConstraint,
             inboundConstraint,
-            messageContainerView.widthAnchor.constraint(lessThanOrEqualToConstant: BubbleConstant.maxWidth),
+            messageContainerView.widthAnchor.constraint(lessThanOrEqualToConstant: bubbleWidth),
         ]
         NSLayoutConstraint.activate(constraints)
-
     }
     func setupStatusImage(){
         

@@ -35,7 +35,7 @@ class PhotoViewController: UIViewController {
         setupImageView()
         setupPlayButton()
         setupNavigationView()
-        view.backgroundColor = UIColor(r: 111, g: 97, b: 108)
+//        view.backgroundColor = UIColor(r: 111, g: 97, b: 108)
     }
     
     
@@ -121,9 +121,10 @@ class PhotoViewController: UIViewController {
 
     
     fileprivate func configureBGColor(_ im: UIImage) {
-        let y = im.size.height - 100
-        let bgColor = im.getPixelColor(pos: CGPoint(x: 10, y: y))
-        view.backgroundColor = bgColor?.darker()
+        guard let bgColor = im.averageColor else {return}
+        navigationController?.navigationBar.tintColor = .blue
+        view.backgroundColor = bgColor.darker()
+        navigationController?.backgroundColor(bgColor)
     }
     
     func configure(with im: UIImage){
@@ -139,16 +140,26 @@ class PhotoViewController: UIViewController {
         
     }
     func configure(i: Int, of message: MessageDomain){
+        if let prep = message.getPrep(index: i), let bgColor = prep.bgColor{
+            let color = UIColor.rgb(red: CGFloat(bgColor.red),
+                                    green: CGFloat(bgColor.green),
+                                    blue: CGFloat(bgColor.blue),
+                                    alpha: CGFloat(bgColor.alpha))
+            navigationController?.navigationBar.tintColor = .blue
+            view.backgroundColor = color.darker()
+            navigationController?.backgroundColor(color)
+
+        }
         updateStaticImage(i: i, of: message)
         
     }
     
+    lazy var mediaWorker : MediaWorker = MediaWorker.shared
     func updateStaticImage(i: Int, of message: MessageDomain) {
         Task{
             do{
-                let im = try await LocalMediaWorker.shared.getImage(index: i, of: message, type: .fullsize)
+                let im = try await mediaWorker.image(index: i, of: message, type: .original)
                 self.imageView.image = im
-                self.configureBGColor(im)
             } catch {
                 print("Can't load image from storage!!!")
             }
