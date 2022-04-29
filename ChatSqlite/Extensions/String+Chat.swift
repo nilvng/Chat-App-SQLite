@@ -23,3 +23,7 @@ extension String {
         }
     }
 }
+extension Notification.Name {
+
+    static let onFinishCacheImageOfMessage = Notification.Name("on-finish-cache-image-of-message")
+}

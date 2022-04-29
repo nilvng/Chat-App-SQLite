@@ -35,11 +35,16 @@ class MessagesInteractorImpl : MessageListInteractor {
             guard let m  = self?.chatService.createNewMessage(type: .image) else {
                 return
             }
+            try await m.setPreps(assets: assets)
+            self?.chatService.sendMessage(m)
+            
             do {
+                
                 guard let savedMediasMessage = try await self?.savePhotos(of: m, assets: assets) else {
                     return
                 }
-                self?.chatService.sendMessage(savedMediasMessage)
+                NotificationCenter.default.post(name: .onFinishCacheImageOfMessage, object: savedMediasMessage)
+                // Notify to reload cells
             } catch let e {
                 print(e.localizedDescription)
             }
@@ -54,29 +59,30 @@ class MessagesInteractorImpl : MessageListInteractor {
     }
     
     
+    // TODO: Only save photos, not create list of preps
     func savePhotos(of model: MessageDomain, assets: [PHAsset]) async throws -> MessageDomain{
 //        var urlStrings : [String] = []
-        var preps : [MediaPrep] = []
         
-        let results = try await withThrowingTaskGroup(of: (Int, MediaPrep).self,
-                                                      returning: [Int: MediaPrep].self,
+        let results = try await withThrowingTaskGroup(of: (String, UIImage).self,
+                                                      returning: [String: UIImage].self,
                                                       body: { taskGroup in
             for i in 0..<assets.count {
                 taskGroup.addTask{
+                    // Save photo
+                    let saveType : ImageFileType = assets[i].mediaType == .video ? .video : .both
                     let (img,id) = try await self.mediaWorker.save(asset: assets[i],
-                                                                   folder: model.cid, type: .both)
-                    var bgColor : ColorRGB? = nil
-                    if let avgColor = img.averageColor, let (red, green, blue, alpha) = avgColor.rgb(){
-                        bgColor = ColorRGB(red: red, green: green, blue: blue, alpha: alpha)
+                                                                   folder: model.cid,
+                                                                   type: saveType)
+                    
+                    // Save video if any
+                    if assets[i].mediaType == .video {
+                        self.mediaWorker.saveVideo(asset: assets[i], folder: model.cid)
                     }
-                    let prep = MediaPrep(imageID: id,
-                                         width: assets[i].pixelWidth,
-                                         height: assets[i].pixelHeight, bgColor: bgColor)
-                    return (i,prep)
+                    return (id,img)
                 }
             }
             // Collect results of all child task in a dictionary
-            var childTaskResults = [Int: MediaPrep]()
+            var childTaskResults = [String: UIImage]()
             for try await result in taskGroup {
                 // Set operation name as key and operation result as value
                 childTaskResults[result.0] = result.1
@@ -86,15 +92,11 @@ class MessagesInteractorImpl : MessageListInteractor {
             return childTaskResults
             
         })
-        // waiting until finished all tasks
-        for st in results.values {
-            preps.append(st)
-        }
-//        model.setContent(urlString: urlStrings)
-        model.mediaPreps = preps
         return model
         
     }
+    
+    
     
 
 

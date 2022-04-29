@@ -7,60 +7,7 @@
 
 import UIKit
 import Photos
-enum ImageFileType {
-    case original, thumbnail, both, avatar, rounded, video
-    func types() -> [ImageFileType] {
-        switch self {
-        case .both:
-            return [.thumbnail, .original]
-        case .avatar:
-            return [.original, .rounded]
-        case .video:
-            return [.thumbnail, .video]
-        default:
-            return [self]
-        }
-    }
-    func getScaledSize(width: CGFloat, height: CGFloat) -> [CGSize]{
-        switch self {
-        case .original:
-            return [UIScreen.main.bounds.size]
-        case .thumbnail:
-            var bubbleWidth : CGFloat = 210.0
-            var scaledHeight = bubbleWidth * CGFloat(height / width)
-            if scaledHeight < 70 {
-               scaledHeight = 70
-                bubbleWidth = scaledHeight * CGFloat(width / height)
-            }
-            return [CGSize(width: bubbleWidth, height: scaledHeight)]
-        case .both:
 
-            return [ImageFileType.original.getScaledSize(width: width, height: height)[0],
-                    ImageFileType.thumbnail.getScaledSize(width: width, height: height)[0]]
-        default:
-            return []
-        }
-    }
-
-    func getName(id: String) -> String {
-        let fileExtension = ".jpg"
-        let videoExension = ".mov"
-        switch self {
-        case .original:
-            return id + "-fullsize" + fileExtension
-        case .thumbnail:
-            return id + "-thumbnail" + fileExtension
-        case .both:
-            return id + "-both" + fileExtension
-        case .rounded:
-            return id + "-rounded" + fileExtension
-        case .video:
-            return id + videoExension
-        default:
-            return id
-        }
-    }
-}
 class MediaWorker {
     var imageStore : ImageStore = ImageStore.shared
     static let shared = MediaWorker()
@@ -81,7 +28,6 @@ class MediaWorker {
     }
     func image(name: String, folder: String?=nil, type: ImageFileType) async throws -> UIImage?{
         var filename = type.getName(id: name)
-//        let _ = try generateURL(filename: filename, folder: folder, isExisted: true)
         if let f = folder {
             filename = f + "/" + filename
         }
@@ -95,22 +41,56 @@ class MediaWorker {
             guard let responseURL = responseURL else {
                 return
             }
-            var filename = responseURL.lastPathComponent
+            var filename : String = responseURL.lastPathComponent
             filename = folder != nil ? "\(folder!)/\(filename)" : filename
-            if let targetURL = self.directory.appendPathComponent(filename) as? URL{
-                let _ = FileManager.default.secureCopyItem(at: responseURL, to: targetURL)
-            }
-            
+            print(self.directory.appendingPathComponent(filename))
+            let targetURL = self.directory.appendingPathComponent(filename)
+            print("New video on: \(targetURL.path)")
+            let _ = FileManager.default.secureCopyItem(at: responseURL, to: targetURL)
             
         }
     }
+    
+    func url(index: Int, of msg: MessageDomain, isExist : Bool) -> URL?{
+        let folder = msg.cid
+        
+        if var filename = msg.getPrep(index: index)?.imageID{
+            var mediaType = ImageFileType.original
+            if msg.mediaPreps?[index].type == .video {
+                mediaType = .video
+            }
+            filename = mediaType.getName(id: filename)
+            let url = try? generateURL(filename: filename, folder: folder,
+                                       isExisted: isExist)
+            return url
+        }
+        return nil
+    }
+    func saveImageForVideo(asset: PHAsset, filename: String, folder: String?=nil){
+        
+    }
+    
+    func save(asset: PHAsset, filename: String, folder: String?) {
+        
+    }
 
-    func save(asset: PHAsset, folder: String?=nil, type: ImageFileType) async -> (im:UIImage,id:String){
+    func save(asset: PHAsset, folder: String?=nil, type: ImageFileType) async throws -> (im:UIImage,id:String){
+        
+        var id : String = ""
+
+        if type == .video {
+
+            var videoURL = try await asset.getURL()
+            videoURL = videoURL.deletingPathExtension()
+            id = videoURL.lastPathComponent
+            
+        } else {
+            id = asset.localIdentifier.replacingOccurrences(of: "/", with: "-")
+
+        }
         let types : [ImageFileType] = type.types()
         var im : UIImage = UIImage()
         
-        let id = asset.localIdentifier.replacingOccurrences(of: "/", with: "-")
-     
         for t in types {
             let targetSize : CGSize = t.getScaledSize(width: CGFloat(asset.pixelWidth),
                                                       height: CGFloat(asset.pixelHeight))[0]
@@ -152,10 +132,7 @@ class MediaWorker {
          2. validate the newly-created path
          3. return the path
          */
-        
-//        guard let directory = directory else {
-//            fatalError()
-//        }
+
         let fileManager = FileManager.default
         
         var target = ""

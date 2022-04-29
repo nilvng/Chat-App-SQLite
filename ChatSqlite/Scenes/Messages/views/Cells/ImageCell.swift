@@ -38,8 +38,17 @@ class ImageCell : MessageCell {
         }
         
         self.prep = prep
-        
-        myImageView.load(filename: prep.imageID, folder: model.cid, type: .thumbnail)
+        let bgColor = model.getPrepColor(i: 0)
+        myImageView.load(filename: prep.imageID, folder: model.cid, type: .thumbnail, backgroundColor: bgColor)
+    }
+    
+    func reloadData(){
+        guard let prep = message.getPrep(index: 0) else {
+            print("Cant display image: \(message.content)")
+            return
+        }
+        let bgColor = message.getPrepColor(i: 0)
+        myImageView.load(filename: prep.imageID, folder: message.cid, type: .thumbnail, backgroundColor: bgColor)
     }
     
     func configure(urlString: String){

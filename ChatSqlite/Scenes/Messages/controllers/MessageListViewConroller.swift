@@ -10,6 +10,7 @@ import UIKit
 import Alamofire
 import Combine
 import Photos
+import AVKit
 
 protocol MessageListViewDelegate : AnyObject{
     func textMessageIsSent(content: String, inTable tableView: UITableView)
@@ -129,10 +130,59 @@ class MessageListViewController : UITableViewController {
         super.viewDidAppear(animated)
         interactor?.loadData()
         scrollToLastMessage()
+        NotificationCenter.default.addObserver(self, selector: #selector(finishCacheMessageHandler), name: .onFinishCacheImageOfMessage, object: nil)
+    }
+    
+    @objc func finishCacheMessageHandler(noti: Notification){
+        guard let m = noti.object as? MessageDomain else{
+            return
+        }
+        
+        self.findAndReplace(m: m)
+    }
+    
+    func findAndReplace(m: MessageDomain){
+        var foundSectionIndex : Int!
+        var foundRowIndex : Int!
+        
+        for sIndex in 0..<dateSections.count {
+            if dateSections[sIndex].title == m.timestamp.toSimpleDate() {
+                foundSectionIndex = sIndex
+                break
+            }
+        }
+        guard foundSectionIndex != nil else {
+            return
+            
+        }
+        for it in 0..<dateSections[foundSectionIndex].items.count {
+            if dateSections[foundSectionIndex].items[it].mid == m.mid {
+                dateSections[foundSectionIndex].items[it] = m
+                foundRowIndex = it
+                break
+            }
+        }
+        guard foundRowIndex != nil else {
+            return
+            
+        }
+        DispatchQueue.main.async {
+            print("row:\(foundRowIndex), section: \(foundSectionIndex)")
+            let indexPath = IndexPath(row: foundRowIndex, section: foundSectionIndex)
+            if let cell = self.tableView.cellForRow(at: indexPath) as? ImageGridCell{
+                cell.reloadData()
+            }
+            if let cell = self.tableView.cellForRow(at: indexPath) as? ImageCell {
+                cell.reloadData()
+            }
+            
+        }
+
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -337,18 +387,32 @@ extension MessageListViewController {
 // MARK: GridCellDelegate
 extension MessageListViewController : GridCellDelegate {
     func didSelect(i: Int, of message: MessageDomain) {
-        let photoVC = PhotoViewController()
-        photoVC.configure(i: i, of: message)
-        show(photoVC, sender: nil)
+                let photoVC = MediaViewController()
+                photoVC.configure(i: i, of: message)
+                show(photoVC, sender: nil)
+
     }
+    
+    
 }
 
 extension MessageListViewController : ImageCellDelegate {
     func didTap(_ cell: ImageCell) {
-        let photoVC = PhotoViewController()
-        
-        photoVC.configure(i: cell.index, of: cell.message)
-        show(photoVC, sender: nil)
+        var message = cell.message
+        var index = cell.index
+        if cell.message.getPrep(index: cell.index)?.type == .photo{
+            let photoVC = MediaViewController()
+            
+            photoVC.configure(i: cell.index, of: cell.message)
+            show(photoVC, sender: nil)
+        } else {
+            let videoVC = AVPlayerViewController()
+            guard let videoURL = MediaWorker.shared.url(index: index!, of: message!,
+                            isExist: true) else {return}
+            videoVC.player = AVPlayer(url: videoURL)
+            show(videoVC, sender:nil)
+        }
+
     }
 }
 

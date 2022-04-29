@@ -13,7 +13,6 @@ import CloudKit
 class PhotoViewGridCell: UICollectionViewCell {
     let imageView : UIImageView = PhotoView()
     let textLabel = UILabel()
-    var progressView: UIProgressView!
     
     var identifier: String!
     
@@ -27,7 +26,6 @@ class PhotoViewGridCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupProgressView()
         setupImageView()
 //        setupTextLabel()
     }
@@ -40,12 +38,6 @@ class PhotoViewGridCell: UICollectionViewCell {
         contentView.addSubview(textLabel)
         textLabel.centerInSuperview()
         
-    }
-    func setupProgressView(){
-        progressView = UIProgressView(progressViewStyle: .bar)
-        contentView.addSubview(progressView)
-        progressView.centerInSuperview()
-        progressView.constraint(equalTo: CGSize(width: 50, height: 10))
     }
     
     func setupImageView(){
@@ -66,46 +58,15 @@ class PhotoViewGridCell: UICollectionViewCell {
 
     }
     
-    func configure(with asset: PHAsset){
-        updateStaticImage(asset: asset)
-    }
-    
-    func configure(id: String, folder: String?=nil, type: ImageFileType){
+    func configure(id: String, folder: String?=nil, backgroundColor: UIColor? = .trueLightGray){
         identifier = id
         if let myPhotoView = imageView as? PhotoView {
-            myPhotoView.load(filename: id, folder: folder, type: type)
+            myPhotoView.load(filename: id, folder: folder, type: .thumbnail, backgroundColor: backgroundColor)
         }
     }
+    
     
     func configure(with im: UIImage){
         imageView.image = im
-    }
-    
-    private func updateStaticImage(asset: PHAsset) {
-        // Prepare the options to pass when fetching the (photo, or video preview) image.
-        let options = PHImageRequestOptions()
-        options.deliveryMode = .opportunistic
-        options.isNetworkAccessAllowed = true
-        options.progressHandler = { progress, _, _, _ in
-            // The handler may originate on a background queue, so
-            // re-dispatch to the main queue for UI work.
-            DispatchQueue.main.sync {
-                self.progressView.progress = Float(progress)
-            }
-        }
-        print("size: \(targetSize)")
-        PHImageManager.default().requestImage(for: asset, targetSize: targetSize,
-                                                 contentMode: .aspectFill, options: options,
-                                              resultHandler: { image, _ in
-                                                // PhotoKit finished the request, so hide the progress view.
-                                                self.progressView.isHidden = true
-                                                
-                                                // If the request succeeded, show the image view.
-                                                guard let image = image else { return }
-                                                
-                                                // Show the image.
-                                                self.imageView.isHidden = false
-                                                self.imageView.image = image
-        })
     }
 }

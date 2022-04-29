@@ -31,5 +31,22 @@ extension PHAsset {
             })
         }
     }
+    
+    func getURL() async throws -> URL {
+
+        return try await withTaskCancellationHandler(handler: {}
+        ){
+            try await withCheckedThrowingContinuation { continuation in
+                getURL { url in
+                    guard let url = url else {
+                        continuation.resume(throwing: UnexpectedNilError())
+                        return
+                    }
+
+                    continuation.resume(returning: url)
+                }
+            }
+        }
+    }
 
 }

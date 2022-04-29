@@ -12,9 +12,11 @@ import UIKit
     lazy var worker : MediaWorker = MediaWorker.shared
     var id: String!
     
-    func load(filename: String, folder: String?=nil, type: ImageFileType){
+    func load(filename: String, folder: String?=nil,
+              type: ImageFileType,
+              backgroundColor: UIColor? = .trueLightGray){ // TODO: generalize this function load(URL:)
         self.id = filename
-        self.backgroundColor = .trueLightGray
+        self.backgroundColor = backgroundColor
         Task {
             let im = try await worker.image(name: filename, folder: folder, type: type)
             self.image = im
@@ -22,14 +24,4 @@ import UIKit
         }
     }
     
-    func load(index: Int, message: MessageDomain, type: ImageFileType){
-        self.id = String(index)
-        self.backgroundColor = .trueLightGray
-        Task {
-            let im = try await worker.image(index: index, of: message, type: type)
-            if self.id == String(index) {
-                self.image = im
-            }
-        }
-    }
 }

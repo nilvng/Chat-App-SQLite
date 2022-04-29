@@ -73,6 +73,10 @@ class ImageGridCell : MessageCell {
         images = [UIImage(named: "green-yellow"), UIImage(named: "dream-hike"), UIImage(named: "purple-blue"), UIImage(named: "dream-lab")]
     }
     
+    func reloadData(){
+        collectionView.reloadData()
+    }
+    
     override func systemLayoutSizeFitting(_ targetSize: CGSize, withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority, verticalFittingPriority: UILayoutPriority) -> CGSize {
             self.collectionView.layoutIfNeeded()
             self.layoutIfNeeded()
@@ -109,10 +113,15 @@ extension ImageGridCell : UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoViewGridCell.identifier, for: indexPath) as! PhotoViewGridCell
         let i = indexPath.item
+        
         guard let prep = message.getPrep(index: i) else {
             return cell
         }
-        cell.configure(id: prep.imageID, folder: message.cid, type: .thumbnail)
+        let bgColor : UIColor? = message.getPrepColor(i: i)
+        
+        cell.configure(id: prep.imageID,
+                       folder: message.cid,
+                       backgroundColor: bgColor)
         return cell
     }
 }

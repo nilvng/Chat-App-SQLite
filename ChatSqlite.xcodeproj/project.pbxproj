@@ -86,7 +86,7 @@
 		0EC6A9852805613200366957 /* NoAccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC6A9842805613200366957 /* NoAccessViewController.swift */; };
 		0EC6A9882805616200366957 /* LocalPhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC6A9872805616200366957 /* LocalPhotoCell.swift */; };
 		0EC6A98B280563F000366957 /* ImageGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC6A98A280563F000366957 /* ImageGridCell.swift */; };
-		0EC6A98D2805640100366957 /* FullPhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC6A98C2805640100366957 /* FullPhotoViewController.swift */; };
+		0EC6A98D2805640100366957 /* MediaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC6A98C2805640100366957 /* MediaViewController.swift */; };
 		0EC6A98F2805641300366957 /* CollageLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC6A98E2805641300366957 /* CollageLayout.swift */; };
 		0EC6A9922805683400366957 /* PhotoViewGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC6A9912805683400366957 /* PhotoViewGridCell.swift */; };
 		0EC6A99628056B0400366957 /* PHAsset+Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EC6A99528056B0400366957 /* PHAsset+Chat.swift */; };
@@ -95,6 +95,7 @@
 		0EDC669A27BA651600A2792E /* MessageCellInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDC669927BA651600A2792E /* MessageCellInteractor.swift */; };
 		0EDC669C27BA698A00A2792E /* FriendRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EDC669B27BA698A00A2792E /* FriendRouter.swift */; };
 		0EE0D6EC280EB47600ADB3E3 /* String+Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EE0D6EB280EB47600ADB3E3 /* String+Chat.swift */; };
+		0EEBB721281B87230020C78E /* ImageFileType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEBB720281B87230020C78E /* ImageFileType.swift */; };
 		0EF4BD43280FBDDD00A6EDE2 /* PhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF4BD42280FBDDD00A6EDE2 /* PhotoView.swift */; };
 		0EF89B62278ECEEF005C3BE1 /* AlamoAvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF89B61278ECEEF005C3BE1 /* AlamoAvatarView.swift */; };
 		0EFDD947276B72C400323984 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFDD946276B72C400323984 /* AppDelegate.swift */; };
@@ -192,7 +193,7 @@
 		0EC6A9842805613200366957 /* NoAccessViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoAccessViewController.swift; sourceTree = "<group>"; };
 		0EC6A9872805616200366957 /* LocalPhotoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalPhotoCell.swift; sourceTree = "<group>"; };
 		0EC6A98A280563F000366957 /* ImageGridCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageGridCell.swift; sourceTree = "<group>"; };
-		0EC6A98C2805640100366957 /* FullPhotoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullPhotoViewController.swift; sourceTree = "<group>"; };
+		0EC6A98C2805640100366957 /* MediaViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaViewController.swift; sourceTree = "<group>"; };
 		0EC6A98E2805641300366957 /* CollageLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollageLayout.swift; sourceTree = "<group>"; };
 		0EC6A9912805683400366957 /* PhotoViewGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewGridCell.swift; sourceTree = "<group>"; };
 		0EC6A99528056B0400366957 /* PHAsset+Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PHAsset+Chat.swift"; sourceTree = "<group>"; };
@@ -201,6 +202,7 @@
 		0EDC669927BA651600A2792E /* MessageCellInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCellInteractor.swift; sourceTree = "<group>"; };
 		0EDC669B27BA698A00A2792E /* FriendRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendRouter.swift; sourceTree = "<group>"; };
 		0EE0D6EB280EB47600ADB3E3 /* String+Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Chat.swift"; sourceTree = "<group>"; };
+		0EEBB720281B87230020C78E /* ImageFileType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFileType.swift; sourceTree = "<group>"; };
 		0EF4BD42280FBDDD00A6EDE2 /* PhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoView.swift; sourceTree = "<group>"; };
 		0EF89B61278ECEEF005C3BE1 /* AlamoAvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlamoAvatarView.swift; sourceTree = "<group>"; };
 		0EFDD943276B72C400323984 /* ChatSqlite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChatSqlite.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -268,11 +270,13 @@
 		0E124232277E9B940054D069 /* Image */ = {
 			isa = PBXGroup;
 			children = (
+				0E2499AB2817932100A89EA9 /* MediaWorker.swift */,
 				0E124246277EDA020054D069 /* BackgroundFactory.swift */,
 				0E2499AD2817A08B00A89EA9 /* AvatarWorker.swift */,
 				0E124245277EDA010054D069 /* ImageStore.swift */,
 				0E124247277EDA020054D069 /* PhotoRequest.swift */,
 				0E70090A278EB76100998BBB /* FileDownloader.swift */,
+				0EEBB720281B87230020C78E /* ImageFileType.swift */,
 			);
 			path = Image;
 			sourceTree = "<group>";
@@ -305,7 +309,7 @@
 		0E3C0D162783F98C00B23E21 /* controllers */ = {
 			isa = PBXGroup;
 			children = (
-				0EC6A98C2805640100366957 /* FullPhotoViewController.swift */,
+				0EC6A98C2805640100366957 /* MediaViewController.swift */,
 				0E124254277EF82B0054D069 /* ChatbarViewController.swift */,
 				0EDC669927BA651600A2792E /* MessageCellInteractor.swift */,
 				0EFDD976276C2C2A00323984 /* ChatViewController.swift */,
@@ -495,7 +499,6 @@
 				0E560B1927BF4AE20019B38C /* MessageListWorker.swift */,
 				0E560B1B27BF53070019B38C /* ChatService.swift */,
 				0E560B1F27BF60030019B38C /* ChatServiceManager.swift */,
-				0E2499AB2817932100A89EA9 /* MediaWorker.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -713,6 +716,7 @@
 				0EDA957A2775A08300646051 /* ConversationStoreProxy.swift in Sources */,
 				0EFDD96F276B7D6100323984 /* FriendSQLiteStore.swift in Sources */,
 				0EFDD973276B86BC00323984 /* ConversationsInteractorImpl.swift in Sources */,
+				0EEBB721281B87230020C78E /* ImageFileType.swift in Sources */,
 				0EFDD961276B79F300323984 /* ConversationSQLiteStore.swift in Sources */,
 				0E124244277ED9E00054D069 /* UIView+anchor.swift in Sources */,
 				0E6666BD2771882A00786E57 /* MessageStoreProxy.swift in Sources */,
@@ -733,7 +737,7 @@
 				0E51D2D227E04B2100748987 /* FriendHeaderView.swift in Sources */,
 				0E560B2027BF60030019B38C /* ChatServiceManager.swift in Sources */,
 				0EE0D6EC280EB47600ADB3E3 /* String+Chat.swift in Sources */,
-				0EC6A98D2805640100366957 /* FullPhotoViewController.swift in Sources */,
+				0EC6A98D2805640100366957 /* MediaViewController.swift in Sources */,
 				0E15EC3227742B790082FA1B /* SQLiteManager.swift in Sources */,
 				0E124253277EF4590054D069 /* ConvConfigController.swift in Sources */,
 				0EDC669A27BA651600A2792E /* MessageCellInteractor.swift in Sources */,

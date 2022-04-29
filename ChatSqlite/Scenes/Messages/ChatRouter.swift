@@ -13,7 +13,7 @@ class ChatRouter {
     }
     
     weak var viewController : UIViewController?
-    
+
     func toMenuScreen(conversation: ConversationDomain){
         let view = ChatMenuController()
         view.configure(conversation)

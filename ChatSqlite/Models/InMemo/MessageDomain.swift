@@ -17,6 +17,11 @@ struct MediaPrep : Codable{
     var width : Int
     var height: Int
     var bgColor: ColorRGB?
+    var type: MediaType = .photo
+}
+
+enum MediaType : Int,Codable{
+    case photo, video
 }
 
 struct ColorRGB : Codable{
@@ -49,6 +54,7 @@ class MessageDomain {
     var downloaded : Bool = false
     var status : MessageStatus = .sent
     var urls : [String] = []
+    
     var mediaPreps : [MediaPrep]?
     // download subscriber
     var subscriber : MessageSubscriber?
@@ -159,6 +165,63 @@ extension MessageDomain {
     func setContent(urlString: [String]){
         content = urlString.joined(separator: "|")
         print(content)
+    }
+}
+
+extension MessageDomain {
+    
+    func setPreps(assets: [PHAsset]) async throws{
+        
+        var preps : [MediaPrep] = []
+        
+        for asset in assets {
+            var id: String
+            var type : MediaType = .photo
+            
+            // Get ID
+            if asset.mediaType == .video {
+                type = .video
+                var videoURL = try await asset.getURL()
+                videoURL = videoURL.deletingPathExtension()
+                id = videoURL.lastPathComponent
+                
+            } else {
+                id = asset.localIdentifier.replacingOccurrences(of: "/", with: "-")
+                
+            }
+            let options : PHImageRequestOptions = {
+                let op = PHImageRequestOptions()
+                op.isNetworkAccessAllowed = true
+                op.deliveryMode = .fastFormat
+                op.resizeMode = .fast
+                return op
+            }()
+            // Get background color
+            let im = try await PHImageManager.default().requestImage(for: asset, targetSize: CGSize(width: 10, height: 10), contentMode: .aspectFill, options: options)
+            let bgColor = im.averageRGBA
+            
+            let prep = MediaPrep(imageID: id,
+                                 width: asset.pixelWidth,
+                                 height: asset.pixelHeight, bgColor: bgColor,
+                                 type: type)
+            preps.append(prep)
+        }
+        
+        self.mediaPreps = preps
+        
+    }
+    
+    func getPrepColor(i: Int) -> UIColor?{
+        guard let prep = getPrep(index: i) else {
+            return nil
+        }
+        if let colorRGB = prep.bgColor {
+            return UIColor(red: CGFloat(colorRGB.red),
+                               green: CGFloat(colorRGB.green),
+                               blue: CGFloat(colorRGB.blue),
+                               alpha: CGFloat(colorRGB.alpha))
+        }
+        return nil
     }
 }
 
