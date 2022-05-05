@@ -66,6 +66,7 @@
 		0E7008DE278806E400998BBB /* FriendEditDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7008D7278806E400998BBB /* FriendEditDataSource.swift */; };
 		0E70090B278EB76100998BBB /* FileDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70090A278EB76100998BBB /* FileDownloader.swift */; };
 		0E700911278EBDE100998BBB /* AlamofireImage in Frameworks */ = {isa = PBXBuildFile; productRef = 0E700910278EBDE100998BBB /* AlamofireImage */; };
+		0E704CC4281BF03500645B07 /* ReferenceView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E704CC3281BF03500645B07 /* ReferenceView.xib */; };
 		0E727F50278571AA002EA7E3 /* NativeContactStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E727F4F278571AA002EA7E3 /* NativeContactStore.swift */; };
 		0E727F5227857416002EA7E3 /* NativeContactStoreAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E727F5127857416002EA7E3 /* NativeContactStoreAdapter.swift */; };
 		0E79FB9627C67CCA0039E8E6 /* SocketDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79FB9527C67CCA0039E8E6 /* SocketDelegate.swift */; };
@@ -173,6 +174,7 @@
 		0E7008D6278806E400998BBB /* FriendDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendDetailController.swift; sourceTree = "<group>"; };
 		0E7008D7278806E400998BBB /* FriendEditDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendEditDataSource.swift; sourceTree = "<group>"; };
 		0E70090A278EB76100998BBB /* FileDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDownloader.swift; sourceTree = "<group>"; };
+		0E704CC3281BF03500645B07 /* ReferenceView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReferenceView.xib; sourceTree = "<group>"; };
 		0E727F4F278571AA002EA7E3 /* NativeContactStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeContactStore.swift; sourceTree = "<group>"; };
 		0E727F5127857416002EA7E3 /* NativeContactStoreAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeContactStoreAdapter.swift; sourceTree = "<group>"; };
 		0E79FB9527C67CCA0039E8E6 /* SocketDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketDelegate.swift; sourceTree = "<group>"; };
@@ -476,6 +478,7 @@
 				0EC6A98A280563F000366957 /* ImageGridCell.swift */,
 				0E44B00C27F2EA8900F1A790 /* ImageCell.swift */,
 				0EC6A9912805683400366957 /* PhotoViewGridCell.swift */,
+				0E704CC3281BF03500645B07 /* ReferenceView.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -668,6 +671,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E704CC4281BF03500645B07 /* ReferenceView.xib in Resources */,
 				0EC6A9832805610F00366957 /* LocalGalleryView.xib in Resources */,
 				0EFDD953276B72C700323984 /* LaunchScreen.storyboard in Resources */,
 				0EFDD950276B72C700323984 /* Assets.xcassets in Resources */,

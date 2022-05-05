@@ -400,18 +400,18 @@ extension MessageListViewController : ImageCellDelegate {
     func didTap(_ cell: ImageCell) {
         var message = cell.message
         var index = cell.index
-        if cell.message.getPrep(index: cell.index)?.type == .photo{
+//        if cell.message.getPrep(index: cell.index)?.type == .photo{
             let photoVC = MediaViewController()
             
             photoVC.configure(i: cell.index, of: cell.message)
             show(photoVC, sender: nil)
-        } else {
-            let videoVC = AVPlayerViewController()
-            guard let videoURL = MediaWorker.shared.url(index: index!, of: message!,
-                            isExist: true) else {return}
-            videoVC.player = AVPlayer(url: videoURL)
-            show(videoVC, sender:nil)
-        }
+//        } else {
+//            let videoVC = AVPlayerViewController()
+//            guard let videoURL = MediaWorker.shared.url(index: index!, of: message!,
+//                            isExist: true) else {return}
+//            videoVC.player = AVPlayer(url: videoURL)
+//            show(videoVC, sender:nil)
+//        }
 
     }
 }

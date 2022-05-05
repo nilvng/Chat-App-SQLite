@@ -43,7 +43,8 @@ class MessagesInteractorImpl : MessageListInteractor {
                 guard let savedMediasMessage = try await self?.savePhotos(of: m, assets: assets) else {
                     return
                 }
-                NotificationCenter.default.post(name: .onFinishCacheImageOfMessage, object: savedMediasMessage)
+                NotificationCenter.default.post(name: .onFinishCacheImageOfMessage,
+                                                object: savedMediasMessage)
                 // Notify to reload cells
             } catch let e {
                 print(e.localizedDescription)
