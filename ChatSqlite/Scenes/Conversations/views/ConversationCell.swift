@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class ConversationCell : UITableViewCell {
     
@@ -34,6 +35,14 @@ class ConversationCell : UITableViewCell {
         return label
 
     }()
+    private let statusLabel : UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.tintColor = .gray
+        label.textAlignment = .left
+        return label
+
+    }()
     private let thumbnail : AvatarView = {
         let image = AlamoAvatarView(frame: .zero)
         image.contentMode = .scaleAspectFill
@@ -52,21 +61,65 @@ class ConversationCell : UITableViewCell {
         
         contentView.addSubview(titleLabel)
         contentView.addSubview(lastMessageLabel)
+        contentView.addSubview(statusLabel)
         contentView.addSubview(timestampLabel)
         contentView.addSubview(thumbnail)
         contentView.addSubview(separatorLine)
 
     }
     
+    var viewModel: ConversationDomain!
+    var subscriptions = Set<AnyCancellable>()
+    
     func configure (model : ConversationDomain){
         
+        viewModel = model
+        
+        if subscriptions.isEmpty {
+            subscribeViewModel()
+        }
         
         titleLabel.text = model.title
         
         thumbnail.update(url: model.thumbnail, text: model.title)
         
         lastMessageLabel.text = model.lastMsg
+        
         timestampLabel.text = model.timestamp.toTimestampString()
+        
+        styleBasedOnStatus()
+    }
+    
+    func styleBasedOnStatus(){
+        switch viewModel.status {
+        case .sent:
+            lastMessageLabel.font = UIFont.systemFont(ofSize: 16)
+            statusLabel.text = "👉"
+        case .received:
+            lastMessageLabel.font = UIFont.boldSystemFont(ofSize: 16)
+            statusLabel.text = ""
+        case .arrived:
+            lastMessageLabel.font = UIFont.systemFont(ofSize: 16)
+            statusLabel.text = "👇"
+        case .seen:
+            lastMessageLabel.font = UIFont.systemFont(ofSize: 16)
+            statusLabel.text = "👌"
+            
+        default:
+            return
+        }
+    }
+    
+    func subscribeViewModel(){
+//        viewModel.$lastMsg.sink { [weak self] value in
+//            self?.lastMessageLabel.text = value
+//        }.store(in: &subscriptions)
+//        viewModel.$status.sink { [weak self] value in
+//            self?.lastMessageLabel.font = (value == .received) ? UIFont.boldSystemFont(ofSize: 16) : UIFont.systemFont(ofSize: 16)
+//        }.store(in: &subscriptions)
+//        viewModel.$timestamp.sink { [weak self] value in
+//            self?.timestampLabel.text = value.toTimestampString()
+//        }.store(in: &subscriptions)
     }
 
     // MARK: AutoLayout setups
@@ -78,6 +131,7 @@ class ConversationCell : UITableViewCell {
         setupThumbnail()
         setupTitleLabel()
         setupLastMessageLabel()
+        setupStatusLabel()
         setupTimestampLabel()
         setupSeparatorLine()
     }
@@ -115,7 +169,7 @@ class ConversationCell : UITableViewCell {
         let constraints : [NSLayoutConstraint] = [
             lastMessageLabel.centerYAnchor.constraint(equalTo: thumbnail.centerYAnchor,constant:11),
             lastMessageLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),
-            lastMessageLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant:  -15)
+            lastMessageLabel.trailingAnchor.constraint(equalTo: statusLabel.trailingAnchor, constant:  -10)
         ]
         lastMessageLabel.setContentHuggingPriority(.init(250), for: .vertical)
         lastMessageLabel.setContentCompressionResistancePriority(.init(249), for: .vertical)
@@ -132,6 +186,17 @@ class ConversationCell : UITableViewCell {
             timestampLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -horizontalPadding)
         ]
         timestampLabel.setContentCompressionResistancePriority(.init(252), for: .horizontal)
+
+        NSLayoutConstraint.activate(constraints)
+    }
+    func setupStatusLabel() {
+        statusLabel.translatesAutoresizingMaskIntoConstraints = false
+                
+        let constraints : [NSLayoutConstraint] = [
+            statusLabel.centerYAnchor.constraint(equalTo: lastMessageLabel.centerYAnchor),
+            statusLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -horizontalPadding)
+        ]
+        statusLabel.setContentCompressionResistancePriority(.init(252), for: .horizontal)
 
         NSLayoutConstraint.activate(constraints)
     }

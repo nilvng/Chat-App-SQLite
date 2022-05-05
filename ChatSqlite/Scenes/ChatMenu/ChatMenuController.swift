@@ -10,7 +10,7 @@ import UIKit
 class ChatMenuController : UIViewController{
         
     var conversation : ConversationDomain!
-    var manager : ConversationBusinessLogic!
+//    var manager : ConversationLocalLogic!
     
     let deleteButton : UIButton = {
         let button = UIButton()
@@ -25,7 +25,7 @@ class ChatMenuController : UIViewController{
     }()
 
     func setup(){
-        manager = ChatManager.shared
+//        manager = SQLiteManager.shared
     }
     
     fileprivate func setupDeleteButton() {
@@ -54,7 +54,7 @@ class ChatMenuController : UIViewController{
         }
 
         for firstViewController in viewControllers {
-            if firstViewController is ConversationController {
+            if firstViewController is HomeViewController {
                 self.navigationController?.popToViewController(firstViewController, animated: true)
                 break
             }
@@ -63,7 +63,7 @@ class ChatMenuController : UIViewController{
     
     func performDeleteItem(){
         let id = conversation.id
-        manager.onDeleteConversation(id: id)
+//        manager.deleteConversation(id: id)
     }
     
     

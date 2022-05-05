@@ -17,7 +17,7 @@ class FriendMediator : FriendDBMediator{
     var presenter : FriendPresenter? = nil
     
     init(){
-        self.store = NativeContactStoreAdapter()
+        self.store = NativeContactStoreAdapter.shared
     }
     
     func fetchData(){

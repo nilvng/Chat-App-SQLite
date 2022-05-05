@@ -10,7 +10,7 @@ import AlamofireImage
 
 class AlamoAvatarView : AvatarView {
     override func update(url: String?, text: String){
-        let firstCharacter = String((text.first)!) as NSString
+        let firstCharacter = String((text.first)!).capitalized as NSString
         
         var placeholder = self.drawText(text: firstCharacter)
         let rad : CGFloat = 20
@@ -21,17 +21,17 @@ class AlamoAvatarView : AvatarView {
             size: CGSize(width: 60, height: 60),
             radius: rad
         )
+        //print("Default avatar...")
         
         if let urlString = url, let urlObj = URL(string: urlString){
             
-            print("fetch image of url: \(urlString)")
+            //print("fetch image of url: \(urlString)")
 
             self.af.setImage(withURL: urlObj,
                              placeholderImage: placeholder,
                              filter: filter)
         } else {
-            print("Default avatar...")
-            self.af.setImage(withURL: URL(fileURLWithPath: text), placeholderImage: placeholder, filter: filter)
+            self.image = placeholder
         }
     }
 }
