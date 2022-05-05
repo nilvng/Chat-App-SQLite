@@ -130,7 +130,7 @@ class MessageListViewController : UITableViewController {
         super.viewDidAppear(animated)
         interactor?.loadData()
         scrollToLastMessage()
-        NotificationCenter.default.addObserver(self, selector: #selector(finishCacheMessageHandler), name: .onFinishCacheImageOfMessage, object: nil)
+        
     }
     
     @objc func finishCacheMessageHandler(noti: Notification){
@@ -138,10 +138,10 @@ class MessageListViewController : UITableViewController {
             return
         }
         
-        self.findAndReplace(m: m)
+        self.reloadMessageCell(m: m)
     }
     
-    func findAndReplace(m: MessageDomain){
+    func reloadMessageCell(m: MessageDomain){
         var foundSectionIndex : Int!
         var foundRowIndex : Int!
         
@@ -182,7 +182,6 @@ class MessageListViewController : UITableViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -418,23 +417,15 @@ extension MessageListViewController : ImageCellDelegate {
 
 // MARK: Presenter
 extension MessageListViewController : MessagesPresenter {
+    
+    func reloadMessage(_ msg: MessageDomain) {
+        reloadMessageCell(m: msg)
+    }
 
     func presentFFMessageStatus() {
         //
         var stopPoint : Int = 0
-//            for index in 0..<itemsCount {
-//                if items[index].status != .seen {
-//                    items[index].status = .seen
-//                } else {
-//                    stopPoint = index
-//                    break
-//                }
-//            }
-//            let updatedSections = sortByDate(items: items)
-//            dateSections = updatedSections
-//            DispatchQueue.main.async {
-//                self.tableView.reloadData()
-//            }
+
     }
     
     func updateARowItem(item: MessageDomain){
@@ -452,14 +443,11 @@ extension MessageListViewController : MessagesPresenter {
         }
     }
     
+
+    
     
     func presentMessageStatus(id: String, status: MessageStatus) {
 
-//        if let index = items.firstIndex(where: { $0.mid == id}) {
-//            items[index].status = status
-//            updateARowItem(item: items[index])
-//
-//        }
     }
     
     func presentItems(_ items: [MessageDomain]?, offset: Int) {

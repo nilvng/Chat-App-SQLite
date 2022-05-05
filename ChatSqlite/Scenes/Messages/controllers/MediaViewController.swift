@@ -44,6 +44,7 @@ class MediaViewController: UIViewController {
 //        view.backgroundColor = UIColor(r: 111, g: 97, b: 108)
     }
     
+    // MARK: Setups
     func setupSlider(){
         let slider = UISlider()
         view.addSubview(slider)
@@ -52,6 +53,9 @@ class MediaViewController: UIViewController {
         slider.isContinuous = true
         slider.tintColor = .purple
         slider.addConstraints(leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, widthConstant: 50)
+        slider.addTarget(self, action: #selector(timeSliderDidChange), for: .valueChanged)
+        slider.addTarget(self, action: #selector(sliderDragEnded), for: .touchDragExit)
+
         self.slider = slider
     }
     
@@ -74,7 +78,35 @@ class MediaViewController: UIViewController {
 
         playButton.addTarget(self, action: #selector(play), for: .touchUpInside)
     }
+    
+    func setupNavigationView(){
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: nil, action: #selector(save))
+        navigationController?.hidesBarsOnTap = true
 
+    }
+
+    // MARK: -Actions
+    @objc func timeSliderDidChange(sender: UISlider, event: UIEvent){
+        removePeriodicTimeObserver()
+        if let e = event.allTouches?.first {
+            if e.phase == .ended {
+                addPeriodicTimeObserver()
+            }
+        }
+        guard let duration = player?.currentItem?.duration.seconds else {
+            return
+        }
+        let time = Double(sender.value) * duration / 100
+        let newTime = CMTime(seconds: Double(time), preferredTimescale: 600)
+        let tolerBefore = CMTime(seconds: 1.0, preferredTimescale: 600)
+        let tolerAfter = CMTime(seconds: 1.0, preferredTimescale: 600)
+
+        player?.seek(to: newTime, toleranceBefore: tolerBefore, toleranceAfter: tolerAfter)
+    }
+    
+    @objc func sliderDragEnded(sender: UISlider){
+        addPeriodicTimeObserver()
+    }
     
     @objc func play(){
 //        print("Play!")
@@ -90,7 +122,6 @@ class MediaViewController: UIViewController {
                 playerLayer.player?.pause()
             }
         } else {
-            setupProgressTimer()
             DispatchQueue.main.async { [self] in
                 
                 guard self.playerLayer == nil else { return }
@@ -110,26 +141,42 @@ class MediaViewController: UIViewController {
                 
                 // Cache the player layer by reference, so you can remove it later.
                 self.playerLayer = playerLayer
-                
+                addPeriodicTimeObserver()
             }
         }
     }
-    
-    func setupNavigationView(){
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: nil, action: #selector(save))
-        navigationController?.hidesBarsOnTap = true
 
-    }
     
     @objc func save(){
         print("saving...")
     }
     
+    
+    // MARK: Update Player
     private func setupProgressTimer() {
         var _ = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { [weak self] (completion) in
             guard let self = self else { return }
             self.updateProgress()
         })
+    }
+    
+    func addPeriodicTimeObserver() {
+        // Notify every half second
+        let timeScale = CMTimeScale(NSEC_PER_SEC)
+        let time = CMTime(seconds: 0.5, preferredTimescale: timeScale)
+
+        timeObserverToken = player?.addPeriodicTimeObserver(forInterval: time,
+                                                          queue: .main) {
+            [weak self] time in
+            self?.updateProgress()
+        }
+    }
+    var timeObserverToken: Any?
+    func removePeriodicTimeObserver() {
+        if let timeObserverToken = timeObserverToken {
+            player?.removeTimeObserver(timeObserverToken)
+            self.timeObserverToken = nil
+        }
     }
 
     //update progression of video, based on it's own data
