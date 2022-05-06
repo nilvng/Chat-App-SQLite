@@ -11,7 +11,8 @@ import Photos
 import PhotosUI
 
 protocol GridCellDelegate : AnyObject {
-    func didSelect(i: Int, of message: MessageDomain)
+    func didSelect(i: Int, of message: MessageDomain,
+                   from vc: UICollectionView)
     
 }
 
@@ -128,6 +129,7 @@ extension ImageGridCell : UICollectionViewDataSource {
 
 extension ImageGridCell : UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        gridCellDelegate?.didSelect(i: indexPath.item, of: message)
+        gridCellDelegate?.didSelect(i: indexPath.item, of: message,
+                                    from: collectionView)
     }
 }

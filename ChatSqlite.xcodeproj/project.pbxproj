@@ -72,6 +72,7 @@
 		0E79FB9627C67CCA0039E8E6 /* SocketDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79FB9527C67CCA0039E8E6 /* SocketDelegate.swift */; };
 		0E7E897D27D10C64004375F7 /* DelegateHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7E897C27D10C64004375F7 /* DelegateHandlers.swift */; };
 		0E7E931427D05E2C00936B35 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7E931327D05E2C00936B35 /* UserSettings.swift */; };
+		0E82BE2C2824168800D9F027 /* PopAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E82BE2B2824168800D9F027 /* PopAnimator.swift */; };
 		0E837C0B27B4F47C00317E0B /* HomeModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E837C0A27B4F47C00317E0B /* HomeModule.swift */; };
 		0E837C0D27B4F8B000317E0B /* HomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E837C0C27B4F8B000317E0B /* HomeRouter.swift */; };
 		0E837C1127B5077F00317E0B /* ChatModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E837C1027B5077F00317E0B /* ChatModule.swift */; };
@@ -180,6 +181,7 @@
 		0E79FB9527C67CCA0039E8E6 /* SocketDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketDelegate.swift; sourceTree = "<group>"; };
 		0E7E897C27D10C64004375F7 /* DelegateHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DelegateHandlers.swift; sourceTree = "<group>"; };
 		0E7E931327D05E2C00936B35 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
+		0E82BE2B2824168800D9F027 /* PopAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopAnimator.swift; sourceTree = "<group>"; };
 		0E837C0A27B4F47C00317E0B /* HomeModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeModule.swift; sourceTree = "<group>"; };
 		0E837C0C27B4F8B000317E0B /* HomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeRouter.swift; sourceTree = "<group>"; };
 		0E837C1027B5077F00317E0B /* ChatModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModule.swift; sourceTree = "<group>"; };
@@ -315,6 +317,7 @@
 				0E124254277EF82B0054D069 /* ChatbarViewController.swift */,
 				0EDC669927BA651600A2792E /* MessageCellInteractor.swift */,
 				0EFDD976276C2C2A00323984 /* ChatViewController.swift */,
+				0E82BE2B2824168800D9F027 /* PopAnimator.swift */,
 				0E124233277EA53D0054D069 /* MessageListViewConroller.swift */,
 				0EFDD978276C2C4700323984 /* MessagesInteractorImpl.swift */,
 			);
@@ -779,6 +782,7 @@
 				0E7008D9278806E400998BBB /* FriendTextEditCell.swift in Sources */,
 				0EC6A9922805683400366957 /* PhotoViewGridCell.swift in Sources */,
 				0E124251277EF3A10054D069 /* ConversationCell.swift in Sources */,
+				0E82BE2C2824168800D9F027 /* PopAnimator.swift in Sources */,
 				0E70090B278EB76100998BBB /* FileDownloader.swift in Sources */,
 				0E99D1B827E81DC200840C87 /* PhotoGalleryViewController.swift in Sources */,
 				0ED966D127CF5F2200393E35 /* ReachabilityService.swift in Sources */,

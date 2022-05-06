@@ -57,7 +57,9 @@ public final class RawSocketClient {
         let st_connect = "\(host) : \(port)"
         
         // already connect to the same host and port
-        assert(self.state != .connecting(st_connect) && self.state != .connected)
+        guard (self.state != .connecting(st_connect) && self.state != .connected) else {
+            return
+        }
         
         self.state = .connecting(st_connect)
         

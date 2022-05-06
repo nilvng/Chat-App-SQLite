@@ -16,13 +16,15 @@ protocol MessagesPresenter : AnyObject{
     func onFoundConversation(_ c: ConversationDomain)
     func presentMessageStatus(id: String, status: MessageStatus)
     func presentFFMessageStatus()
+    func reloadMessage(_ msg: MessageDomain)
 }
 
 class MessagesInteractorImpl : MessageListInteractor {
             
     var chatService : ChatService
     var mediaWorker : MediaWorker = MediaWorker.shared
-        
+    weak var presenter : MessagesPresenter?
+    
     var noRecords : Int = 20
     var offSet : CGFloat {
         CGFloat(420)
@@ -43,8 +45,8 @@ class MessagesInteractorImpl : MessageListInteractor {
                 guard let savedMediasMessage = try await self?.savePhotos(of: m, assets: assets) else {
                     return
                 }
-                NotificationCenter.default.post(name: .onFinishCacheImageOfMessage,
-                                                object: savedMediasMessage)
+
+                self?.presenter?.reloadMessage(savedMediasMessage)
                 // Notify to reload cells
             } catch let e {
                 print(e.localizedDescription)

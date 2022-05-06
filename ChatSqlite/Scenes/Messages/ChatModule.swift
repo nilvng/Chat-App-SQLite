@@ -17,11 +17,13 @@ class ChatModule {
         let service = ChatServiceManager.shared.getChatService(for: conv)
         print("show: \(conv.id)")
         let inter = MessagesInteractorImpl(chatService: service)
+        inter.presenter = listView
         
         let router = ChatRouter()
         router.viewController = view
         
         listView.interactor = inter
+        listView.router = router
         listView.configure(conversation: conv)
         listView.parentDelegate = view
         service.observeMessageList(observer: listView)
