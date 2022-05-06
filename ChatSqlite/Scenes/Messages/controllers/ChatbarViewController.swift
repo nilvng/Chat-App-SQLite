@@ -44,10 +44,17 @@ class ChatbarViewController: UIViewController {
         line.backgroundColor = UIColor(white: 0.5, alpha: 0.5)
         return line
     }()
-
+    
+    var referenceView : ReferenceView = ReferenceView()
+    
+    func configure(accent: UIColor){
+        submitButton.tintColor = accent
+    }
+    
     deinit{
         print("\(self) deinit.")
     }
+    // MARK: Navigation
     override func viewDidLoad() {
         
         super.viewDidLoad()
@@ -71,10 +78,7 @@ class ChatbarViewController: UIViewController {
         super.viewDidDisappear(animated)
         unobserveKeyboard()
     }
-    
-    func configure(accent: UIColor){
-        submitButton.tintColor = accent
-    }
+
     
     func unobserveKeyboard(){
         NotificationCenter.default.removeObserver(self)
@@ -83,6 +87,8 @@ class ChatbarViewController: UIViewController {
     
     var padding : CGFloat = 3
     
+    // MARK: - Setups
+
     func setupTextView(){
         view.addSubview(textView)
         textView.translatesAutoresizingMaskIntoConstraints = false
@@ -134,6 +140,7 @@ class ChatbarViewController: UIViewController {
     }
 
 
+    // MARK: - Actions
     @objc func submitButtonPressed(){
         sendMessage(textView.text)
         textView.text = ""
@@ -144,6 +151,12 @@ class ChatbarViewController: UIViewController {
         delegate?.photoIconSelected()
     }
     
+    func referTo(msg: MessageDomain = MessageDomain(cid: "344", content: "hi", type: .text, status: .seen, downloaded: false)){
+//        setupReferenceView()
+        referenceView.configure(name: msg.sender, body: msg.content)
+    }
+    
+    // MARK: keyboards
     func setupObserveKeyboard(){
     
     NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardMoving), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -163,6 +176,7 @@ class ChatbarViewController: UIViewController {
     }
 }
 
+// MARK: - TextViewDelegate
 extension ChatbarViewController : UITextViewDelegate{
     fileprivate func sendMessage(_ text: String) {
         if  text != ""{

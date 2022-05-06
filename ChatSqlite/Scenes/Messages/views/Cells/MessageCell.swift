@@ -7,11 +7,16 @@
 
 import UIKit
 
+protocol MessageCellDelegate : AnyObject {
+    func swipe(_ cell: MessageCell)
+}
+
 class MessageCell: UITableViewCell {
     
     typealias MessageCellAction = (MessageCell) -> Void
     
     var interactor : MessageCellInteractor?
+    weak var delegate : MessageCellDelegate?
     
     var message : MessageDomain!
     var index: Int!

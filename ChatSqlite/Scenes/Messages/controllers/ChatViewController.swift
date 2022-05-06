@@ -67,6 +67,7 @@ class ChatViewController: UIViewController {
         return bg
     }()
     var chatBarView : ChatbarViewController!
+    var referenceView : ReferenceView?
     
     var chatBarBottomConstraint : NSLayoutConstraint!
     
@@ -86,7 +87,7 @@ class ChatViewController: UIViewController {
         return v
     }()
     
-    // MARK: Init
+    // MARK: - Init
     init(){
         super.init(nibName: nil, bundle: nil)
     }
@@ -102,7 +103,7 @@ class ChatViewController: UIViewController {
         conversation = ConversationDomain.fromFriend(friend: friend)
     }
     
-    // MARK: Setups
+    // MARK: - Setups
     
     func setupTableView(){
         
@@ -122,7 +123,18 @@ class ChatViewController: UIViewController {
         tableView.contentInset = UIEdgeInsets(top: tableInset, left: 0, bottom: 0, right: 0)
 
     }
-    // MARK: setup float bb
+    
+    func setupReferenceView(){
+        let referView = ReferenceView()
+        view.addSubview(referView)
+        referView.backgroundColor = .babyBlue
+        referView.addConstraints(leading: view.leadingAnchor, bottom: chatBarView.view.topAnchor, trailing: view.trailingAnchor)
+        referView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
+        referenceView = referView
+        referenceView?.isHidden = true
+    }
+    
     var bbFlyConstraint : NSLayoutConstraint!
     var bbSnapConstraint : NSLayoutConstraint!
     var bbStretchConstraint : NSLayoutConstraint!
@@ -223,15 +235,16 @@ class ChatViewController: UIViewController {
             action: #selector(menuButtonPressed))
     }
     
-    // MARK: Navigation
+    // MARK: - Navigation
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupNavigationBar()
         
         setupTableView()
-        
+                
         setupChatbarView()
+        setupReferenceView()
         setupFloatBb()
         
         edgesForExtendedLayout = []
@@ -272,7 +285,7 @@ class ChatViewController: UIViewController {
 
 }
 
-// MARK: Animate Bubble
+// MARK: - Animate Bubble
 
 extension ChatViewController {
     
@@ -316,7 +329,7 @@ extension ChatViewController {
     
 }
 
-// MARK: Chatbar Delegate
+// MARK: - ChatBar Delegate
 extension ChatViewController : ChatbarDelegate {
     func photoIconSelected() {
         router?.toPhotoGallery()
@@ -351,7 +364,7 @@ extension ChatViewController : ChatbarDelegate {
         }
 }
 
-// MARK: PHPicker
+// MARK: - PHPicker
 extension ChatViewController : PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         var providers = [NSItemProvider]()
@@ -424,8 +437,17 @@ extension ChatViewController : PHPickerViewControllerDelegate {
 
 }
 
-// MARK: MessageListDelegate
+// MARK: - MessageListDelegate
 extension ChatViewController : MessageListViewDelegate {
+    func messageDidReply(_ msg: MessageDomain) {
+//        chatBarView.referTo(msg: msg)
+        if referenceView == nil {
+        setupReferenceView()
+        }
+        referenceView?.isHidden = false
+        referenceView!.configure(name: msg.sender, body: msg.content)
+    }
+    
     func onConversationChanged(conversation: ConversationDomain) {
         self.conversation = conversation
         //chatTitleLabel.text = conversation.title

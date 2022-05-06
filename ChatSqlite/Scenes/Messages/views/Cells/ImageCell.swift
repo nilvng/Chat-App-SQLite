@@ -15,7 +15,7 @@ class ImageCell : MessageCell {
     static let ID = "PhotoBubbleCell"
     var myImageView : PhotoView = PhotoView()
     var prep : MediaPrep!
-    weak var delegate : ImageCellDelegate?
+    weak var imageCellDelegate : ImageCellDelegate?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -68,7 +68,7 @@ class ImageCell : MessageCell {
     }
     
     @objc func handleTap(sender: UIGestureRecognizer){
-        delegate?.didTap(self)
+        imageCellDelegate?.didTap(self)
     }
     
     required init?(coder: NSCoder) {

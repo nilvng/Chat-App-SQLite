@@ -56,7 +56,10 @@ class TextMessageCell : MessageCell {
             case .ended:
                 UIView.animate(withDuration: 0.5, delay: 0.02, usingSpringWithDamping: 0.6, initialSpringVelocity: 10, options: .curveLinear, animations: {
                     recognizer.view?.center = self.originalPosContainer
-                }, completion: nil)
+                }, completion: { _ in
+                    // Animation is over -> delegate to chatBar view to show this reference
+                    self.delegate?.swipe(self)
+                })
             default:
                 break
             }

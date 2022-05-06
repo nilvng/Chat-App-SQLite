@@ -66,13 +66,13 @@
 		0E7008DE278806E400998BBB /* FriendEditDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7008D7278806E400998BBB /* FriendEditDataSource.swift */; };
 		0E70090B278EB76100998BBB /* FileDownloader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E70090A278EB76100998BBB /* FileDownloader.swift */; };
 		0E700911278EBDE100998BBB /* AlamofireImage in Frameworks */ = {isa = PBXBuildFile; productRef = 0E700910278EBDE100998BBB /* AlamofireImage */; };
-		0E704CC4281BF03500645B07 /* ReferenceView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0E704CC3281BF03500645B07 /* ReferenceView.xib */; };
 		0E727F50278571AA002EA7E3 /* NativeContactStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E727F4F278571AA002EA7E3 /* NativeContactStore.swift */; };
 		0E727F5227857416002EA7E3 /* NativeContactStoreAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E727F5127857416002EA7E3 /* NativeContactStoreAdapter.swift */; };
 		0E79FB9627C67CCA0039E8E6 /* SocketDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E79FB9527C67CCA0039E8E6 /* SocketDelegate.swift */; };
 		0E7E897D27D10C64004375F7 /* DelegateHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7E897C27D10C64004375F7 /* DelegateHandlers.swift */; };
 		0E7E931427D05E2C00936B35 /* UserSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E7E931327D05E2C00936B35 /* UserSettings.swift */; };
 		0E82BE2C2824168800D9F027 /* PopAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E82BE2B2824168800D9F027 /* PopAnimator.swift */; };
+		0E82BE302824FE6E00D9F027 /* ReferenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E82BE2F2824FE6E00D9F027 /* ReferenceView.swift */; };
 		0E837C0B27B4F47C00317E0B /* HomeModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E837C0A27B4F47C00317E0B /* HomeModule.swift */; };
 		0E837C0D27B4F8B000317E0B /* HomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E837C0C27B4F8B000317E0B /* HomeRouter.swift */; };
 		0E837C1127B5077F00317E0B /* ChatModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E837C1027B5077F00317E0B /* ChatModule.swift */; };
@@ -175,13 +175,13 @@
 		0E7008D6278806E400998BBB /* FriendDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendDetailController.swift; sourceTree = "<group>"; };
 		0E7008D7278806E400998BBB /* FriendEditDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FriendEditDataSource.swift; sourceTree = "<group>"; };
 		0E70090A278EB76100998BBB /* FileDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDownloader.swift; sourceTree = "<group>"; };
-		0E704CC3281BF03500645B07 /* ReferenceView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ReferenceView.xib; sourceTree = "<group>"; };
 		0E727F4F278571AA002EA7E3 /* NativeContactStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeContactStore.swift; sourceTree = "<group>"; };
 		0E727F5127857416002EA7E3 /* NativeContactStoreAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeContactStoreAdapter.swift; sourceTree = "<group>"; };
 		0E79FB9527C67CCA0039E8E6 /* SocketDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketDelegate.swift; sourceTree = "<group>"; };
 		0E7E897C27D10C64004375F7 /* DelegateHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DelegateHandlers.swift; sourceTree = "<group>"; };
 		0E7E931327D05E2C00936B35 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
 		0E82BE2B2824168800D9F027 /* PopAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopAnimator.swift; sourceTree = "<group>"; };
+		0E82BE2F2824FE6E00D9F027 /* ReferenceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferenceView.swift; sourceTree = "<group>"; };
 		0E837C0A27B4F47C00317E0B /* HomeModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeModule.swift; sourceTree = "<group>"; };
 		0E837C0C27B4F8B000317E0B /* HomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeRouter.swift; sourceTree = "<group>"; };
 		0E837C1027B5077F00317E0B /* ChatModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatModule.swift; sourceTree = "<group>"; };
@@ -332,6 +332,7 @@
 				0E94D0EB27991A26003485AF /* DownloadBtnView.swift */,
 				0E5527FB27E5845F00597C96 /* TimestampHeaderView.swift */,
 				0EC6A98E2805641300366957 /* CollageLayout.swift */,
+				0E82BE2F2824FE6E00D9F027 /* ReferenceView.swift */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -481,7 +482,6 @@
 				0EC6A98A280563F000366957 /* ImageGridCell.swift */,
 				0E44B00C27F2EA8900F1A790 /* ImageCell.swift */,
 				0EC6A9912805683400366957 /* PhotoViewGridCell.swift */,
-				0E704CC3281BF03500645B07 /* ReferenceView.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -674,7 +674,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0E704CC4281BF03500645B07 /* ReferenceView.xib in Resources */,
 				0EC6A9832805610F00366957 /* LocalGalleryView.xib in Resources */,
 				0EFDD953276B72C700323984 /* LaunchScreen.storyboard in Resources */,
 				0EFDD950276B72C700323984 /* Assets.xcassets in Resources */,
@@ -764,6 +763,7 @@
 				0E124241277ED9E00054D069 /* UIColor+Chat.swift in Sources */,
 				0E7008D8278806E400998BBB /* FriendDeleteCell.swift in Sources */,
 				0E3C0D1A2783F9EF00B23E21 /* ChatMenuController.swift in Sources */,
+				0E82BE302824FE6E00D9F027 /* ReferenceView.swift in Sources */,
 				0EC6A9882805616200366957 /* LocalPhotoCell.swift in Sources */,
 				0E062B1527CDFCF7002DAF95 /* SocketModel.swift in Sources */,
 				0E062B0927CDCB14002DAF95 /* RawSocketClient.swift in Sources */,

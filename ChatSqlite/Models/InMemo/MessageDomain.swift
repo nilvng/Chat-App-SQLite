@@ -50,6 +50,7 @@ class MessageDomain {
     var timestamp: Date
     
     var sender: String
+    var senderDomain: FriendDomain?
     
     var downloaded : Bool = false
     var status : MessageStatus = .sent

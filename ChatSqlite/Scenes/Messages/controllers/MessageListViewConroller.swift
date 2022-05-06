@@ -16,6 +16,7 @@ protocol MessageListViewDelegate : AnyObject{
     func textMessageIsSent(content: String, inTable tableView: UITableView)
     func messageWillDisplay(tableView: UITableView)
     func onConversationChanged(conversation: ConversationDomain)
+    func messageDidReply(_ msg: MessageDomain)
 }
 
 class MessageListViewController : UITableViewController {
@@ -303,7 +304,9 @@ extension MessageListViewController {
         let message =  dateSections[indexPath.section].items[indexPath.row]
         
         if message.type == .text {
-            cell = tableView.dequeueReusableCell(withIdentifier: TextMessageCell.ID, for: indexPath) as? TextMessageCell
+            let textCell = tableView.dequeueReusableCell(withIdentifier: TextMessageCell.ID, for: indexPath) as! TextMessageCell
+            textCell.delegate = self
+            cell = textCell
         } else if message.type == .image{
             if message.urls.count > 1 || message.mediaPreps?.count ?? 0 > 1 {
                 let gridCell = tableView.dequeueReusableCell(withIdentifier: ImageGridCell.ID) as! ImageGridCell
@@ -479,5 +482,11 @@ extension MessageListViewController : MessagesPresenter {
         
         self.conversation = c
         self.parentDelegate?.onConversationChanged(conversation: c)
+    }
+}
+// MARK: - MessageCellDelegate
+extension MessageListViewController : MessageCellDelegate {
+    func swipe(_ cell: MessageCell) {
+        parentDelegate?.messageDidReply(cell.message)
     }
 }
