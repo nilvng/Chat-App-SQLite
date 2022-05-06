@@ -23,6 +23,7 @@ class ChatModule {
         router.viewController = view
         
         listView.interactor = inter
+        listView.router = router
         listView.configure(conversation: conv)
         listView.parentDelegate = view
         service.observeMessageList(observer: listView)

@@ -19,6 +19,7 @@ protocol MessageListViewDelegate : AnyObject{
 }
 
 class MessageListViewController : UITableViewController {
+    weak var router : ChatRouter?
     var interactor : MessageListInteractor?
     weak var parentDelegate : MessageListViewDelegate?
     
@@ -379,17 +380,13 @@ extension MessageListViewController {
         view.transform = CGAffineTransform(scaleX: 1, y: -1)
         return view
     }
- 
     
 }
 
-// MARK: GridCellDelegate
+// MARK: - GridCellDelegate
 extension MessageListViewController : GridCellDelegate {
-    func didSelect(i: Int, of message: MessageDomain) {
-                let photoVC = MediaViewController()
-                photoVC.configure(i: i, of: message)
-                show(photoVC, sender: nil)
-
+    func didSelect(i: Int, of message: MessageDomain, from vc: UICollectionView) {
+        router?.toMediaView(i: i, of: message, from: vc)
     }
     
     
@@ -397,8 +394,8 @@ extension MessageListViewController : GridCellDelegate {
 
 extension MessageListViewController : ImageCellDelegate {
     func didTap(_ cell: ImageCell) {
-        var message = cell.message
-        var index = cell.index
+        let message = cell.message
+        let index = cell.index
         if cell.message.getPrep(index: cell.index)?.type == .photo{
             let photoVC = MediaViewController()
             
@@ -407,15 +404,15 @@ extension MessageListViewController : ImageCellDelegate {
         } else {
             let videoVC = AVPlayerViewController()
             guard let videoURL = MediaWorker.shared.url(index: index!, of: message!,
-                            isExist: true) else {return}
+                                                        isExist: true) else {return}
             videoVC.player = AVPlayer(url: videoURL)
             show(videoVC, sender:nil)
         }
-
+        
     }
 }
 
-// MARK: Presenter
+// MARK: - Presenter
 extension MessageListViewController : MessagesPresenter {
     
     func reloadMessage(_ msg: MessageDomain) {

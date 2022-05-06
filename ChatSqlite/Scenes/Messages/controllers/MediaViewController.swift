@@ -52,7 +52,7 @@ class MediaViewController: UIViewController {
         slider.maximumValue = 100
         slider.isContinuous = true
         slider.tintColor = .purple
-        slider.addConstraints(leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor, widthConstant: 50)
+        slider.addConstraints(leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor)
         slider.addTarget(self, action: #selector(timeSliderDidChange), for: .valueChanged)
         slider.addTarget(self, action: #selector(sliderDragEnded), for: .touchDragExit)
 
@@ -188,7 +188,7 @@ class MediaViewController: UIViewController {
         slider.setValue(Float(currentMoment * 100.0 / duration), animated: true)
     }
 
-    
+    // MARK: - Configuration
     fileprivate func configureBGColor(_ im: UIImage) {
         guard let bgColor = im.averageColor else {return}
         navigationController?.navigationBar.tintColor = .blue
@@ -233,6 +233,7 @@ class MediaViewController: UIViewController {
         }
     }
     
+    // MARK: - Navigation
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         guard mediaPrep != nil else{
@@ -242,6 +243,7 @@ class MediaViewController: UIViewController {
             playButton.isHidden = false
         } else {
             playButton.isHidden = true
+            slider.isHidden = true
         }
     }
     
