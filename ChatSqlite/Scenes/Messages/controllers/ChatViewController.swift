@@ -14,10 +14,11 @@ protocol MessageListInteractor {
     func setSelectedFriend(friend: FriendDomain)
     func loadData()
     func loadMore(tableOffset: CGFloat)
-    func onSendMessage(content: String, conversation: ConversationDomain)
+    func onSendMessage(content: String, conversation: ConversationDomain, referID: String?)
     func onSendMessage(m: MessageDomain)
     func sendSeenStatus()
     func doneSelectLocalMedia(_ asset: [PHAsset])
+    func getReferredMessage(of msg: MessageDomain,completion: @escaping (MessageDomain?) -> Void)
 }
 
 
@@ -29,12 +30,16 @@ class ChatViewController: UIViewController {
     // MARK: VC properties
     var interactor : MessageListInteractor?
     var router : ChatRouter?
+    var referID : String?
     
     var conversation : ConversationDomain! {
         didSet{
             theme = conversation?.theme ?? .basic
             DispatchQueue.main.async {
-                self.chatTitleLabel.text = self.conversation?.title ?? ""
+                guard let c = self.conversation else{
+                    return
+                }
+                self.minimalChatItemView.configure(title: c.title, avatarUrlString: c.thumbnail)
                 self.messageListView.setBubbleTheme(theme: self.theme)
                 self.view.layoutIfNeeded()
             }
@@ -44,13 +49,7 @@ class ChatViewController: UIViewController {
     // MARK: UI Properties
     var theme : Theme = .basic
     var mode : AccentColorMode = .light
-    lazy var chatTitleLabel : UILabel = {
-        let chatTitleLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 400, height: 50))
-        chatTitleLabel.textColor  = mode == .light ? UIColor.darkGray : UIColor.white
-        chatTitleLabel.font = UIFont.systemFont(ofSize: 19)
-        chatTitleLabel.text = "New Friend"
-        return chatTitleLabel
-    }()
+    var minimalChatItemView  = MinimalChatItemView()
     
     var menuButton : UIButton = {
         let button = UIButton()
@@ -99,7 +98,7 @@ class ChatViewController: UIViewController {
     }
     
     func configure(friend: FriendDomain) {
-        chatTitleLabel.text = friend.name
+        minimalChatItemView.configure(title: friend.name, avatarUrlString: nil)
         conversation = ConversationDomain.fromFriend(friend: friend)
     }
     
@@ -226,7 +225,7 @@ class ChatViewController: UIViewController {
     func setupNavigationBar(){
         navigationItem.rightBarButtonItem = nil
         
-        navigationItem.titleView = chatTitleLabel
+        navigationItem.titleView = minimalChatItemView
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             image: UIImage.chat_menu,
@@ -248,7 +247,7 @@ class ChatViewController: UIViewController {
         setupFloatBb()
         
         edgesForExtendedLayout = []
-        
+//        navigationController?.delegate = router
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -359,8 +358,9 @@ extension ChatViewController : ChatbarDelegate {
     }
     
     func messageSubmitted(message: String) {
-
-        interactor?.onSendMessage(content: message, conversation: conversation)
+        referenceView?.isHidden = true
+        interactor?.onSendMessage(content: message, conversation: conversation, referID: referID)
+        
         }
 }
 
@@ -445,6 +445,7 @@ extension ChatViewController : MessageListViewDelegate {
         setupReferenceView()
         }
         referenceView?.isHidden = false
+        referID = msg.mid
         referenceView!.configure(name: msg.sender, body: msg.content)
     }
     

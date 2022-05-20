@@ -27,10 +27,14 @@ class MessageListViewController : UITableViewController {
     var itemsCount : Int = 0
     var dateSections : [DateSection] = []
     
+    var currentReference : MessageDomain?
     var conversation : ConversationDomain!
     var theme : Theme = .basic
     
     var lastUpdatedOffset : Int = 0
+    var animatableView : UIView?
+    var sourceSnapshot : UIView?
+    
     static var CELL_ID = "messCell"
     
     struct DateSection {
@@ -60,7 +64,9 @@ class MessageListViewController : UITableViewController {
     
     func resolveAndMergeSections(newSections: [DateSection]){
         let curN = dateSections.count
-       
+        guard newSections.count > 0 else{
+            return
+        }
         if curN > 0 && dateSections[curN-1].title == newSections[0].title {
             dateSections[curN-1].items.append(contentsOf: newSections[0].items)
             for i in 1..<newSections.count{
@@ -131,46 +137,14 @@ class MessageListViewController : UITableViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         interactor?.loadData()
-        scrollToLastMessage()
-        
-    }
-    
-    @objc func finishCacheMessageHandler(noti: Notification){
-        guard let m = noti.object as? MessageDomain else{
-            return
-        }
-        
-        self.reloadMessageCell(m: m)
     }
     
     func reloadMessageCell(m: MessageDomain){
-        var foundSectionIndex : Int!
-        var foundRowIndex : Int!
-        
-        for sIndex in 0..<dateSections.count {
-            if dateSections[sIndex].title == m.timestamp.toSimpleDate() {
-                foundSectionIndex = sIndex
-                break
-            }
-        }
-        guard foundSectionIndex != nil else {
+
+        guard let indexPath = getIndexPath(of: m) else{
             return
-            
-        }
-        for it in 0..<dateSections[foundSectionIndex].items.count {
-            if dateSections[foundSectionIndex].items[it].mid == m.mid {
-                dateSections[foundSectionIndex].items[it] = m
-                foundRowIndex = it
-                break
-            }
-        }
-        guard foundRowIndex != nil else {
-            return
-            
         }
         DispatchQueue.main.async {
-            print("row:\(foundRowIndex), section: \(foundSectionIndex)")
-            let indexPath = IndexPath(row: foundRowIndex, section: foundSectionIndex)
             if let cell = self.tableView.cellForRow(at: indexPath) as? ImageGridCell{
                 cell.reloadData()
             }
@@ -182,13 +156,34 @@ class MessageListViewController : UITableViewController {
 
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
+    func getIndexPath(of m: MessageDomain) -> IndexPath?{
+        var foundSectionIndex : Int!
+        var foundRowIndex : Int!
+        
+        for sIndex in 0..<dateSections.count {
+            if dateSections[sIndex].title == m.timestamp.toSimpleDate() {
+                foundSectionIndex = sIndex
+                break
+            }
+        }
+        guard foundSectionIndex != nil else {
+            return nil
+            
+        }
+        for it in 0..<dateSections[foundSectionIndex].items.count {
+            if dateSections[foundSectionIndex].items[it].mid == m.mid {
+                dateSections[foundSectionIndex].items[it] = m
+                foundRowIndex = it
+                break
+            }
+        }
+        guard foundRowIndex != nil else {
+            return nil
+            
+        }
+        return IndexPath(row: foundRowIndex, section: foundSectionIndex)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
     func scrollToLastMessage(animated: Bool = true){
 
         guard itemsCount > 0 && tableView.numberOfSections > 0 else {
@@ -302,6 +297,9 @@ extension MessageListViewController {
         var cell : MessageCell!
         
         let message =  dateSections[indexPath.section].items[indexPath.row]
+        if indexPath.section == 0 {
+            print(0)
+        }
         
         if message.type == .text {
             let textCell = tableView.dequeueReusableCell(withIdentifier: TextMessageCell.ID, for: indexPath) as! TextMessageCell
@@ -314,7 +312,7 @@ extension MessageListViewController {
                 cell = gridCell
             } else {
                 let imCell = tableView.dequeueReusableCell(withIdentifier: ImageCell.ID) as! ImageCell
-                imCell.delegate = self
+                imCell.imageCellDelegate = self
                 cell = imCell
                 }
 
@@ -331,9 +329,24 @@ extension MessageListViewController {
         
         if isStartOfContinuous { cell.showAvatar(name: conversation.title)} // show placeholder is the name of conversation
         
+        if let fk = message.referenceFK, message.referredMessage == nil{
+            interactor?.getReferredMessage(of: message){ m in
+                guard let mfk = m else {
+                    print("\(self) Failed finding reference Message: \(fk)")
+                    return
+                }
+                DispatchQueue.main.async {
+                    
+                tableView.beginUpdates()
+                    cell.configureReferenceView(mfk)
+                    cell.setNeedsLayout()
+                    cell.layoutIfNeeded()
+                tableView.endUpdates()
+                }
+            }
+        }
         return cell
     }
-
     
     func isEndOfContinuousMessages(indexPath: IndexPath, message: MessageDomain) -> Bool{
         var laterMessage : MessageDomain
@@ -389,29 +402,21 @@ extension MessageListViewController {
 // MARK: - GridCellDelegate
 extension MessageListViewController : GridCellDelegate {
     func didSelect(i: Int, of message: MessageDomain, from vc: UICollectionView) {
-        router?.toMediaView(i: i, of: message, from: vc)
+        guard let selectedIndex = vc.indexPathsForSelectedItems?.first,
+              let selectedCell = vc.cellForItem(at: selectedIndex) as? PhotoViewGridCell else{
+            return
+        }
+        animatableView = selectedCell.imageView
+        sourceSnapshot = animatableView?.snapshotView(afterScreenUpdates: false)
+        router?.toMediaView(i: i, of: message)
     }
-    
-    
 }
 
 extension MessageListViewController : ImageCellDelegate {
     func didTap(_ cell: ImageCell) {
-        var message = cell.message
-        var index = cell.index
-//        if cell.message.getPrep(index: cell.index)?.type == .photo{
-            let photoVC = MediaViewController()
-            
-            photoVC.configure(i: cell.index, of: cell.message)
-            show(photoVC, sender: nil)
-//        } else {
-//            let videoVC = AVPlayerViewController()
-//            guard let videoURL = MediaWorker.shared.url(index: index!, of: message!,
-//                            isExist: true) else {return}
-//            videoVC.player = AVPlayer(url: videoURL)
-//            show(videoVC, sender:nil)
-//        }
-
+        animatableView = cell.myImageView
+        sourceSnapshot = animatableView?.snapshotView(afterScreenUpdates: false)
+        router?.toMediaView(i: 0, of: cell.message)
     }
 }
 
@@ -486,7 +491,46 @@ extension MessageListViewController : MessagesPresenter {
 }
 // MARK: - MessageCellDelegate
 extension MessageListViewController : MessageCellDelegate {
+    func tapRepliedCell(_ cell: MessageCell) {
+        guard let referredMsg = cell.message.referredMessage,
+            let goToPath = getIndexPath(of: referredMsg) else{
+            return
+        }
+        
+        tableView.scrollToRow(at: goToPath, at: .bottom, animated: true)
+        
+    }
+    
     func swipe(_ cell: MessageCell) {
+        currentReference = cell.message
         parentDelegate?.messageDidReply(cell.message)
     }
+}
+
+// MARK: - AnimatableViewController
+extension MessageListViewController : PopAnimatableViewController {
+    func getSourceSnapshot() -> UIView? {
+        sourceSnapshot
+    }
+    
+    func getWindow() -> UIWindow? {
+        view.window
+    }
+    
+    func getView() -> UIView {
+        return view.superview ?? view
+    }
+    
+    func getAnimatableView() -> UIView {
+        return animatableView!
+    }
+    
+    func animatableViewRect() -> CGRect {
+        let window = self.view.window
+        let rect = animatableView!.convert(animatableView!.bounds, to: window)
+        print("animatable rect: \(rect)")
+        return rect
+    }
+    
+    
 }

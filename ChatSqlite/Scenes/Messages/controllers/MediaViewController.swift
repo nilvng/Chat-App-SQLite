@@ -10,6 +10,9 @@ import Photos
 
 class MediaViewController: UIViewController {
     
+    enum PlayerState {
+        case isSeeking, isPlaying, pause, donePlaying
+    }
     
     var imageView = UIImageView()
     var progressView = UIProgressView()
@@ -23,25 +26,33 @@ class MediaViewController: UIViewController {
     }
     var player : AVPlayer?
     var playButton : UIButton = UIButton()
-    var isPlaying : Bool = false {
-        didSet {
-            // animate play button
-        }
-    }
+    var playerState : PlayerState = .pause
+    
+    var sliderAnimator : UIViewPropertyAnimator?
+    
+    var durationLabel : UILabel = UILabel()
+    var durationHour : Int?
+    var durationMinute : Int?
+    
+    var timeObserverToken : Any?
     fileprivate var playerLayer: AVPlayerLayer!
     var slider : UISlider!
-    
+    var videoProgressBarView : VideoProgressBarView?
+    var navBarView = UIView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(progressView)
         progressView.centerInSuperview()
-
+        
         setupImageView()
+        setupNav()
         setupPlayButton()
-        setupNavigationView()
+//        setupNavigationView()
         setupSlider()
+//        setupVideoProgressBar()
 //        view.backgroundColor = UIColor(r: 111, g: 97, b: 108)
+        
     }
     
     // MARK: Setups
@@ -50,13 +61,44 @@ class MediaViewController: UIViewController {
         view.addSubview(slider)
         slider.minimumValue = 0
         slider.maximumValue = 100
-        slider.isContinuous = true
+        slider.isContinuous = false
         slider.tintColor = .purple
         slider.addConstraints(leading: view.leadingAnchor, bottom: view.bottomAnchor, trailing: view.trailingAnchor)
-        slider.addTarget(self, action: #selector(timeSliderDidChange), for: .valueChanged)
-        slider.addTarget(self, action: #selector(sliderDragEnded), for: .touchDragExit)
-
+        slider.addTarget(self, action: #selector(timeSliderDidChange), for: [.valueChanged])
+        slider.addTarget(self, action: #selector(sliderDragEnded), for: .touchDown)
         self.slider = slider
+    }
+    
+    func setupVideoProgressBar(){
+        videoProgressBarView = VideoProgressBarView()
+        videoProgressBarView?.isUserInteractionEnabled = true
+        self.view.addSubview(videoProgressBarView!)
+        videoProgressBarView?.addConstraints(leading: self.view.leadingAnchor, bottom: self.slider.topAnchor, trailing: self.view.trailingAnchor)
+//        print(videoProgressBarView?.gestureRecognizers)
+    }
+    
+    func setupTimeLabel(){
+        
+    }
+    
+    @objc func tapBar(){
+        print("tap...")
+    }
+    
+    func setupNav(){
+        view.addSubview(navBarView)
+        navBarView.addConstraints(top: view.topAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor, heightConstant: 55)
+        let backButton = UIButton()
+        backButton.setImage(UIImage(systemName: "arrow.left"), for: .normal)
+        navBarView.addSubview(backButton)
+        backButton.centerYAnchor.constraint(equalTo: navBarView.centerYAnchor).isActive = true
+        backButton.leadingAnchor.constraint(equalTo: navBarView.leadingAnchor, constant: 5).isActive = true
+        backButton.constraint(equalTo: CGSize(width: 30, height: 30))
+        backButton.addTarget(self, action: #selector(popView), for: .touchUpInside)
+    }
+    
+    @objc func popView(){
+        dismiss(animated: true)
     }
     
     
@@ -76,7 +118,7 @@ class MediaViewController: UIViewController {
         playButton.widthAnchor.constraint(equalToConstant: 70).isActive = true
         playButton.heightAnchor.constraint(equalToConstant: 70).isActive = true
 
-        playButton.addTarget(self, action: #selector(play), for: .touchUpInside)
+        playButton.addTarget(self, action: #selector(playButtonTap), for: .touchUpInside)
     }
     
     func setupNavigationView(){
@@ -85,14 +127,10 @@ class MediaViewController: UIViewController {
 
     }
 
-    // MARK: -Actions
+    // MARK: - Actions
     @objc func timeSliderDidChange(sender: UISlider, event: UIEvent){
-        removePeriodicTimeObserver()
-        if let e = event.allTouches?.first {
-            if e.phase == .ended {
-                addPeriodicTimeObserver()
-            }
-        }
+        let prevState = playerState
+        setPlayerStatus(to: .isSeeking)
         guard let duration = player?.currentItem?.duration.seconds else {
             return
         }
@@ -102,13 +140,17 @@ class MediaViewController: UIViewController {
         let tolerAfter = CMTime(seconds: 1.0, preferredTimescale: 600)
 
         player?.seek(to: newTime, toleranceBefore: tolerBefore, toleranceAfter: tolerAfter)
+        setPlayerStatus(to: prevState)
     }
     
     @objc func sliderDragEnded(sender: UISlider){
-        addPeriodicTimeObserver()
+//        setPlayerStatus(to: .isSeeking)
+        print("touch down")
     }
     
-    @objc func play(){
+    private var playerItemContext = 0
+    
+    @objc func playButtonTap(){
 //        print("Play!")
         guard mediaPrep.type == .video else {
             return
@@ -117,9 +159,9 @@ class MediaViewController: UIViewController {
         if playerLayer != nil {
             // The app already created an AVPlayerLayer, so tell it to play.
             if playButton.isSelected {
-                playerLayer.player!.play()
+                setPlayerStatus(to: .isPlaying)
             } else {
-                playerLayer.player?.pause()
+                setPlayerStatus(to: .pause)
             }
         } else {
             DispatchQueue.main.async { [self] in
@@ -130,6 +172,12 @@ class MediaViewController: UIViewController {
                 guard let videoURL = mediaWorker.url(index: index, of: message,
                                                      isExist: true) else {return}
                 self.player = AVPlayer(url: videoURL)
+                // Register as an observer of the player item's status property
+//               player!.addObserver(self,
+//                                   forKeyPath: #keyPath(AVPlayerItem.status),
+//                                      options: [.old, .new],
+//                                      context: &playerItemContext)
+                
                 let playerLayer = AVPlayerLayer(player: player)
 
                 // Configure the AVPlayerLayer and add it to the view.
@@ -137,12 +185,63 @@ class MediaViewController: UIViewController {
                 playerLayer.frame = self.view.layer.bounds
                 self.view.layer.addSublayer(playerLayer)
                 self.view.bringSubviewToFront(self.playButton)
-                self.player?.play()
                 
-                // Cache the player layer by reference, so you can remove it later.
+                // Cache he player layer by reference, so you can remove it later
+                
                 self.playerLayer = playerLayer
-                addPeriodicTimeObserver()
+                startUpdatingPlaybackStatus()
+                if let duration = player?.currentItem?.asset.duration.seconds{
+                videoProgressBarView?.configure(duration: duration)
+                }
+                // setup animator
+                setPlayerStatus(to: .isPlaying)
+                
             }
+        }
+    }
+    func startUpdatingPlaybackStatus(){
+        let timeScale = CMTimeScale(NSEC_PER_SEC)
+        let interval = CMTime(seconds: 1, preferredTimescale: timeScale)
+        timeObserverToken = player?.addPeriodicTimeObserver(forInterval: interval,
+                                                            queue: .main, using: { [weak self] curTime in
+            self?.updateProgress()
+        })
+    }
+    
+    func removePeriodicTimeObserver() {
+        if let timeObserverToken = timeObserverToken {
+            player?.removeTimeObserver(timeObserverToken)
+            self.timeObserverToken = nil
+        }
+    }
+    
+    func play(){
+//        displayLink.isPaused = false
+        playerLayer.player?.play()
+        videoProgressBarView?.play()
+    }
+
+    func stopUpdatingPlaybackStatus() {
+    }
+    func pause(){
+        // Pause
+        playerLayer.player?.pause()
+        videoProgressBarView?.pause()
+//        displayLink.isPaused = true
+    }
+    
+    func setPlayerStatus(to status : PlayerState){
+        self.playerState = status
+        switch status {
+        case .isSeeking:
+//            displayLink.isPaused = true
+            break
+        case .isPlaying:
+            play()
+        case .pause:
+            pause()
+        case .donePlaying:
+            print("done")
         }
     }
 
@@ -152,41 +251,29 @@ class MediaViewController: UIViewController {
     }
     
     
-    // MARK: Update Player
-    private func setupProgressTimer() {
-        var _ = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: { [weak self] (completion) in
-            guard let self = self else { return }
-            self.updateProgress()
+    // MARK: - Update Player
+    //update progression of video, based on it's own data
+
+    @objc func updateProgress() {
+        guard let duration = player?.currentItem?.duration.seconds,
+            let curTime = player?.currentItem?.currentTime().seconds,
+        player?.status == .readyToPlay else { return }
+        
+        guard playerState == .isPlaying else {
+            return
+        }
+        
+        if curTime == duration {
+            stopUpdatingPlaybackStatus()
+        }
+        let playbackProgress = Float(curTime / duration) * 100.0
+//        print(playbackProgress)
+        UIView.animate(withDuration: 0.8, animations: {
+            self.slider.setValue(playbackProgress, animated: true)
         })
     }
     
-    func addPeriodicTimeObserver() {
-        // Notify every half second
-        let timeScale = CMTimeScale(NSEC_PER_SEC)
-        let time = CMTime(seconds: 0.5, preferredTimescale: timeScale)
-
-        timeObserverToken = player?.addPeriodicTimeObserver(forInterval: time,
-                                                          queue: .main) {
-            [weak self] time in
-            self?.updateProgress()
-        }
-    }
-    var timeObserverToken: Any?
-    func removePeriodicTimeObserver() {
-        if let timeObserverToken = timeObserverToken {
-            player?.removeTimeObserver(timeObserverToken)
-            self.timeObserverToken = nil
-        }
-    }
-
-    //update progression of video, based on it's own data
-
-    private func updateProgress() {
-        guard let duration = player?.currentItem?.duration.seconds,
-            let currentMoment = player?.currentItem?.currentTime().seconds else { return }
-
-        slider.setValue(Float(currentMoment * 100.0 / duration), animated: true)
-    }
+    
 
     // MARK: - Configuration
     fileprivate func configureBGColor(_ im: UIImage) {
@@ -221,7 +308,9 @@ class MediaViewController: UIViewController {
         
     }
     
+    
     lazy var mediaWorker : MediaWorker = MediaWorker.shared
+    
     func updateStaticImage(i: Int, of message: MessageDomain) {
         Task{
             do{
@@ -251,7 +340,35 @@ class MediaViewController: UIViewController {
         super.viewWillDisappear(animated)
         navigationController?.navigationBar.tintColor = .blue
         navigationController?.hidesBarsOnTap = false
+        sliderAnimator?.stopAnimation(false)
 
     }
 
+}
+
+// MARK: - AnimatableViewController
+extension MediaViewController : PopAnimatableViewController {
+    func getSourceSnapshot() -> UIView? {
+        return nil
+    }
+    
+    func getWindow() -> UIWindow? {
+        view.window
+    }
+    
+
+    func getView() -> UIView {
+        return view
+    }
+    
+    func getAnimatableView() -> UIView {
+        return imageView
+    }
+    
+    func animatableViewRect() -> CGRect {
+        let window = self.view.window
+        return imageView.convert(imageView.bounds, to: window)
+    }
+    
+    
 }

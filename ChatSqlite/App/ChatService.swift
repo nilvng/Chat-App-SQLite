@@ -96,6 +96,12 @@ class ChatService {
         
     }
     
+    func getOne(withMID mid: String, completion: @escaping (MessageDomain?) -> Void) {
+        messageWorker.requestGetOne(mid: mid, completion: { m in
+            completion(m)
+        })
+    }
+    
     func observeMessageList(observer: MessagesPresenter){
         messageWorker.observer = observer
     }

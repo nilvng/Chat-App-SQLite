@@ -57,6 +57,8 @@ class MessageDomain {
     var urls : [String] = []
     
     var mediaPreps : [MediaPrep]?
+    var referenceFK : String?
+    var referredMessage : MessageDomain?
     // download subscriber
     var subscriber : MessageSubscriber?
     

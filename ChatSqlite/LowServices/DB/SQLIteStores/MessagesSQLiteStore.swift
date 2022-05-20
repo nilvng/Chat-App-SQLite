@@ -26,7 +26,7 @@ class MessagesSQLStore : MessageDBLogic {
     var downloaded = Expression<Bool>("downloaded")
     var status = Expression<Int?>("status")
     var mediaPreps = Expression<String?>("mediaPreps")
-
+    var referenceFK = Expression<String?>("referenceFK")
     
         
     let serialQueue = DispatchQueue(
@@ -76,6 +76,7 @@ class MessagesSQLStore : MessageDBLogic {
             t.column(downloaded)
             t.column(status)
             t.column(mediaPreps)
+            t.foreignKey(referenceFK, references: table, mid)
         })
         } catch let e {
             print(e.localizedDescription)
@@ -111,42 +112,54 @@ extension MessagesSQLStore{
             //print("offset: \(noRecords * noPages) - pages: \(noPages)")
             queries = desc ? queries.order(timestamp.desc) : queries.order(timestamp.asc)
             let result : [MessageSQLite] = try db!.prepareRowIterator(queries).map { row in
-                var m = MessageSQLite()
-                m.mid = row[mid]
-                m.cid = row[cid]
-                m.content = row[content]
-                m.type = MessageType(rawValue:row[type])
-                m.timestamp = row[timestamp]
-                m.sender = row[sender]
-                m.downloaded = row[downloaded]
-                if let rowData = row[mediaPreps] {
-//                    print("did it")
-                    do {
-                        m.mediaPreps = rowData.parse(to: [MediaPrep].self)
-                    } catch {
-                        print("Cant parse mediaPreps")
-                    }
-                }
-                if let val = row[status] {
-                    m.status = MessageStatus(rawValue: val) ?? .seen
-                } else {
-                    m.status = .seen
-                }
-                return m
+                return parseData(row)
             }
-//            let result: [MessageSQLite] = try db!.prepare(queries).map { row in
-//                return try row.decode()
-//            }
             completionHandler(result,nil)
         } catch let e{
             print(e)
             completionHandler(nil,.cantFetch("Cant fetch"))
             }
         }
+    
+    func parseData(_ row : RowIterator.Element) -> MessageSQLite {
+        var m = MessageSQLite()
+        m.mid = row[mid]
+        m.cid = row[cid]
+        m.content = row[content]
+        m.type = MessageType(rawValue:row[type])
+        m.timestamp = row[timestamp]
+        m.sender = row[sender]
+        m.downloaded = row[downloaded]
+        m.referenceFK = row[referenceFK]
+        
+        if let rowData = row[mediaPreps] {
+//                    print("did it")
+                m.mediaPreps = rowData.parse(to: [MediaPrep].self)
+    
+        }
+        if let val = row[status] {
+            m.status = MessageStatus(rawValue: val) ?? .seen
+        } else {
+            m.status = .seen
+        }
+        return m
+        
+    }
         
     
     func getWithId(_ id: String, completionHandler: @escaping (Message?, StoreError?) -> Void) {
-        fatalError()
+        let query = table.filter(self.mid == id)
+        
+        
+        do {
+            let result : [MessageSQLite] = try db!.prepare(query).map { row in
+                return self.parseData(row)
+            }
+            completionHandler(result.first, nil)
+        } catch let e {
+            print(e.localizedDescription)
+            completionHandler(nil, .cantFetch("Can't fetch row with id \(id)"))
+        }
     }
     
     func add(newItem: Message, completionHandler: @escaping (Message?, StoreError?) -> Void) {

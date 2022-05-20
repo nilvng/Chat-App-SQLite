@@ -13,8 +13,10 @@ class AvatarWorker {
     let photoRequest = PhotoRequest()
     static let shared = AvatarWorker()
     
-    func load(url: String, type: ImageFileType = .rounded) async -> UIImage?{
-        var config = ImageConfig(url: url, type: type, source: .remote, storage: .cache)
+    func image(url: String, type: ImageFileType = .rounded) async -> UIImage?{
+        let config = ImageConfig(url: url, type: type,
+                                 source: .remote,
+                                 storage: .document)
         // can't find in local storage
         guard let im = try? await imageStore.getImage(config: config) else{
             // try to fetch image from remote server

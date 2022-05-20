@@ -27,7 +27,7 @@ class MessagesInteractorImpl : MessageListInteractor {
     
     var noRecords : Int = 20
     var offSet : CGFloat {
-        CGFloat(420)
+        CGFloat(390)
     }
     var currPage = 0
     var selectedFriend : FriendDomain?
@@ -115,27 +115,43 @@ class MessagesInteractorImpl : MessageListInteractor {
 
     }
     
+    func getReferredMessage(of msg: MessageDomain, completion: @escaping (MessageDomain?) -> Void){
+        guard let fk = msg.referenceFK else{
+            return
+        }
+        chatService.getOne(withMID: fk, completion: { m in
+            msg.referredMessage = m
+            completion(m)
+        })
+    }
+    
+    func fetchOne(mid: String, completion: @escaping (MessageDomain?) -> Void){
+
+    }
+    
     func loadData(){
         // filter messenges belong to this conversation
         chatService.loadMessages(noRecords: noRecords, noPages: 0)
         }
     
     func loadMore(tableOffset : CGFloat){
-        //print(tableOffset)
         
         let pages = Int(tableOffset / offSet)
+
         guard pages - currPage == 1 else {
             return
         }
         currPage = pages
 
-//        chatService.loadMessages(noRecords: noRecords, noPages: pages)
+        chatService.loadMessages(noRecords: noRecords, noPages: pages)
     }
 
-    func onSendMessage(content: String, conversation: ConversationDomain){
+    func onSendMessage(content: String, conversation: ConversationDomain, referID: String?=nil){
         // display message
         let m = MessageDomain(cid: conversation.id, content: content, type: .text, status: .sent)
-        
+        if referID != nil {
+            m.referenceFK = referID
+        }
         // update db
         chatService.sendMessage(m)
         

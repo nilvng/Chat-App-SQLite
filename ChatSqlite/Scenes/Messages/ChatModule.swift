@@ -20,7 +20,7 @@ class ChatModule {
         inter.presenter = listView
         
         let router = ChatRouter()
-        router.viewController = view
+        router.viewController = listView
         
         listView.interactor = inter
         listView.router = router
@@ -50,7 +50,7 @@ class ChatModule {
         let inter = MessagesInteractorImpl(chatService: service)
         
         let router = ChatRouter()
-        router.viewController = view
+        router.viewController = listView
         
         listView.interactor = inter
         listView.configure(friend: friend)

@@ -25,7 +25,7 @@ class AvatarView: UIImageView {
 
         Task {
             
-            let im = await avatarWorker.load(url: theKey)
+            let im = await avatarWorker.image(url: theKey)
             self.image = im?.rounded()
       
         }

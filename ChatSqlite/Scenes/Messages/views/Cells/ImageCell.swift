@@ -25,6 +25,7 @@ class ImageCell : MessageCell {
         messageContainerView.layer.cornerRadius = 15
     }
     
+    
     func configure(with im: UIImage){
         myImageView.image = im
     }

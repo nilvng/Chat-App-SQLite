@@ -9,6 +9,7 @@ import UIKit
 
 protocol MessageCellDelegate : AnyObject {
     func swipe(_ cell: MessageCell)
+    func tapRepliedCell(_ cell: MessageCell)
 }
 
 class MessageCell: UITableViewCell {
@@ -30,7 +31,12 @@ class MessageCell: UITableViewCell {
     var downloadConstraint : NSLayoutConstraint!
     var notDownloadConstraint : NSLayoutConstraint!
     var bubbleWidth = BubbleConstant.maxWidth
-
+    
+    lazy var repliedMessageView : BubbleTextContentView  = {
+        let view = BubbleTextContentView()
+        view.textLabel.numberOfLines = 2
+        return view
+    }()
     
     var statusImage = UIImageView()
     
@@ -41,13 +47,6 @@ class MessageCell: UITableViewCell {
         label.font = UIFont.systemFont(ofSize: 12)
         return label
     }()
-    
-
-    
-//    var bubbleImageView : UIImageView = {
-//        let imageView = UIImageView()
-//        return imageView
-//    }()
     
     var avatarView : AvatarView = {
         let view = AlamoAvatarView(frame: CGRect(x: 0, y: 0, width: 33, height: 33))
@@ -77,15 +76,15 @@ class MessageCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         contentView.addSubview(statusImage)
-//        contentView.addSubview(bubbleImageView)
         contentView.addSubview(avatarView)
+        contentView.addSubview(repliedMessageView)
         contentView.addSubview(messageContainerView)
         contentView.addSubview(timestampLabel)
 
         setupAvatarView()
         setupMessageBody()
+        setupRepliedView()
         setupStatusImage()
-//        setupDownloadButton()
 
         backgroundView = .none
         backgroundColor = .clear
@@ -93,17 +92,13 @@ class MessageCell: UITableViewCell {
                 
         }
     
-    // MARK: Configuration
     
     var bubbleVPadding : CGFloat = BubbleConstant.vPadding
     var bubbleHPadding : CGFloat = BubbleConstant.hPadding
-    
-    func setInteractor(){
-        interactor = MessageCellInteractor()
-        interactor?.presenter = self
-    }
 
-    
+
+    // MARK: -Configuration
+
     func configure(with model: MessageDomain, indexPath: IndexPath,
                    isStartMessage isStart: Bool, isEndMessage isEnd: Bool){
 
@@ -117,9 +112,6 @@ class MessageCell: UITableViewCell {
 
         if !isReceived {
             alignSentBubble()
-            let config = outgoingBubbleConfig
-//            bubbleImageView.image = BackgroundFactory.shared.getBackground(config: config)
-            
             if let symbol = model.status.getSymbol(){
                 statusImage.isHidden = false
                 statusImage.image = symbol
@@ -128,8 +120,6 @@ class MessageCell: UITableViewCell {
         } else {
             statusImage.isHidden = true
             alignReceivedBubble(isStart, model)
-            let config = incomingBubbleConfig
-//            bubbleImageView.image = BackgroundFactory.shared.getBackground(config: config)
         }
         
         if model.status == .seen{
@@ -140,11 +130,28 @@ class MessageCell: UITableViewCell {
             }
         }
         
+        repliedMessageView.isHidden =           model.referenceFK == nil ? true : false
+        self.continuousConstraint.isActive =    model.referenceFK == nil ? true : false
+        if let referred = model.referredMessage{
+            configureReferenceView(referred)
+        }
         
         // Continuous message would be closer to each other
-        continuousConstraint.constant = isEnd ? bubbleVPadding : bubbleVPadding - 4
+        continuousConstraint.constant = isEnd ? BubbleConstant.contentVPadding + 2 : BubbleConstant.contentVPadding
 
-
+    }
+    
+    func configureReferenceView(_ m: MessageDomain){
+        let config = m.isFromThisUser() ? incomingBubbleConfig : outgoingBubbleConfig
+        let im = BackgroundFactory.shared.getBackground(config: config)
+        self.repliedMessageView.configure(with: m.content, im: im)
+        self.repliedMessageView.setBubbleColor(UIColor.gray.withAlphaComponent(0.3))
+    }
+    
+    
+    func setInteractor(){
+        interactor = MessageCellInteractor()
+        interactor?.presenter = self
     }
     
     func updateStatus(to status: MessageStatus){
@@ -192,14 +199,17 @@ class MessageCell: UITableViewCell {
         // remove avatar view as message is sent by me
         avatarView.isHidden = true
         // bubble will have color so, text color = .white
-//        messageContentView.textColor = .white
+        leadingRepliedViewConstraint.isActive = false
+        trailingRepliedViewConstraint.isActive = true
+
     }
     
     fileprivate func alignReceivedBubble(_ isStart: Bool, _ model: MessageDomain) {
         // received message will align to the left
         outboundConstraint?.isActive = false
         inboundConstraint?.isActive = true
-//        messageContentView.textColor = .black
+        leadingRepliedViewConstraint.isActive = false
+        trailingRepliedViewConstraint.isActive = true
         // show avatar view if is the last continuous message a friend sent
         avatarView.isHidden = !isStart
         
@@ -233,27 +243,42 @@ class MessageCell: UITableViewCell {
         guard !isReceived(sender: message.sender) else {
             return
         }
-        let normalizedY = currentFrame.maxY
-        
-        if normalizedY < 0 {
-            print(normalizedY)
-            return
-        }
+        // Subview handles this
+    }
+    var leadingRepliedViewConstraint : NSLayoutConstraint!
+    var trailingRepliedViewConstraint : NSLayoutConstraint!
 
-        let color = theme.gradientImage.getPixelColor(pos: CGPoint(x:10 , y: normalizedY))
-//        self.bubbleImageView.tintColor = color
+    @objc func tapRepliedMessage(){
+        print("Tap Tap")
+        delegate?.tapRepliedCell(self)
     }
     
     // MARK: Setup views
-    
+    func setupRepliedView(){
+        repliedMessageView.translatesAutoresizingMaskIntoConstraints = false
+        self.trailingRepliedViewConstraint =  repliedMessageView.trailingAnchor.constraint(equalTo: messageContainerView.trailingAnchor)
+        self.leadingRepliedViewConstraint = repliedMessageView.leadingAnchor.constraint(equalTo: messageContainerView.leadingAnchor)
+        let constraints : [NSLayoutConstraint] = [
+            repliedMessageView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            repliedMessageView.bottomAnchor.constraint(equalTo: messageContainerView.topAnchor,
+                                                         constant: 3),
+            leadingRepliedViewConstraint,
+            repliedMessageView.widthAnchor.constraint(lessThanOrEqualToConstant: bubbleWidth),
+        ]
+        NSLayoutConstraint.activate(constraints)
+        let gesture = UITapGestureRecognizer()
+        gesture.addTarget(self, action: #selector(tapRepliedMessage))
+        repliedMessageView.addGestureRecognizer(gesture)
+    }
     func setupMessageBody(){
         messageContainerView.translatesAutoresizingMaskIntoConstraints = false
-        self.outboundConstraint =  messageContainerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -bubbleHPadding - 6)
+        self.outboundConstraint =  messageContainerView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -bubbleHPadding - 11)
         self.inboundConstraint = messageContainerView.leadingAnchor.constraint(equalTo: avatarView.trailingAnchor, constant: bubbleHPadding)
-        self.continuousConstraint = messageContainerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: bubbleVPadding)
+        self.continuousConstraint = messageContainerView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: BubbleConstant.vPadding)
 
         let constraints : [NSLayoutConstraint] = [
-            messageContainerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -bubbleVPadding),
+            messageContainerView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor,
+                                                         constant: -BubbleConstant.contentVPadding),
             continuousConstraint,
             outboundConstraint,
             inboundConstraint,
@@ -267,7 +292,7 @@ class MessageCell: UITableViewCell {
         let constraints : [NSLayoutConstraint] = [
             statusImage.widthAnchor.constraint(equalToConstant: 15),
             statusImage.heightAnchor.constraint(equalToConstant: 15),
-            statusImage.leadingAnchor.constraint(equalTo:  messageContainerView.trailingAnchor, constant: 1),
+            statusImage.trailingAnchor.constraint(equalTo:  contentView.trailingAnchor, constant: -3),
             statusImage.bottomAnchor.constraint(equalTo: messageContainerView.bottomAnchor),
         ]
         

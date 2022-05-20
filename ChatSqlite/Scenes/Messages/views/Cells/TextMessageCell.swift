@@ -32,6 +32,7 @@ class TextMessageCell : MessageCell {
         messageContainerView.isUserInteractionEnabled = true
         panGesture.addTarget(self, action: #selector(swipeReply))
     }
+
     
     var originalPosContainer : CGPoint = .zero
     
@@ -46,13 +47,16 @@ class TextMessageCell : MessageCell {
                 let translation = recognizer.translation(in: swipedView)
                 let curX = recognizer.view!.center.x
                 let curY = recognizer.view!.center.y
-                if insideDraggableArea(swipedView.center) {
+                if !message.isFromThisUser() {
                      
                         swipedView.center =  CGPoint(x: curX + translation.x,
                                                      y: curY)
-                        recognizer.setTranslation(.zero, in: self)
-                    
+                }else{
+                    swipedView.center =  CGPoint(x: curX + translation.x,
+                                                 y: curY)
                 }
+                recognizer.setTranslation(.zero, in: self)
+
             case .ended:
                 UIView.animate(withDuration: 0.5, delay: 0.02, usingSpringWithDamping: 0.6, initialSpringVelocity: 10, options: .curveLinear, animations: {
                     recognizer.view?.center = self.originalPosContainer
@@ -65,23 +69,33 @@ class TextMessageCell : MessageCell {
             }
         }
     }
-    
-    func insideDraggableArea(_ point: CGPoint) -> Bool{
-        return point.x < 200
-    }
+//    
+//    func insideDraggableArea(_ point: CGPoint) -> Bool{
+//        if message.isFromThisUser(){
+//            return point.x
+//        }
+//        return point.x < 200
+//    }
     
     override func configure(with model: MessageDomain,
                             indexPath: IndexPath,
                             isStartMessage isStart: Bool,
                             isEndMessage isEnd: Bool) {
+        
         let isReceived = isReceived(sender: model.sender)
         let config = isReceived ? incomingBubbleConfig : outgoingBubbleConfig
+        
         let im = BackgroundFactory.shared.getBackground(config: config)
         
         textMessageView.configure(with: model.content, im: im)
         let textColor : UIColor = isReceived ? .black : .white
+        
         textMessageView.setTextColor(textColor)
+        
         super.configure(with: model, indexPath: indexPath, isStartMessage: isStart, isEndMessage: isEnd)
+
+
+        self.updateConstraints()
     }
     
     override func styleDownloadbleBubble(isIt: Bool, content: String = "", isReceived: Bool = false) {

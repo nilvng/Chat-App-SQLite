@@ -176,8 +176,21 @@ extension MessageStoreProxy : MessageDBLogic {
     }
     
     func getWithId(_ id: String, completionHandler: @escaping (Message?, StoreError?) -> Void) {
-        fatalError()
-    }
+        utilityQueue.async {
+            if let found = self.messages.first(where: {$0.mid == id }){
+                completionHandler(found, nil)
+                
+            }else{
+                self.store.getWithId(id, completionHandler: { m, err in
+                    if let m = m {
+                        self.messages.append(m)
+                    }
+                    completionHandler(m, err)
+                })
+            }
+        }
+        }
+        
     
     func add(newItem: Message, completionHandler: @escaping (Message?, StoreError?) -> Void) {
         utilityQueue.async { [self] in

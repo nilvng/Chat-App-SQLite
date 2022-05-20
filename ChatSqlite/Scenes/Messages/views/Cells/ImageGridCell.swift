@@ -66,7 +66,7 @@ class ImageGridCell : MessageCell {
 // MARK: - Configure
     override func configure(with: MessageDomain, indexPath: IndexPath, isStartMessage: Bool, isEndMessage: Bool){
         super.configure(with: with, indexPath: indexPath, isStartMessage: isStartMessage, isEndMessage: isEndMessage)
-//        setupCollectionView()
+//        collectionView.reloadData()
     }
 
     
@@ -89,7 +89,6 @@ class ImageGridCell : MessageCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         message = nil
-//        collectionView.reloadData()
     }
 }
 

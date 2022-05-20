@@ -13,8 +13,7 @@ class ChatRouter : NSObject {
     }
     
     weak var viewController : UIViewController?
-    var transition = PopAnimator()
-    var mediaOriginFrame = CGRect.zero
+    var transition : PopAnimator?
 
     func toMenuScreen(conversation: ConversationDomain){
         let view = ChatMenuController()
@@ -37,32 +36,30 @@ class ChatRouter : NSObject {
         viewController?.present(vc, animated: true, completion: nil)
     }
     
-    func toMediaView(i: Int, of message: MessageDomain,
-                     from fromController: UICollectionView){
+    func toMediaView(i: Int, of message: MessageDomain){
         let photoVC = MediaViewController()
         photoVC.transitioningDelegate = self
         photoVC.configure(i: i, of: message)
-
-        // get original frame
-        guard let selectedIndexPath = fromController.indexPathsForSelectedItems?.first,
-              let selectedCell = fromController.cellForItem(at: selectedIndexPath),
-        let selectedSuperView = selectedCell.superview else{
-                  return
-              }
-        let bubbleFrame = selectedSuperView.convert(selectedCell.frame, to: nil)
-
-        mediaOriginFrame = bubbleFrame
-        
-//        mediaOriginFrame = CGRect(x: mediaOriginFrame.origin.x + 20, y: mediaOriginFrame.origin.y + 20, width: mediaOriginFrame.size.width - 40, height: mediaOriginFrame.size.height - 40)
-        mediaOriginFrame = CGRect(x: mediaOriginFrame.origin.x, y: mediaOriginFrame.origin.y, width: mediaOriginFrame.size.width, height: mediaOriginFrame.size.height)
-        
-        self.viewController?.present(photoVC, animated: true, completion: nil)
+        photoVC.modalPresentationStyle = .fullScreen
+        viewController?.present(photoVC, animated: true)
     }
 }
 // MARK: - TransitionDelegate
 extension ChatRouter : UIViewControllerTransitioningDelegate{
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        transition.originalFrame = mediaOriginFrame
+        guard let second = presented as? PopAnimatableViewController,
+              let first = viewController as? PopAnimatableViewController else {
+                  return nil
+              }
+        transition = PopAnimator(presenting: true, firstVC: first, secondVC: second)
+        return transition
+    }
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        guard let second = dismissed as? PopAnimatableViewController,
+              let first = viewController as? PopAnimatableViewController else {
+                  return nil
+              }
+        transition = PopAnimator(presenting: false, firstVC: first, secondVC: second)
         return transition
     }
 }

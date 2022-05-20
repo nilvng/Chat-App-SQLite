@@ -99,6 +99,8 @@ actor ImageStore {
     func getImage(config: ImageConfig) async throws -> UIImage? {
         // Case1: Find in memo
         if let existingImage = cache.object(forKey: config) {
+//            print("Config: \(config.urlString), \(config.type)")
+            print("Media found memo")
             return existingImage
         }
         // Case2: Find on disk
@@ -106,8 +108,8 @@ actor ImageStore {
                            storage: config.storageFolder)
         if let imageFromDisk = UIImage(contentsOfFile: url.path) {
             let image = self.setImage(imageFromDisk, forKey: config, inMemOnly: true)
-            print("Found on disk..")
-            print(url.path)
+//            print("Media found on disk..")
+//            print(url.path)
             return image
         }
         

@@ -51,10 +51,10 @@ class BubbleTextContentView : UIView {
             
         bubbleImageView.translatesAutoresizingMaskIntoConstraints = false
         let constraints : [NSLayoutConstraint] = [
-            bubbleImageView.topAnchor.constraint(equalTo: textLabel.topAnchor, constant: -bubbleVPadding + BubbleConstant.contentVPadding),
-            bubbleImageView.leadingAnchor.constraint(equalTo: textLabel.leadingAnchor, constant: -bubbleHPadding + BubbleConstant.contentHPadding),
-            bubbleImageView.bottomAnchor.constraint(equalTo:  textLabel.bottomAnchor, constant: bubbleVPadding - BubbleConstant.contentVPadding),
-            bubbleImageView.trailingAnchor.constraint(equalTo: textLabel.trailingAnchor, constant: bubbleHPadding - BubbleConstant.contentHPadding),
+            bubbleImageView.topAnchor.constraint(equalTo: textLabel.topAnchor, constant: -2),
+            bubbleImageView.leadingAnchor.constraint(equalTo: textLabel.leadingAnchor, constant: -BubbleConstant.contentHPadding),
+            bubbleImageView.bottomAnchor.constraint(equalTo:  textLabel.bottomAnchor, constant: 2),
+            bubbleImageView.trailingAnchor.constraint(equalTo: textLabel.trailingAnchor, constant: BubbleConstant.contentHPadding),
         ]
         
         NSLayoutConstraint.activate(constraints)
