@@ -60,6 +60,16 @@ class ChatServiceManager {
         self.cachedService[cid] = service
 
     }
+    
+    func sendMessage(msg: MessageDomain, completion: @escaping (Bool ) -> Void){
+        getChatService(cid: msg.cid) { service in
+            if let service = service {
+                service.sendMessage(msg)
+                completion(true)
+            }
+            completion(false)
+        }
+    }
 }
 
 extension ChatServiceManager : SocketDelegate {

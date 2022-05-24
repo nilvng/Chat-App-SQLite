@@ -85,6 +85,7 @@ class MessageDomain {
         self.downloaded = downloaded
         self.status = status
     }
+
     
     func isFromThisUser() -> Bool{
         return self.sender == UserSettings.shared.getUserID()

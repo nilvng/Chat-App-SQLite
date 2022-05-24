@@ -16,6 +16,7 @@ class ChatService {
     var registerAction : RegisterAction?
     
     var socketService : SocketService = SocketService.shared
+    var notificationManager : NotificationManager = NotificationManager()
     
     init(conversation: ConversationDomain, callback: RegisterAction? = nil) {
         self.messageWorker = MessageListWorker(cid: conversation.id)
@@ -44,6 +45,8 @@ class ChatService {
         let uid = UserSettings.shared.getUserID()
         socketService.sendMessageState(msg: msg, status: .arrived, from: uid)
         self.addMessage(msg: msg)
+        notificationManager.publishNewMessageNoti(text: msg.content,
+                                                  from: conversatioNWorker.getTitle(), cid: msg.cid)
         // send ack
         
     }

@@ -31,7 +31,7 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     }
     
     
-    let duration = 0.25
+    let duration = 0.33
     var presenting = true
     
     var firstVC : PopAnimatableViewController
@@ -47,11 +47,12 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        let containerView = transitionContext.containerView
-        let toView = secondVC.getView()
         
+        let containerView = transitionContext.containerView
+        let toView = transitionContext.view(forKey: .to)!
+
         containerView.addSubview(toView)
-        toView.alpha = 0 // transparent toView
+        containerView.bringSubviewToFront(toView)
         
         guard let window = firstVC.getWindow() ?? secondVC.getWindow(),
               let cellsubSnapshot = firstVC.getAnimatableView().snapshotView(afterScreenUpdates: true),
@@ -59,6 +60,7 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
                   transitionContext.completeTransition(true)
                   return
               }
+
         let backgroundView : UIView
         let fadeView = UIView(frame: containerView.bounds)
         fadeView.backgroundColor = secondVC.getView().backgroundColor
@@ -69,47 +71,47 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             backgroundView.addSubview(fadeView)
             fadeView.alpha = 0
         } else {
-            backgroundView = firstVC.getView().snapshotView(afterScreenUpdates: true) ?? fadeView
-//            fadeView.alpha = 1
-            backgroundView.addSubview(fadeView)
+            backgroundView = fadeView
+//            backgroundView.addSubview(fadeView)
         }
         
-        [backgroundView,cellSnapshot, viewSnapshot].forEach { containerView.addSubview($0)}
-        containerView.layoutIfNeeded()
+        [ cellSnapshot, viewSnapshot].forEach { containerView.addSubview($0)}
         
         let tosubView = secondVC.getAnimatableView()
         
         let viewRect = tosubView.convert(tosubView.bounds, to: window)
         let trueImagevViewRect = trueFullsize(thumbRect: sourceRect, fullsizeRect: viewRect)
         
-        
         let isPresenting = presenting
         
         // Starting Frame
         viewSnapshot.frame = isPresenting ? self.sourceRect : viewRect
-        self.cellSnapshot.frame = isPresenting ? self.sourceRect : trueImagevViewRect
+        cellSnapshot.frame = isPresenting ? self.sourceRect : trueImagevViewRect
         viewSnapshot.alpha = isPresenting ? 0 : 1
         cellSnapshot.alpha = isPresenting ? 1 : 0
+        toView.alpha = 0
 
-        UIView.animateKeyframes(withDuration: duration, delay: 0, options: [.calculationModeCubic], animations: {
+        
+        UIView.animateKeyframes(withDuration: duration, delay: 0, options: .calculationModeCubic, animations: {
             
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1){
                 // Ending Frame
                 viewSnapshot.frame = isPresenting ? viewRect :self.sourceRect
                 self.cellSnapshot.frame = isPresenting ? trueImagevViewRect : self.sourceRect
                 fadeView.alpha = isPresenting ? 1 : 0
+                toView.alpha = 1
             }
                 // fade animation
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.6){
+                self.cellSnapshot.alpha = isPresenting ? 0.4 : 1
                 viewSnapshot.alpha = isPresenting ? 1 : 0
-                self.cellSnapshot.alpha = isPresenting ? 0 : 1
             }
+
             
         }, completion: { _ in
             self.cellSnapshot.removeFromSuperview()
             viewSnapshot.removeFromSuperview()
             backgroundView.removeFromSuperview()
-            toView.alpha = 1
             transitionContext.completeTransition(true)
         })
         
@@ -123,9 +125,9 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         let x : CGFloat = 0
         let y : CGFloat = fullsizeRect.midY - h / 2
         let updated = CGRect(x: x, y: y, width: w, height: h)
-        print("before: \(thumbRect)")
-        print("scale: \(scalefactor)")
-        print("after: \(updated)")
+//        print("before: \(thumbRect)")
+//        print("scale: \(scalefactor)")
+//        print("after: \(updated)")
 
         return updated
     }

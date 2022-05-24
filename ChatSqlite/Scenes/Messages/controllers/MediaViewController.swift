@@ -140,11 +140,11 @@ class MediaViewController: UIViewController {
         let tolerAfter = CMTime(seconds: 1.0, preferredTimescale: 600)
 
         player?.seek(to: newTime, toleranceBefore: tolerBefore, toleranceAfter: tolerAfter)
-        setPlayerStatus(to: prevState)
+        setPlayerStatus(to: .isPlaying)
     }
     
     @objc func sliderDragEnded(sender: UISlider){
-//        setPlayerStatus(to: .isSeeking)
+        setPlayerStatus(to: .isSeeking)
         print("touch down")
     }
     
@@ -268,7 +268,7 @@ class MediaViewController: UIViewController {
         }
         let playbackProgress = Float(curTime / duration) * 100.0
 //        print(playbackProgress)
-        UIView.animate(withDuration: 0.8, animations: {
+        UIView.animate(withDuration: 1, animations: {
             self.slider.setValue(playbackProgress, animated: true)
         })
     }
@@ -291,7 +291,7 @@ class MediaViewController: UIViewController {
     func configure(i: Int, of message: MessageDomain){
         self.message = message
         self.index = i
-
+        
         if let prep = message.getPrep(index: i),
             let bgColor = prep.bgColor{
             self.mediaPrep = prep
@@ -304,6 +304,8 @@ class MediaViewController: UIViewController {
             navigationController?.backgroundColor(color)
 
         }
+//        self.imageView.image = UIImage(named: "default")
+        
         updateStaticImage(i: i, of: message)
         
     }
@@ -316,6 +318,7 @@ class MediaViewController: UIViewController {
             do{
                 let im = try await mediaWorker.image(index: i, of: message, type: .original)
                 self.imageView.image = im
+                print("finished load fullsize image")
             } catch {
                 print("Can't load image from storage!!!")
             }

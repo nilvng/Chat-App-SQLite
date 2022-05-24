@@ -20,6 +20,10 @@ class ConversationWorker {
     func getId() -> String{
         return model.id
     }
+    func getTitle() -> String{
+        return model.title
+    }
+
     
     func updateLastMessage(msg: MessageDomain){
         model.lastMsg = msg.content

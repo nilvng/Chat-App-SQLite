@@ -55,11 +55,7 @@ extension ChatRouter : UIViewControllerTransitioningDelegate{
         return transition
     }
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        guard let second = dismissed as? PopAnimatableViewController,
-              let first = viewController as? PopAnimatableViewController else {
-                  return nil
-              }
-        transition = PopAnimator(presenting: false, firstVC: first, secondVC: second)
+        transition?.presenting = false
         return transition
     }
 }

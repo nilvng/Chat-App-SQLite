@@ -15,10 +15,36 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         socketService = SocketService.shared
+        checkNotification()
         return true
     }
+    
+    func checkNotification(){
+        UNUserNotificationCenter.current().getNotificationSettings { (notificationSettings) in
+               switch notificationSettings.authorizationStatus {
+               case .notDetermined:
+                   self.requestAuthorization()
+               case .authorized:
+                   print("good")
+               case .denied:
+                   print("Application Not Allowed to Display Notifications")
+               case .provisional:
+                   break
+               case .ephemeral:
+                   break
+               @unknown default:
+                   break
+               }
+        }
+    }
+    func requestAuthorization(){
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (success, error) in
+                if let error = error {
+                    print("Request Authorization Failed (\(error), \(error.localizedDescription))")
+                }
+            }
+    }
 
-    // MARK: UISceneSession LifecycleException    NSException *    "UICollectionViewLayoutAttributes: -setFrame: with CGRectNull is undefined."    0x0000600000b62b80
 
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         // Called when a new scene session is being created.
