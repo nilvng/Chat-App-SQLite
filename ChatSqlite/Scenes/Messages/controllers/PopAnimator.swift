@@ -50,9 +50,6 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         
         let containerView = transitionContext.containerView
         let toView = transitionContext.view(forKey: .to)!
-
-//        containerView.subviews.forEach { $0.removeFromSuperview()}
-        print(containerView.subviews.count)
         containerView.addSubview(toView)
         
         guard let window = firstVC.getWindow() ?? secondVC.getWindow(),
@@ -74,7 +71,6 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             fadeView.alpha = 0
         } else {
             backgroundView = fadeView
-//            backgroundView.addSubview(fadeView)
         }
         
         [backgroundView, cellSnapshot, viewSnapshot].forEach { containerView.addSubview($0)}
@@ -98,16 +94,20 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1){
                 // Ending Frame
-                viewSnapshot.frame = isPresenting ? viewRect :self.sourceRect
-                self.cellSnapshot.frame = isPresenting ? trueImagevViewRect : self.sourceRect
                 toView.alpha = 1
             }
-                // fade animation
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.9){
+                // Ending Frame
+                viewSnapshot.frame = isPresenting ? viewRect :self.sourceRect
+                self.cellSnapshot.frame = isPresenting ? trueImagevViewRect : self.sourceRect
+//                toView.alpha = 1
+            }
+                // Gradually replace cellView with fullView
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.6){
                 self.cellSnapshot.alpha = isPresenting ? 1 : 1
                 viewSnapshot.alpha = isPresenting ? 1 : 0
             }
-
+            // Gradually Show the background color of MediaView
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5){
                 fadeView.alpha = isPresenting ? 1 : 0
             }

@@ -10,7 +10,10 @@ import UserNotifications
 import UIKit
 
 class NotificationManager : NSObject {
+    static let shared : NotificationManager? = NotificationManager()
+    
     var center  = UNUserNotificationCenter.current()
+    var handlers : [String: ActionHandler] = [:]
     var chatManager : ChatServiceManager = ChatServiceManager.shared
     struct Category {
         static let message = "Message"
@@ -18,6 +21,7 @@ class NotificationManager : NSObject {
     struct Action {
         static let reply = "Reply"
         static let like = "like"
+        static let messageDefault = "msgDefault"
     }
     
     override init(){
@@ -68,18 +72,28 @@ class NotificationManager : NSObject {
         
         let category = UNNotificationCategory(identifier: Category.message, actions: [likeAction, replyAction], intentIdentifiers: [], options: [])
         
+        handlers[Action.reply] = MessageReplyHandler()
+        handlers[Action.messageDefault] = MessageDefaultHandler()
+        
         center.setNotificationCategories([category])
     }
     
-    func handleUserInput(response: UNTextInputNotificationResponse){
-        let text = response.userText
-        guard let cid = response.notification.request.content.userInfo["cid"] as? String else{
-            return
+    func didReceive(response : UNNotificationResponse){
+        let categoryID = response.notification.request.content.categoryIdentifier
+            
+            switch response.actionIdentifier {
+            case Action.like:
+                handlers[Action.messageDefault]?.execute(response: response)
+            case Action.reply:
+                handlers[Action.reply]?.execute(response: response)
+                
+            case UNNotificationDismissActionIdentifier, UNNotificationDefaultActionIdentifier:
+                if categoryID == Category.message{
+                    handlers[Action.messageDefault]?.execute(response: response)
+                }
+            default:
+                break
         }
-        let m = MessageDomain(cid: cid, content: text, type: .text, status: .sent, downloaded: false)
-        chatManager.sendMessage(msg: m, completion: { working in
-            print("\(self) successfully send msg")
-        })
     }
 
 }
@@ -90,40 +104,9 @@ extension NotificationManager : UNUserNotificationCenterDelegate {
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        print("I'm here")
-        let userInfo = response.notification.request.content.userInfo
-        let categoryID = response.notification.request.content.categoryIdentifier
-        let convID = userInfo["cid"] as! String
-        if categoryID == Category.message {
-            switch response.actionIdentifier {
-            case Action.like:
-                print("likey")
-                openChatView(cid: convID)
-            case Action.reply:
-                guard let textResponse = response as? UNTextInputNotificationResponse else {
-                    fatalError()
-                }
-                //send to ChatService
-                print("Request to send msg: \(textResponse.userText) to \(convID)")
-                self.handleUserInput(response: textResponse)
-                
-            case UNNotificationDismissActionIdentifier, UNNotificationDefaultActionIdentifier:
-                openChatView(cid: convID)
-            default:
-                break
-            }
-        }
+        
+        self.didReceive(response: response)
+        
         completionHandler()
     }
-    
-    func openChatView(cid: String){
-        chatManager.getChatService(cid: cid, completion: { service in
-            guard let service = service else {
-                return
-            }
-            let conv = service.conversatioNWorker.model!
-            ChatCoordinator.shared?.navigate(to: .chatView(model: conv))
-        })
-    }
-
 }

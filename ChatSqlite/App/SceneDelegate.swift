@@ -27,28 +27,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         //Handle Notification Response
             guard let notifiResponse = connectionOptions.notificationResponse else { return }
-        let request = notifiResponse.notification.request
-        let alert2 = UIAlertController(title: request.content.title,
-                                       message: request.content.body, preferredStyle: .alert)
-            let defaultAction2 = UIAlertAction(title: "OK", style: .default, handler: { action in
-            })
-        alert2.addAction(defaultAction2)
-        
-        if let cid = request.content.userInfo["cid"] as? String {
-            openChatView(cid: cid)
-        } else{
-        window?.rootViewController?.present(alert2,animated: true)
-        }
+        NotificationManager.shared?.didReceive(response: notifiResponse)
 
-    }
-    
-    func openChatView(cid: String){
-        ChatServiceManager.shared.getChatService(cid: cid, completion: { service in
-            guard let service = service, let conv = service.conversatioNWorker.model else {
-                return
-            }
-            ChatCoordinator.shared?.navigate(to: .chatView(model: conv))
-        })
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

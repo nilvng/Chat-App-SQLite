@@ -35,7 +35,6 @@
 		0E14DC8427CBD0D800D00151 /* NIO in Frameworks */ = {isa = PBXBuildFile; productRef = 0E14DC8327CBD0D800D00151 /* NIO */; };
 		0E14DC8627CBD0D800D00151 /* NIOCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0E14DC8527CBD0D800D00151 /* NIOCore */; };
 		0E14DC8827CBD0D800D00151 /* NIOTLS in Frameworks */ = {isa = PBXBuildFile; productRef = 0E14DC8727CBD0D800D00151 /* NIOTLS */; };
-		0E15EC3227742B790082FA1B /* SQLiteManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E15EC3127742B790082FA1B /* SQLiteManager.swift */; };
 		0E2395B927708340006B2DE2 /* FriendDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2395B827708340006B2DE2 /* FriendDomain.swift */; };
 		0E2395BB2770834C006B2DE2 /* ConversationDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2395BA2770834C006B2DE2 /* ConversationDomain.swift */; };
 		0E2395BD2770835A006B2DE2 /* MessageDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E2395BC2770835A006B2DE2 /* MessageDomain.swift */; };
@@ -52,6 +51,7 @@
 		0E48DE42283CD7F300978DFB /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E48DE41283CD7F300978DFB /* NotificationViewController.swift */; };
 		0E48DE45283CD7F300978DFB /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E48DE43283CD7F300978DFB /* MainInterface.storyboard */; };
 		0E48DE49283CD7F300978DFB /* ChatNotiExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 0E48DE3B283CD7F200978DFB /* ChatNotiExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		0E48DE50283F36FE00978DFB /* ActionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E48DE4F283F36FE00978DFB /* ActionHandler.swift */; };
 		0E50A73D27EAD62700DC7787 /* ModelCodecOutboundHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E50A73C27EAD62700DC7787 /* ModelCodecOutboundHandler.swift */; };
 		0E50A73F27EDA4AF00DC7787 /* MessageBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E50A73E27EDA4AF00DC7787 /* MessageBody.swift */; };
 		0E51D2D227E04B2100748987 /* FriendHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E51D2D127E04B2100748987 /* FriendHeaderView.swift */; };
@@ -178,7 +178,6 @@
 		0E124254277EF82B0054D069 /* ChatbarViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatbarViewController.swift; sourceTree = "<group>"; };
 		0E124255277EF82B0054D069 /* MessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		0E124256277EF82B0054D069 /* BubbleConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BubbleConstant.swift; sourceTree = "<group>"; };
-		0E15EC3127742B790082FA1B /* SQLiteManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SQLiteManager.swift; sourceTree = "<group>"; };
 		0E2395B827708340006B2DE2 /* FriendDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendDomain.swift; sourceTree = "<group>"; };
 		0E2395BA2770834C006B2DE2 /* ConversationDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDomain.swift; sourceTree = "<group>"; };
 		0E2395BC2770835A006B2DE2 /* MessageDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageDomain.swift; sourceTree = "<group>"; };
@@ -196,6 +195,7 @@
 		0E48DE41283CD7F300978DFB /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
 		0E48DE44283CD7F300978DFB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
 		0E48DE46283CD7F300978DFB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0E48DE4F283F36FE00978DFB /* ActionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionHandler.swift; sourceTree = "<group>"; };
 		0E50A73C27EAD62700DC7787 /* ModelCodecOutboundHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelCodecOutboundHandler.swift; sourceTree = "<group>"; };
 		0E50A73E27EDA4AF00DC7787 /* MessageBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBody.swift; sourceTree = "<group>"; };
 		0E51D2D127E04B2100748987 /* FriendHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendHeaderView.swift; sourceTree = "<group>"; };
@@ -217,6 +217,8 @@
 		0E70090A278EB76100998BBB /* FileDownloader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDownloader.swift; sourceTree = "<group>"; };
 		0E727F4F278571AA002EA7E3 /* NativeContactStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeContactStore.swift; sourceTree = "<group>"; };
 		0E727F5127857416002EA7E3 /* NativeContactStoreAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeContactStoreAdapter.swift; sourceTree = "<group>"; };
+		0E72CD33283F627E002CB0A6 /* ChatNotiExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ChatNotiExtension.entitlements; sourceTree = "<group>"; };
+		0E72CD34283F63F5002CB0A6 /* ChatSqlite.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ChatSqlite.entitlements; sourceTree = "<group>"; };
 		0E79FB9527C67CCA0039E8E6 /* SocketDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketDelegate.swift; sourceTree = "<group>"; };
 		0E7E897C27D10C64004375F7 /* DelegateHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DelegateHandlers.swift; sourceTree = "<group>"; };
 		0E7E931327D05E2C00936B35 /* UserSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettings.swift; sourceTree = "<group>"; };
@@ -399,11 +401,21 @@
 		0E48DE40283CD7F300978DFB /* ChatNotiExtension */ = {
 			isa = PBXGroup;
 			children = (
+				0E72CD33283F627E002CB0A6 /* ChatNotiExtension.entitlements */,
 				0E48DE41283CD7F300978DFB /* NotificationViewController.swift */,
 				0E48DE43283CD7F300978DFB /* MainInterface.storyboard */,
 				0E48DE46283CD7F300978DFB /* Info.plist */,
 			);
 			path = ChatNotiExtension;
+			sourceTree = "<group>";
+		};
+		0E48DE4E283F36BD00978DFB /* NotificationCenter */ = {
+			isa = PBXGroup;
+			children = (
+				0E96CAED28378AEC008649F3 /* NotificationManager.swift */,
+				0E48DE4F283F36FE00978DFB /* ActionHandler.swift */,
+			);
+			path = NotificationCenter;
 			sourceTree = "<group>";
 		};
 		0E491EB8282E0F9800463ACA /* otherViews */ = {
@@ -582,13 +594,11 @@
 			children = (
 				0EFDD946276B72C400323984 /* AppDelegate.swift */,
 				0EFDD948276B72C400323984 /* SceneDelegate.swift */,
-				0E15EC3127742B790082FA1B /* SQLiteManager.swift */,
 				0E560B1727BF48660019B38C /* ConversationWorker.swift */,
 				0E560B1927BF4AE20019B38C /* MessageListWorker.swift */,
 				0E560B1B27BF53070019B38C /* ChatService.swift */,
-				0E560B1F27BF60030019B38C /* ChatServiceManager.swift */,
-				0E96CAED28378AEC008649F3 /* NotificationManager.swift */,
 				0E48DE35283CC35100978DFB /* ChatCoordinator.swift */,
+				0E560B1F27BF60030019B38C /* ChatServiceManager.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -615,6 +625,8 @@
 		0EFDD945276B72C400323984 /* ChatSqlite */ = {
 			isa = PBXGroup;
 			children = (
+				0E72CD34283F63F5002CB0A6 /* ChatSqlite.entitlements */,
+				0E48DE4E283F36BD00978DFB /* NotificationCenter */,
 				0EA597EB27D20FA900F4B2AC /* Connection */,
 				0E79FB9427C67CBC0039E8E6 /* Socket */,
 				0EDC669627BA056F00A2792E /* App */,
@@ -826,6 +838,7 @@
 				0EFF595627E094BA00F4F366 /* MsgStatusSocketModel.swift in Sources */,
 				0EFDD969276B7A4A00323984 /* Conversation.swift in Sources */,
 				0EA0589D27D7A02900E7E708 /* PostButton.swift in Sources */,
+				0E48DE50283F36FE00978DFB /* ActionHandler.swift in Sources */,
 				0EC6A9852805613200366957 /* NoAccessViewController.swift in Sources */,
 				0EFDD971276B86AD00323984 /* FriendListViewController.swift in Sources */,
 				0E837C0B27B4F47C00317E0B /* HomeModule.swift in Sources */,
@@ -871,7 +884,6 @@
 				0E82BE322825178C00D9F027 /* MinimalChatItemView.swift in Sources */,
 				0EE0D6EC280EB47600ADB3E3 /* String+Chat.swift in Sources */,
 				0EC6A98D2805640100366957 /* MediaViewController.swift in Sources */,
-				0E15EC3227742B790082FA1B /* SQLiteManager.swift in Sources */,
 				0E124253277EF4590054D069 /* ConvConfigController.swift in Sources */,
 				0EDC669A27BA651600A2792E /* MessageCellInteractor.swift in Sources */,
 				0E062B1327CDD5BF002DAF95 /* ModelCodecHandlers.swift in Sources */,
@@ -954,6 +966,7 @@
 		0E48DE4B283CD7F300978DFB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ChatNotiExtension/ChatNotiExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UBHQB9F5N3;
@@ -979,6 +992,7 @@
 		0E48DE4C283CD7F300978DFB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = ChatNotiExtension/ChatNotiExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UBHQB9F5N3;
@@ -1123,6 +1137,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ChatSqlite/ChatSqlite.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UBHQB9F5N3;
@@ -1153,6 +1168,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ChatSqlite/ChatSqlite.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = UBHQB9F5N3;

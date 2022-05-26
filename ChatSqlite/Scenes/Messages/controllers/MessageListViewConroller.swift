@@ -428,9 +428,25 @@ extension MessageListViewController : MessagesPresenter {
     }
 
     func presentFFMessageStatus() {
-        //
-        var stopPoint : Int = 0
-
+        var section = 0
+        var row = 0
+        var listUpdatedRow : [IndexPath] = []
+        while dateSections[section].items[row].status != .seen{
+            listUpdatedRow.append(IndexPath(row: row, section: section))
+            dateSections[section].items[row].status = .seen
+            let items = dateSections[section].items
+            row = row < items.count - 1 ? row+1 : 0
+            if row == 0 {
+                if section == dateSections.count - 1 {
+                    break
+                } else {
+                    section += 1
+                }
+            }
+        }
+        DispatchQueue.main.async {
+            self.tableView.reloadRows(at: listUpdatedRow, with: .fade)
+        }
     }
     
     func updateARowItem(item: MessageDomain){
@@ -442,7 +458,7 @@ extension MessageListViewController : MessagesPresenter {
             if let row = section.items.firstIndex(where: { $0.mid == item.mid}) {
                 section.items[row] = item
                 DispatchQueue.main.async {
-                    self.tableView.reloadRows(at: [IndexPath(row: row, section: sIndex)], with: .automatic)
+                    self.tableView.reloadRows(at: [IndexPath(row: row, section: sIndex)], with: .fade)
                 }
             }
         }
@@ -452,7 +468,17 @@ extension MessageListViewController : MessagesPresenter {
     
     
     func presentMessageStatus(id: String, status: MessageStatus) {
-
+        for sec in 0..<dateSections.count{
+            for row in 0..<dateSections.count {
+                if dateSections[sec].items[row].mid == id {
+                    DispatchQueue.main.async {
+                        self.dateSections[sec].items[row].status = status
+                        self.tableView.reloadRows(at: [IndexPath(row: row, section: sec)], with: .automatic)
+                    }
+                    return
+                }
+            }
+        }
     }
     
     func presentItems(_ items: [MessageDomain]?, offset: Int) {
