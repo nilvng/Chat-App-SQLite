@@ -46,6 +46,12 @@
 		0E3C0D1A2783F9EF00B23E21 /* ChatMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E3C0D192783F9EF00B23E21 /* ChatMenuController.swift */; };
 		0E44B00727F2C11400F1A790 /* BubbleTextContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E44B00627F2C11400F1A790 /* BubbleTextContentView.swift */; };
 		0E44B00D27F2EA8900F1A790 /* ImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E44B00C27F2EA8900F1A790 /* ImageCell.swift */; };
+		0E48DE36283CC35100978DFB /* ChatCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E48DE35283CC35100978DFB /* ChatCoordinator.swift */; };
+		0E48DE3D283CD7F300978DFB /* UserNotifications.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E48DE3C283CD7F200978DFB /* UserNotifications.framework */; };
+		0E48DE3F283CD7F300978DFB /* UserNotificationsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E48DE3E283CD7F300978DFB /* UserNotificationsUI.framework */; };
+		0E48DE42283CD7F300978DFB /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E48DE41283CD7F300978DFB /* NotificationViewController.swift */; };
+		0E48DE45283CD7F300978DFB /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0E48DE43283CD7F300978DFB /* MainInterface.storyboard */; };
+		0E48DE49283CD7F300978DFB /* ChatNotiExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 0E48DE3B283CD7F200978DFB /* ChatNotiExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		0E50A73D27EAD62700DC7787 /* ModelCodecOutboundHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E50A73C27EAD62700DC7787 /* ModelCodecOutboundHandler.swift */; };
 		0E50A73F27EDA4AF00DC7787 /* MessageBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E50A73E27EDA4AF00DC7787 /* MessageBody.swift */; };
 		0E51D2D227E04B2100748987 /* FriendHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E51D2D127E04B2100748987 /* FriendHeaderView.swift */; };
@@ -124,6 +130,30 @@
 		0EFF595627E094BA00F4F366 /* MsgStatusSocketModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EFF595527E094BA00F4F366 /* MsgStatusSocketModel.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		0E48DE47283CD7F300978DFB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0EFDD93B276B72C400323984 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0E48DE3A283CD7F200978DFB;
+			remoteInfo = ChatNotiExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		0E48DE4D283CD7F300978DFB /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				0E48DE49283CD7F300978DFB /* ChatNotiExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		0E062B0827CDCB14002DAF95 /* RawSocketClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RawSocketClient.swift; sourceTree = "<group>"; };
 		0E062B0A27CDCBF2002DAF95 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
@@ -159,6 +189,13 @@
 		0E3C0D192783F9EF00B23E21 /* ChatMenuController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMenuController.swift; sourceTree = "<group>"; };
 		0E44B00627F2C11400F1A790 /* BubbleTextContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BubbleTextContentView.swift; sourceTree = "<group>"; };
 		0E44B00C27F2EA8900F1A790 /* ImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCell.swift; sourceTree = "<group>"; };
+		0E48DE35283CC35100978DFB /* ChatCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCoordinator.swift; sourceTree = "<group>"; };
+		0E48DE3B283CD7F200978DFB /* ChatNotiExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ChatNotiExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		0E48DE3C283CD7F200978DFB /* UserNotifications.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotifications.framework; path = System/Library/Frameworks/UserNotifications.framework; sourceTree = SDKROOT; };
+		0E48DE3E283CD7F300978DFB /* UserNotificationsUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UserNotificationsUI.framework; path = System/Library/Frameworks/UserNotificationsUI.framework; sourceTree = SDKROOT; };
+		0E48DE41283CD7F300978DFB /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
+		0E48DE44283CD7F300978DFB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
+		0E48DE46283CD7F300978DFB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0E50A73C27EAD62700DC7787 /* ModelCodecOutboundHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelCodecOutboundHandler.swift; sourceTree = "<group>"; };
 		0E50A73E27EDA4AF00DC7787 /* MessageBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBody.swift; sourceTree = "<group>"; };
 		0E51D2D127E04B2100748987 /* FriendHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendHeaderView.swift; sourceTree = "<group>"; };
@@ -238,6 +275,15 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		0E48DE38283CD7F200978DFB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0E48DE3F283CD7F300978DFB /* UserNotificationsUI.framework in Frameworks */,
+				0E48DE3D283CD7F300978DFB /* UserNotifications.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0EFDD940276B72C400323984 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -258,6 +304,8 @@
 		0E062B0327CDC70E002DAF95 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0E48DE3C283CD7F200978DFB /* UserNotifications.framework */,
+				0E48DE3E283CD7F300978DFB /* UserNotificationsUI.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -346,6 +394,16 @@
 				0E3C0D192783F9EF00B23E21 /* ChatMenuController.swift */,
 			);
 			path = ChatMenu;
+			sourceTree = "<group>";
+		};
+		0E48DE40283CD7F300978DFB /* ChatNotiExtension */ = {
+			isa = PBXGroup;
+			children = (
+				0E48DE41283CD7F300978DFB /* NotificationViewController.swift */,
+				0E48DE43283CD7F300978DFB /* MainInterface.storyboard */,
+				0E48DE46283CD7F300978DFB /* Info.plist */,
+			);
+			path = ChatNotiExtension;
 			sourceTree = "<group>";
 		};
 		0E491EB8282E0F9800463ACA /* otherViews */ = {
@@ -530,6 +588,7 @@
 				0E560B1B27BF53070019B38C /* ChatService.swift */,
 				0E560B1F27BF60030019B38C /* ChatServiceManager.swift */,
 				0E96CAED28378AEC008649F3 /* NotificationManager.swift */,
+				0E48DE35283CC35100978DFB /* ChatCoordinator.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -538,6 +597,7 @@
 			isa = PBXGroup;
 			children = (
 				0EFDD945276B72C400323984 /* ChatSqlite */,
+				0E48DE40283CD7F300978DFB /* ChatNotiExtension */,
 				0EFDD944276B72C400323984 /* Products */,
 				0E062B0327CDC70E002DAF95 /* Frameworks */,
 			);
@@ -547,6 +607,7 @@
 			isa = PBXGroup;
 			children = (
 				0EFDD943276B72C400323984 /* ChatSqlite.app */,
+				0E48DE3B283CD7F200978DFB /* ChatNotiExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -630,6 +691,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		0E48DE3A283CD7F200978DFB /* ChatNotiExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0E48DE4A283CD7F300978DFB /* Build configuration list for PBXNativeTarget "ChatNotiExtension" */;
+			buildPhases = (
+				0E48DE37283CD7F200978DFB /* Sources */,
+				0E48DE38283CD7F200978DFB /* Frameworks */,
+				0E48DE39283CD7F200978DFB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ChatNotiExtension;
+			productName = ChatNotiExtension;
+			productReference = 0E48DE3B283CD7F200978DFB /* ChatNotiExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		0EFDD942276B72C400323984 /* ChatSqlite */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0EFDD957276B72C700323984 /* Build configuration list for PBXNativeTarget "ChatSqlite" */;
@@ -637,10 +715,12 @@
 				0EFDD93F276B72C400323984 /* Sources */,
 				0EFDD940276B72C400323984 /* Frameworks */,
 				0EFDD941276B72C400323984 /* Resources */,
+				0E48DE4D283CD7F300978DFB /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				0E48DE48283CD7F300978DFB /* PBXTargetDependency */,
 			);
 			name = ChatSqlite;
 			packageProductDependencies = (
@@ -666,6 +746,9 @@
 				LastSwiftUpdateCheck = 1310;
 				LastUpgradeCheck = 1310;
 				TargetAttributes = {
+					0E48DE3A283CD7F200978DFB = {
+						CreatedOnToolsVersion = 13.1;
+					};
 					0EFDD942276B72C400323984 = {
 						CreatedOnToolsVersion = 13.1;
 					};
@@ -690,11 +773,20 @@
 			projectRoot = "";
 			targets = (
 				0EFDD942276B72C400323984 /* ChatSqlite */,
+				0E48DE3A283CD7F200978DFB /* ChatNotiExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		0E48DE39283CD7F200978DFB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0E48DE45283CD7F300978DFB /* MainInterface.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0EFDD941276B72C400323984 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -708,6 +800,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		0E48DE37283CD7F200978DFB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0E48DE42283CD7F300978DFB /* NotificationViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0EFDD93F276B72C400323984 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -734,6 +834,7 @@
 				0E560B1A27BF4AE20019B38C /* MessageListWorker.swift in Sources */,
 				0E12423B277ED9560054D069 /* AvatarView.swift in Sources */,
 				0E7008DE278806E400998BBB /* FriendEditDataSource.swift in Sources */,
+				0E48DE36283CC35100978DFB /* ChatCoordinator.swift in Sources */,
 				0EF4BD43280FBDDD00A6EDE2 /* PhotoView.swift in Sources */,
 				0E2499AC2817932100A89EA9 /* MediaWorker.swift in Sources */,
 				0E124242277ED9E00054D069 /* Date+Chat.swift in Sources */,
@@ -822,7 +923,23 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		0E48DE48283CD7F300978DFB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0E48DE3A283CD7F200978DFB /* ChatNotiExtension */;
+			targetProxy = 0E48DE47283CD7F300978DFB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
+		0E48DE43283CD7F300978DFB /* MainInterface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0E48DE44283CD7F300978DFB /* Base */,
+			);
+			name = MainInterface.storyboard;
+			sourceTree = "<group>";
+		};
 		0EFDD951276B72C700323984 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -834,6 +951,56 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		0E48DE4B283CD7F300978DFB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = UBHQB9F5N3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ChatNotiExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ChatNotiExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = zalo.vng.ChatSqlite.ChatNotiExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		0E48DE4C283CD7F300978DFB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = UBHQB9F5N3;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ChatNotiExtension/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = ChatNotiExtension;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = zalo.vng.ChatSqlite.ChatNotiExtension;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		0EFDD955276B72C700323984 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -953,6 +1120,7 @@
 		0EFDD958276B72C700323984 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -982,6 +1150,7 @@
 		0EFDD959276B72C700323984 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -1011,6 +1180,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		0E48DE4A283CD7F300978DFB /* Build configuration list for PBXNativeTarget "ChatNotiExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0E48DE4B283CD7F300978DFB /* Debug */,
+				0E48DE4C283CD7F300978DFB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		0EFDD93E276B72C400323984 /* Build configuration list for PBXProject "ChatSqlite" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

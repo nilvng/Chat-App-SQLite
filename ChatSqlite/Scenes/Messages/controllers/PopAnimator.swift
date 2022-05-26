@@ -31,7 +31,7 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     }
     
     
-    let duration = 0.33
+    let duration = 0.3
     var presenting = true
     
     var firstVC : PopAnimatableViewController
@@ -51,8 +51,9 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         let containerView = transitionContext.containerView
         let toView = transitionContext.view(forKey: .to)!
 
+//        containerView.subviews.forEach { $0.removeFromSuperview()}
+        print(containerView.subviews.count)
         containerView.addSubview(toView)
-        containerView.bringSubviewToFront(toView)
         
         guard let window = firstVC.getWindow() ?? secondVC.getWindow(),
               let cellsubSnapshot = firstVC.getAnimatableView().snapshotView(afterScreenUpdates: true),
@@ -60,7 +61,8 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
                   transitionContext.completeTransition(true)
                   return
               }
-
+        sourceRect = firstVC.animatableViewRect() // update cellRect in case new message comes
+        
         let backgroundView : UIView
         let fadeView = UIView(frame: containerView.bounds)
         fadeView.backgroundColor = secondVC.getView().backgroundColor
@@ -75,7 +77,7 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
 //            backgroundView.addSubview(fadeView)
         }
         
-        [ cellSnapshot, viewSnapshot].forEach { containerView.addSubview($0)}
+        [backgroundView, cellSnapshot, viewSnapshot].forEach { containerView.addSubview($0)}
         
         let tosubView = secondVC.getAnimatableView()
         
@@ -98,15 +100,17 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
                 // Ending Frame
                 viewSnapshot.frame = isPresenting ? viewRect :self.sourceRect
                 self.cellSnapshot.frame = isPresenting ? trueImagevViewRect : self.sourceRect
-                fadeView.alpha = isPresenting ? 1 : 0
                 toView.alpha = 1
             }
                 // fade animation
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.6){
-                self.cellSnapshot.alpha = isPresenting ? 0.4 : 1
+                self.cellSnapshot.alpha = isPresenting ? 1 : 1
                 viewSnapshot.alpha = isPresenting ? 1 : 0
             }
 
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5){
+                fadeView.alpha = isPresenting ? 1 : 0
+            }
             
         }, completion: { _ in
             self.cellSnapshot.removeFromSuperview()
@@ -121,7 +125,6 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         let scalefactor = fullsizeRect.width / thumbRect.width
         let w = thumbRect.width * scalefactor
         let h = thumbRect.height * scalefactor
-//        let x : CGFloat = fullsizeRect.midX - w / 2
         let x : CGFloat = 0
         let y : CGFloat = fullsizeRect.midY - h / 2
         let updated = CGRect(x: x, y: y, width: w, height: h)

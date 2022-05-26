@@ -47,7 +47,6 @@ class ChatService {
         self.addMessage(msg: msg)
         notificationManager.publishNewMessageNoti(text: msg.content,
                                                   from: conversatioNWorker.getTitle(), cid: msg.cid)
-        // send ack
         
     }
     func createNewMessage(type: MessageType) -> MessageDomain{

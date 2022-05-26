@@ -7,6 +7,7 @@
 
 import Foundation
 import UserNotifications
+import UIKit
 
 class NotificationManager : NSObject {
     var center  = UNUserNotificationCenter.current()
@@ -60,7 +61,9 @@ class NotificationManager : NSObject {
     }
     
     func configureMessageNoti(){
-        let likeAction = UNNotificationAction(identifier: Action.like, title: "Like", options: [])
+        let likeAction = UNNotificationAction(identifier: Action.like,
+                                              title: "Like",
+                                              options: [])
         let replyAction = UNTextInputNotificationAction(identifier: Action.reply, title: "Reply", options: [.authenticationRequired])
         
         let category = UNNotificationCategory(identifier: Category.message, actions: [likeAction, replyAction], intentIdentifiers: [], options: [])
@@ -87,29 +90,40 @@ extension NotificationManager : UNUserNotificationCenterDelegate {
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        print("I'm here")
         let userInfo = response.notification.request.content.userInfo
         let categoryID = response.notification.request.content.categoryIdentifier
-        
+        let convID = userInfo["cid"] as! String
         if categoryID == Category.message {
             switch response.actionIdentifier {
             case Action.like:
                 print("likey")
-                break
+                openChatView(cid: convID)
             case Action.reply:
                 guard let textResponse = response as? UNTextInputNotificationResponse else {
                     fatalError()
                 }
                 //send to ChatService
-                print("Request to send msg: \(textResponse.userText) to \(userInfo["cid"])")
+                print("Request to send msg: \(textResponse.userText) to \(convID)")
                 self.handleUserInput(response: textResponse)
                 
             case UNNotificationDismissActionIdentifier, UNNotificationDefaultActionIdentifier:
-                print("Open Noti")
+                openChatView(cid: convID)
             default:
                 break
             }
         }
         completionHandler()
+    }
+    
+    func openChatView(cid: String){
+        chatManager.getChatService(cid: cid, completion: { service in
+            guard let service = service else {
+                return
+            }
+            let conv = service.conversatioNWorker.model!
+            ChatCoordinator.shared?.navigate(to: .chatView(model: conv))
+        })
     }
 
 }

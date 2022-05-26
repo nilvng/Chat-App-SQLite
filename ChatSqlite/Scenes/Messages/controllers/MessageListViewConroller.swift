@@ -528,7 +528,8 @@ extension MessageListViewController : PopAnimatableViewController {
     func animatableViewRect() -> CGRect {
         let window = self.view.window
         let rect = animatableView!.convert(animatableView!.bounds, to: window)
-        print("animatable rect: \(rect)")
+//        let rect = myTableView.convert(animatableView!.bounds, to: nil)
+//        print("animatable rect: \(rect)")
         return rect
     }
     

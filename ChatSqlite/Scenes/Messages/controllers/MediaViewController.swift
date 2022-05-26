@@ -370,7 +370,8 @@ extension MediaViewController : PopAnimatableViewController {
     
     func animatableViewRect() -> CGRect {
         let window = self.view.window
-        return imageView.convert(imageView.bounds, to: window)
+        let rect = imageView.convert(imageView.bounds, to: window)
+        return rect
     }
     
     

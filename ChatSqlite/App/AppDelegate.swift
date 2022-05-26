@@ -44,6 +44,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             }
     }
+    
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) async -> UIBackgroundFetchResult {
+        print(userInfo)
+        return .newData
+    }
 
 
     func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
