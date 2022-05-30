@@ -31,7 +31,7 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     }
     
     
-    let duration = 0.3
+    let duration = 1.3
     var presenting = true
     
     var firstVC : PopAnimatableViewController
@@ -59,7 +59,7 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
                   return
               }
         sourceRect = firstVC.animatableViewRect() // update cellRect in case new message comes
-        
+        print("cell position: ", sourceRect)
         let backgroundView : UIView
         let fadeView = UIView(frame: containerView.bounds)
         fadeView.backgroundColor = secondVC.getView().backgroundColor
@@ -68,7 +68,6 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             cellSnapshot = cellsubSnapshot
             backgroundView = UIView(frame: containerView.bounds)
             backgroundView.addSubview(fadeView)
-            fadeView.alpha = 0
         } else {
             backgroundView = fadeView
         }
@@ -91,16 +90,12 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
 
         
         UIView.animateKeyframes(withDuration: duration, delay: 0, options: .calculationModeCubic, animations: {
-            
+
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 1){
-                // Ending Frame
-                toView.alpha = 1
-            }
-            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.9){
                 // Ending Frame
                 viewSnapshot.frame = isPresenting ? viewRect :self.sourceRect
                 self.cellSnapshot.frame = isPresenting ? trueImagevViewRect : self.sourceRect
-//                toView.alpha = 1
+                toView.alpha = 1
             }
                 // Gradually replace cellView with fullView
             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.6){
@@ -108,8 +103,8 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
                 viewSnapshot.alpha = isPresenting ? 1 : 0
             }
             // Gradually Show the background color of MediaView
-            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.5){
-                fadeView.alpha = isPresenting ? 1 : 0
+            UIView.addKeyframe(withRelativeStartTime: 0.6, relativeDuration: 0.4){
+                fadeView.alpha = isPresenting ? 0.8 : 0
             }
             
         }, completion: { _ in

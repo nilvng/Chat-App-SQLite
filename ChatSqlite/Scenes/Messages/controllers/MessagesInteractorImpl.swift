@@ -32,6 +32,10 @@ class MessagesInteractorImpl : MessageListInteractor {
     var currPage = 0
     var selectedFriend : FriendDomain?
     
+    func chatDidOpen(){
+        chatService.updatetoSeen()
+    }
+    
     func doneSelectLocalMedia(_ assets: [PHAsset]){
         Task.detached{ [weak self] in
             guard let m  = self?.chatService.createNewMessage(type: .image) else {

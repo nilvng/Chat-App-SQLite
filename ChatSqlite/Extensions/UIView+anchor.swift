@@ -239,3 +239,50 @@ func constraint(equalTo size: CGSize) {
         
     }
 }
+
+extension UIView {
+    
+    func animateReveal(centerSize: CGSize, willReveal : Bool ,completion: @escaping () -> Void){
+        // add mask
+        if self.layer.mask == nil {
+            let layer = CAShapeLayer()
+            
+            let w = self.frame.width
+    //        let h = self.frame.height
+            let maskRect = CGRect(x: w / 2 - centerSize.width / 2, y: 0, width: centerSize.width, height: centerSize.height)
+            let path = UIBezierPath(rect: maskRect)
+
+            layer.path = path.cgPath
+        
+            self.layer.mask = layer
+        }
+        guard let cashapeLayer : CAShapeLayer = self.layer.mask as? CAShapeLayer else {
+            return
+        }
+        let newPath = UIBezierPath(rect: self.bounds)
+
+        // animate
+        let anim = CABasicAnimation(keyPath: "path")
+
+        // from value is the current mask path
+        anim.fromValue = cashapeLayer.path
+
+        // to value is the new path
+        anim.toValue = newPath.cgPath
+
+        // duration of your animation
+        anim.duration = 1.0
+
+        // custom timing function to make it look smooth
+        anim.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+        
+        // add animation
+
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        CATransaction.setCompletionBlock(completion)
+        cashapeLayer.add(anim, forKey: nil)
+        cashapeLayer.path = newPath.cgPath
+        CATransaction.commit()
+    }
+}

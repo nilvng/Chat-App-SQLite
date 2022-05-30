@@ -34,6 +34,8 @@ class MessageListViewController : UITableViewController {
     var lastUpdatedOffset : Int = 0
     var animatableView : UIView?
     var sourceSnapshot : UIView?
+    var selectedCell : UIView?
+    var shouldRemoveAnimatable : Bool = false
     
     static var CELL_ID = "messCell"
     
@@ -137,6 +139,15 @@ class MessageListViewController : UITableViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         interactor?.loadData()
+        if shouldRemoveAnimatable, let animView = animatableView, let cellRect = rectSelectedCell() {
+            UIView.animate(withDuration: 1, animations: {
+                animView.frame = cellRect
+            }, completion: { [weak self] _ in
+                animView.removeFromSuperview()
+                self?.shouldRemoveAnimatable = false
+            })
+        }
+        
     }
     
     func reloadMessageCell(m: MessageDomain){
@@ -401,14 +412,71 @@ extension MessageListViewController {
 
 // MARK: - GridCellDelegate
 extension MessageListViewController : GridCellDelegate {
+    
+    func rectSelectedCell () -> CGRect? {
+        guard let cell = selectedCell else {
+            return nil
+        }
+        return cell.convert(cell.bounds, to: view)
+    }
+    
     func didSelect(i: Int, of message: MessageDomain, from vc: UICollectionView) {
         guard let selectedIndex = vc.indexPathsForSelectedItems?.first,
               let selectedCell = vc.cellForItem(at: selectedIndex) as? PhotoViewGridCell else{
             return
         }
-        animatableView = selectedCell.imageView
-        sourceSnapshot = animatableView?.snapshotView(afterScreenUpdates: false)
+        // Was the image cropped?
+        var fullView : UIView? = nil
+        self.selectedCell = selectedCell
+        if let ratio = message.mediaPreps?[i].ratioHW {
+            let layoutRatio = selectedCell.frame.height / selectedCell.frame.width
+            let isCropped : Bool = abs(ratio - layoutRatio) > 0.05
+            if let im = selectedCell.imageView.image , isCropped {
+                // if it's cropped, first animate reveal
+                /// add the fullsize image view
+                fullView = UIImageView(image: im)
+                fullView?.contentMode = .scaleAspectFill
+                fullView?.clipsToBounds = true
+                
+                fullView!.transform = CGAffineTransform(scaleX: 1, y: -1)
+                let cellRect = selectedCell.convert(selectedCell.bounds, to: view)
+                view.addSubview(fullView!)
+                shouldRemoveAnimatable = true
+                fullView!.frame = CGRect(x: cellRect.origin.x, y: cellRect.origin.y,
+                                        width: cellRect.height / ratio, height: cellRect.height)
+                fullView!.center = CGPoint(x: cellRect.origin.x + cellRect.width / 2,
+                                          y: cellRect.origin.y + cellRect.height / 2)
+                print("fullrect, ", fullView?.frame)
+                let fullRect = fullView!.frame
+                fullView?.frame = cellRect
+                print("cell ", fullView?.frame)
+                UIView.animate(withDuration: 1, animations: {
+                    fullView?.frame = fullRect
+                }, completion: { [weak self] _ in
+                    self?.animatableView = fullView
+                    self?.sourceSnapshot = fullView?.snapshotView(afterScreenUpdates: false)
+                    self?.router?.toMediaView(i: i, of: message)
+                })
+                /// animate reveal
+//                fullView!.animateReveal(centerSize: CGSize(width: cellRect.width, height: cellRect.height), willReveal: true, completion: { [weak self] in
+//                    print("done")
+//                    self?.animatableView = fullView
+//                    self?.sourceSnapshot = fullView?.snapshotView(afterScreenUpdates: false)
+//                    self?.router?.toMediaView(i: i, of: message)
+//
+//                })
+
+                print("what first")
+                return
+            }
+        }
+        
+        animatableView = fullView ?? selectedCell.imageView
+//        sourceSnapshot = animatableView?.snapshotView(afterScreenUpdates: false)
+        sourceSnapshot = fullView ?? animatableView?.snapshotView(afterScreenUpdates: false)
         router?.toMediaView(i: i, of: message)
+        fullView?.removeFromSuperview()
+        
     }
 }
 
@@ -444,6 +512,10 @@ extension MessageListViewController : MessagesPresenter {
                 }
             }
         }
+        if section < dateSections.count && row < dateSections[section].items.count{
+            listUpdatedRow.append(IndexPath(row: row, section: section))
+        }
+        
         DispatchQueue.main.async {
             self.tableView.reloadRows(at: listUpdatedRow, with: .fade)
         }

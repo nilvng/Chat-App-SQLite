@@ -13,6 +13,8 @@ import UIKit
     lazy var remoteWorker : AvatarWorker = AvatarWorker.shared
     var id: String!
     
+    
+    
     func load(filename: String, folder: String?=nil,
               type: ImageFileType,
               backgroundColor: UIColor? = .trueLightGray){ // TODO: generalize this function load(URL:)

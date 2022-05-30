@@ -19,6 +19,8 @@ protocol MessageListInteractor {
     func sendSeenStatus()
     func doneSelectLocalMedia(_ asset: [PHAsset])
     func getReferredMessage(of msg: MessageDomain,completion: @escaping (MessageDomain?) -> Void)
+    func chatDidOpen()
+
 }
 
 
@@ -258,6 +260,7 @@ class ChatViewController: UIViewController {
         super.viewDidAppear(animated)
         navigationController?.navigationBar.barStyle = .default
         navigationController?.navigationBar.tintColor = theme.accentColor
+        interactor?.chatDidOpen()
     }
     
     // MARK: Actions

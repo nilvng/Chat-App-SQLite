@@ -18,6 +18,10 @@ struct MediaPrep : Codable{
     var height: Int
     var bgColor: ColorRGB?
     var type: MediaType = .photo
+    
+    var ratioHW : Double? {
+            Double(height) / Double(width)
+    }
 }
 
 enum MediaType : Int,Codable{

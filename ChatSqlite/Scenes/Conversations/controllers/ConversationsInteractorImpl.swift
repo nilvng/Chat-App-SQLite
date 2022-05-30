@@ -21,12 +21,12 @@ protocol ConversationPresenter : AnyObject {
 class ConversationsInteractorImpl : ConversationListInteractor{
     func selectConversation(_ c: ConversationDomain) {
         // notify member of this conversation that we already seen all message
-        var conv = c
-        if conv.status == .received {
-            conv.status = .seen
-            localStore.upsertConversation(conv)
-            SocketService.shared.sendStateSeen(of: conv)
-        }
+//        var conv = c
+//        if conv.status == .received {
+//            conv.status = .seen
+//            localStore.upsertConversation(conv)
+//            SocketService.shared.sendStateSeen(of: conv)
+//        }
     }
     
  

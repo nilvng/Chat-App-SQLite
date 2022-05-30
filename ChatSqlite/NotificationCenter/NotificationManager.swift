@@ -17,6 +17,7 @@ class NotificationManager : NSObject {
     var chatManager : ChatServiceManager = ChatServiceManager.shared
     struct Category {
         static let message = "Message"
+        static let random = "Random"
     }
     struct Action {
         static let reply = "Reply"
@@ -62,6 +63,7 @@ class NotificationManager : NSObject {
     // MARK: -Configure Actions
     func configure(){
         configureMessageNoti()
+        configureRandomNoti()
     }
     
     func configureMessageNoti(){
@@ -74,6 +76,20 @@ class NotificationManager : NSObject {
         
         handlers[Action.reply] = MessageReplyHandler()
         handlers[Action.messageDefault] = MessageDefaultHandler()
+        
+        center.setNotificationCategories([category])
+    }
+    
+    func configureRandomNoti(){
+        let likeAction = UNNotificationAction(identifier: Action.like,
+                                              title: "Like",
+                                              options: [])
+        let replyAction = UNTextInputNotificationAction(identifier: Action.reply, title: "Reply", options: [.authenticationRequired])
+        
+        let category = UNNotificationCategory(identifier: Category.random, actions: [likeAction, replyAction], intentIdentifiers: [], options: [])
+        
+//        handlers[Action.reply] = MessageReplyHandler()
+//        handlers[Action.messageDefault] = MessageDefaultHandler()
         
         center.setNotificationCategories([category])
     }
