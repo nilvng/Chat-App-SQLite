@@ -33,7 +33,8 @@ class MessagesInteractorImpl : MessageListInteractor {
     var selectedFriend : FriendDomain?
     
     func chatDidOpen(){
-        chatService.updatetoSeen()
+        // TODO: send seen status only when the latest message is of their friend
+//        chatService.updatetoSeen()
     }
     
     func doneSelectLocalMedia(_ assets: [PHAsset]){

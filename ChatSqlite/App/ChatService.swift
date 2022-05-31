@@ -46,7 +46,8 @@ class ChatService {
         socketService.sendMessageState(msg: msg, status: .arrived, from: uid)
         self.addMessage(msg: msg)
         notificationManager?.publishNewMessageNoti(text: msg.content,
-                                                  from: conversatioNWorker.getTitle(), cid: msg.cid)
+                                                  from: conversatioNWorker.getTitle(),
+                                                   cid: msg.cid)
         
     }
     func createNewMessage(type: MessageType) -> MessageDomain{

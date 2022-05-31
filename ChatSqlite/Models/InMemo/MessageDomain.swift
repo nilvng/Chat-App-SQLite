@@ -77,12 +77,12 @@ class MessageDomain {
         self.status = status
         self.mediaPreps = mediaPreps
     }
-    init(cid: String, content: String="", type: MessageType,
+    init(cid: String, content: String? = nil, type: MessageType,
          status: MessageStatus = .sent,
          downloaded: Bool = false) {
         self.mid = UUID().uuidString
         self.cid = cid
-        self.content = content
+        self.content = content ?? type.getDefaultContent() ?? ""
         self.type = type
         self.timestamp = Date()
         self.sender = UserSettings.shared.getUserID()

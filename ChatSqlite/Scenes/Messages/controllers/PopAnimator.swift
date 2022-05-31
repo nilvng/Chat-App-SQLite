@@ -27,11 +27,10 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             return nil
         }
         self.sourceRect = firstVC.getAnimatableView().convert(firstVC.getAnimatableView().bounds, to: win)
-        
     }
     
     
-    let duration = 1.3
+    let duration = 0.3
     var presenting = true
     
     var firstVC : PopAnimatableViewController
@@ -51,15 +50,15 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         let containerView = transitionContext.containerView
         let toView = transitionContext.view(forKey: .to)!
         containerView.addSubview(toView)
-        
+        let cellsubSnapshot = firstVC.getAnimatableView()
+
         guard let window = firstVC.getWindow() ?? secondVC.getWindow(),
-              let cellsubSnapshot = firstVC.getAnimatableView().snapshotView(afterScreenUpdates: true),
               let viewSnapshot = secondVC.getAnimatableView().snapshotView(afterScreenUpdates: true) else {
                   transitionContext.completeTransition(true)
                   return
               }
         sourceRect = firstVC.animatableViewRect() // update cellRect in case new message comes
-        print("cell position: ", sourceRect)
+        print("source: ", sourceRect)
         let backgroundView : UIView
         let fadeView = UIView(frame: containerView.bounds)
         fadeView.backgroundColor = secondVC.getView().backgroundColor
@@ -68,16 +67,18 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             cellSnapshot = cellsubSnapshot
             backgroundView = UIView(frame: containerView.bounds)
             backgroundView.addSubview(fadeView)
+            fadeView.alpha = 0
         } else {
-            backgroundView = fadeView
+            backgroundView = UIView(frame: containerView.bounds)
+            backgroundView.addSubview(fadeView)
+            fadeView.alpha = 1
         }
         
         [backgroundView, cellSnapshot, viewSnapshot].forEach { containerView.addSubview($0)}
         
         let tosubView = secondVC.getAnimatableView()
-        
         let viewRect = tosubView.convert(tosubView.bounds, to: window)
-        let trueImagevViewRect = trueFullsize(thumbRect: sourceRect, fullsizeRect: viewRect)
+        let trueImagevViewRect = secondVC.animatableViewRect()
         
         let isPresenting = presenting
         
@@ -87,7 +88,6 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         viewSnapshot.alpha = isPresenting ? 0 : 1
         cellSnapshot.alpha = isPresenting ? 1 : 0
         toView.alpha = 0
-
         
         UIView.animateKeyframes(withDuration: duration, delay: 0, options: .calculationModeCubic, animations: {
 
@@ -103,9 +103,16 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
                 viewSnapshot.alpha = isPresenting ? 1 : 0
             }
             // Gradually Show the background color of MediaView
-            UIView.addKeyframe(withRelativeStartTime: 0.6, relativeDuration: 0.4){
-                fadeView.alpha = isPresenting ? 0.8 : 0
+            if isPresenting {
+            UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.3){
+                fadeView.alpha = 1
+                }
+            } else {
+                UIView.addKeyframe(withRelativeStartTime: 0.4, relativeDuration: 1){
+                    fadeView.alpha = 0
+                    }
             }
+            
             
         }, completion: { _ in
             self.cellSnapshot.removeFromSuperview()
@@ -114,20 +121,6 @@ class PopAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             transitionContext.completeTransition(true)
         })
         
-    }
-    
-    func trueFullsize(thumbRect : CGRect, fullsizeRect: CGRect) -> CGRect{
-        let scalefactor = fullsizeRect.width / thumbRect.width
-        let w = thumbRect.width * scalefactor
-        let h = thumbRect.height * scalefactor
-        let x : CGFloat = 0
-        let y : CGFloat = fullsizeRect.midY - h / 2
-        let updated = CGRect(x: x, y: y, width: w, height: h)
-//        print("before: \(thumbRect)")
-//        print("scale: \(scalefactor)")
-//        print("after: \(updated)")
-
-        return updated
     }
 
 }

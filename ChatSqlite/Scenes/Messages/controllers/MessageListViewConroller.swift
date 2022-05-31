@@ -139,14 +139,7 @@ class MessageListViewController : UITableViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         interactor?.loadData()
-        if shouldRemoveAnimatable, let animView = animatableView, let cellRect = rectSelectedCell() {
-            UIView.animate(withDuration: 1, animations: {
-                animView.frame = cellRect
-            }, completion: { [weak self] _ in
-                animView.removeFromSuperview()
-                self?.shouldRemoveAnimatable = false
-            })
-        }
+  
         
     }
     
@@ -428,51 +421,30 @@ extension MessageListViewController : GridCellDelegate {
         // Was the image cropped?
         var fullView : UIView? = nil
         self.selectedCell = selectedCell
-        if let ratio = message.mediaPreps?[i].ratioHW {
-            let layoutRatio = selectedCell.frame.height / selectedCell.frame.width
-            let isCropped : Bool = abs(ratio - layoutRatio) > 0.05
-            if let im = selectedCell.imageView.image , isCropped {
-                // if it's cropped, first animate reveal
-                /// add the fullsize image view
-                fullView = UIImageView(image: im)
-                fullView?.contentMode = .scaleAspectFill
-                fullView?.clipsToBounds = true
-                
-                fullView!.transform = CGAffineTransform(scaleX: 1, y: -1)
-                let cellRect = selectedCell.convert(selectedCell.bounds, to: view)
-                view.addSubview(fullView!)
-                shouldRemoveAnimatable = true
-                fullView!.frame = CGRect(x: cellRect.origin.x, y: cellRect.origin.y,
-                                        width: cellRect.height / ratio, height: cellRect.height)
-                fullView!.center = CGPoint(x: cellRect.origin.x + cellRect.width / 2,
-                                          y: cellRect.origin.y + cellRect.height / 2)
-                print("fullrect, ", fullView?.frame)
-                let fullRect = fullView!.frame
-                fullView?.frame = cellRect
-                print("cell ", fullView?.frame)
-                UIView.animate(withDuration: 1, animations: {
-                    fullView?.frame = fullRect
-                }, completion: { [weak self] _ in
-                    self?.animatableView = fullView
-                    self?.sourceSnapshot = fullView?.snapshotView(afterScreenUpdates: false)
-                    self?.router?.toMediaView(i: i, of: message)
-                })
-                /// animate reveal
-//                fullView!.animateReveal(centerSize: CGSize(width: cellRect.width, height: cellRect.height), willReveal: true, completion: { [weak self] in
-//                    print("done")
-//                    self?.animatableView = fullView
-//                    self?.sourceSnapshot = fullView?.snapshotView(afterScreenUpdates: false)
-//                    self?.router?.toMediaView(i: i, of: message)
-//
-//                })
-
-                print("what first")
-                return
-            }
+        guard let ratio = message.mediaPreps?[i].ratioHW else {
+            return
+        }
+        let layoutRatio = selectedCell.frame.height / selectedCell.frame.width
+        let isCropped : Bool = abs(ratio - layoutRatio) > 0.05
+        
+        // if it's cropped, create a animatable view that can stretched
+        if let im = selectedCell.imageView.image , isCropped {
+            /// add the fullsize image view
+            fullView = UIImageView(image: im)
+            fullView?.contentMode = .scaleAspectFill
+            fullView?.clipsToBounds = true
+            
+            let cellRect = selectedCell.convert(selectedCell.bounds, to: view)
+            shouldRemoveAnimatable = true
+            fullView!.frame = CGRect(x: cellRect.origin.x, y: cellRect.origin.y,
+                                    width: cellRect.height / ratio, height: cellRect.height)
+            fullView!.center = CGPoint(x: cellRect.origin.x + cellRect.width / 2,
+                                      y: cellRect.origin.y + cellRect.height / 2)
+            fullView?.frame = cellRect
+            
         }
         
-        animatableView = fullView ?? selectedCell.imageView
-//        sourceSnapshot = animatableView?.snapshotView(afterScreenUpdates: false)
+        animatableView = fullView ?? selectedCell.imageView.snapshotView(afterScreenUpdates: false)
         sourceSnapshot = fullView ?? animatableView?.snapshotView(afterScreenUpdates: false)
         router?.toMediaView(i: i, of: message)
         fullView?.removeFromSuperview()
@@ -482,7 +454,9 @@ extension MessageListViewController : GridCellDelegate {
 
 extension MessageListViewController : ImageCellDelegate {
     func didTap(_ cell: ImageCell) {
-        animatableView = cell.myImageView
+        selectedCell = cell.myImageView
+        let snap = cell.myImageView.snapshotView(afterScreenUpdates: false)
+        animatableView = snap
         sourceSnapshot = animatableView?.snapshotView(afterScreenUpdates: false)
         router?.toMediaView(i: 0, of: cell.message)
     }
@@ -625,9 +599,9 @@ extension MessageListViewController : PopAnimatableViewController {
     
     func animatableViewRect() -> CGRect {
         let window = self.view.window
-        let rect = animatableView!.convert(animatableView!.bounds, to: window)
-//        let rect = myTableView.convert(animatableView!.bounds, to: nil)
-//        print("animatable rect: \(rect)")
+        guard let rect = selectedCell?.convert(selectedCell!.bounds, to: window) else{
+            return .zero
+        }
         return rect
     }
     

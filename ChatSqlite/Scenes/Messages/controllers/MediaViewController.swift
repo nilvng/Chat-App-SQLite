@@ -44,15 +44,11 @@ class MediaViewController: UIViewController {
         super.viewDidLoad()
         view.addSubview(progressView)
         progressView.centerInSuperview()
-        
+//        navigationController?.navigationBar.tintColor = .white
         setupImageView()
         setupNav()
         setupPlayButton()
-//        setupNavigationView()
         setupSlider()
-//        setupVideoProgressBar()
-//        view.backgroundColor = UIColor(r: 111, g: 97, b: 108)
-        
     }
     
     // MARK: Setups
@@ -74,7 +70,6 @@ class MediaViewController: UIViewController {
         videoProgressBarView?.isUserInteractionEnabled = true
         self.view.addSubview(videoProgressBarView!)
         videoProgressBarView?.addConstraints(leading: self.view.leadingAnchor, bottom: self.slider.topAnchor, trailing: self.view.trailingAnchor)
-//        print(videoProgressBarView?.gestureRecognizers)
     }
     
     func setupTimeLabel(){
@@ -87,9 +82,11 @@ class MediaViewController: UIViewController {
     
     func setupNav(){
         view.addSubview(navBarView)
-        navBarView.addConstraints(top: view.topAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor, heightConstant: 55)
+        navBarView.addConstraints(top: view.topAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor, heightConstant: 65)
         let backButton = UIButton()
         backButton.setImage(UIImage(systemName: "arrow.left"), for: .normal)
+        backButton.tintColor = .white
+        
         navBarView.addSubview(backButton)
         backButton.centerYAnchor.constraint(equalTo: navBarView.centerYAnchor).isActive = true
         backButton.leadingAnchor.constraint(equalTo: navBarView.leadingAnchor, constant: 5).isActive = true
@@ -369,9 +366,17 @@ extension MediaViewController : PopAnimatableViewController {
     }
     
     func animatableViewRect() -> CGRect {
-        let window = self.view.window
-        let rect = imageView.convert(imageView.bounds, to: window)
-        return rect
+        
+        guard let scaleHW = mediaPrep.ratioHW else {
+            let window = self.view.window
+            let rect = imageView.convert(imageView.bounds, to: window)
+            return rect
+        }
+        let trueH = view.bounds.width * scaleHW
+        let trueW = view.bounds.width
+        let y = (Double(view.bounds.height) / 2) - trueH / 2
+        let updated = CGRect(x: 0, y: y, width: trueW, height: trueH)
+        return updated
     }
     
     

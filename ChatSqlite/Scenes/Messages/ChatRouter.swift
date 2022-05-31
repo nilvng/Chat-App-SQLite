@@ -23,10 +23,15 @@ class ChatRouter : NSObject {
     func toPhotoGallery(){
         let vc = GalleryContainerViewController()
         vc.callback  =  { assets in
-            guard let viewController = self.viewController as? ChatViewController else {
+            
+            if let viewController = self.viewController as? MessageListViewController {
+                viewController.interactor?.doneSelectLocalMedia(assets)
+            } else if let viewController = self.viewController as? ChatViewController {
+                viewController.interactor?.doneSelectLocalMedia(assets)
+            } else{
+                print("\(self): rootViewController to PhotoGallery is not as expected")
                 return
             }
-            viewController.interactor?.doneSelectLocalMedia(assets)
         }
         vc.modalPresentationStyle = .pageSheet
         if let presentation  = vc.sheetPresentationController {

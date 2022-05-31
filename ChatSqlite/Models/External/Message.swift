@@ -14,6 +14,21 @@ enum MessageType : Int, Codable {
     case image
     case video
     case gif
+    
+    func getDefaultContent() -> String?{
+        switch self {
+        case .file:
+            return "[File]"
+        case .image:
+            return "[Photo]"
+        case .video:
+            return "[Video]"
+        case .gif:
+            return "[GIF]"
+        default:
+            return nil
+        }
+    }
 }
 
 enum MessageStatus : Int, Codable{

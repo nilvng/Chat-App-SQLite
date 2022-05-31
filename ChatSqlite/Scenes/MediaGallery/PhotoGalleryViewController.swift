@@ -77,7 +77,7 @@ class PhotoGalleryViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+    // MARK: Navigation
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -93,17 +93,19 @@ class PhotoGalleryViewController: UIViewController {
         
     }
     
-    func setupInteractor(_ inter: LocalGalleryService){
-//        let service = LocalGalleryService()
-        inter.delegate = self
-        interactor = inter
-    }
-    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
     
+    
+    // MARK: Setups
+    func setupInteractor(_ inter: LocalGalleryService){
+//        let service = LocalGalleryService()
+        inter.delegate = self
+        interactor = inter
+    }
+
     
     func setupCollectionView(){
         collectionView.dataSource = self
@@ -111,6 +113,7 @@ class PhotoGalleryViewController: UIViewController {
         collectionView.register(LocalPhotoCell.self, forCellWithReuseIdentifier: LocalPhotoCell.identifier)
     }
     
+    // MARK: - Actions
     @IBAction func submit(){
         var assets : [PHAsset] = []
         for i in selectedIndices {

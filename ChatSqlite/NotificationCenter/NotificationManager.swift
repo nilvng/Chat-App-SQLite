@@ -13,6 +13,7 @@ class NotificationManager : NSObject {
     static let shared : NotificationManager? = NotificationManager()
     
     var center  = UNUserNotificationCenter.current()
+    var isAuthorized : Bool = false
     var handlers : [String: ActionHandler] = [:]
     var chatManager : ChatServiceManager = ChatServiceManager.shared
     struct Category {
@@ -29,6 +30,7 @@ class NotificationManager : NSObject {
         super.init()
         UNUserNotificationCenter.current().getNotificationSettings { (notificationSettings) in
             if notificationSettings.authorizationStatus  == .authorized {
+                self.isAuthorized = true
                 self.configure()
             }
         }
@@ -38,6 +40,11 @@ class NotificationManager : NSObject {
     func publishNewMessageNoti(text: String,
                                from who: String,
                                cid: String){
+        
+        guard isAuthorized else{
+            return
+        }
+        
         let content = UNMutableNotificationContent()
         content.title = who
         content.body = text
@@ -63,7 +70,6 @@ class NotificationManager : NSObject {
     // MARK: -Configure Actions
     func configure(){
         configureMessageNoti()
-        configureRandomNoti()
     }
     
     func configureMessageNoti(){
@@ -76,20 +82,6 @@ class NotificationManager : NSObject {
         
         handlers[Action.reply] = MessageReplyHandler()
         handlers[Action.messageDefault] = MessageDefaultHandler()
-        
-        center.setNotificationCategories([category])
-    }
-    
-    func configureRandomNoti(){
-        let likeAction = UNNotificationAction(identifier: Action.like,
-                                              title: "Like",
-                                              options: [])
-        let replyAction = UNTextInputNotificationAction(identifier: Action.reply, title: "Reply", options: [.authenticationRequired])
-        
-        let category = UNNotificationCategory(identifier: Category.random, actions: [likeAction, replyAction], intentIdentifiers: [], options: [])
-        
-//        handlers[Action.reply] = MessageReplyHandler()
-//        handlers[Action.messageDefault] = MessageDefaultHandler()
         
         center.setNotificationCategories([category])
     }

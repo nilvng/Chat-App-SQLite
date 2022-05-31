@@ -46,16 +46,15 @@ class MessageListWorker {
                     return
                 }
                 self?.observer?.presentItems(msgs, offset: noPages * noRecords)
-                
             })
     }
-    
     
     func requestGetOne(mid: String, completion: @escaping (MessageDomain?) -> Void){
         dbStore?.fetchItemWithId(mid, completionHandler: { m, err in
             completion(m)
         })
     }
+    
     @discardableResult
     func add(_ msg: MessageDomain) -> Bool{
         observer?.presentSentItem(msg)

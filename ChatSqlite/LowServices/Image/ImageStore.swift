@@ -100,7 +100,7 @@ actor ImageStore {
         // Case1: Find in memo
         if let existingImage = cache.object(forKey: config) {
 //            print("Config: \(config.urlString), \(config.type)")
-            print("Media found memo")
+//            print("Media found memo")
             return existingImage
         }
         // Case2: Find on disk

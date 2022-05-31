@@ -82,8 +82,7 @@ class ImageGridCell : MessageCell {
             self.collectionView.layoutIfNeeded()
             self.layoutIfNeeded()
             let contentSize = self.collectionView.collectionViewLayout.collectionViewContentSize
-            let padding = bubbleVPadding + BubbleConstant.contentVPadding * 2
-            return CGSize(width: contentSize.width, height: contentSize.height + padding)
+            return CGSize(width: contentSize.width, height: contentSize.height)
         }
     
     override func prepareForReuse() {
